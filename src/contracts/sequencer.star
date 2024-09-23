@@ -1,5 +1,5 @@
-shared_utils = import_module("../../../shared_utils/shared_utils.star")
-input_parser = import_module("../../../package_io/input_parser.star")
+shared_utils = import_module("../shared_utils/shared_utils.star")
+input_parser = import_module("../package_io/input_parser.star")
 
 PRIVATE_KEY=0xbcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31
 PROXY_ADDRESS=0x3c0e871bB7337D5e6A18FDD73c4D9e7567961Ad3
