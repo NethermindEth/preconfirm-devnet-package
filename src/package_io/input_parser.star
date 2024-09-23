@@ -69,6 +69,8 @@ ATTR_TO_BE_SKIPPED_AT_ROOT = (
     "network_params",
     "participants",
     "mev_params",
+    "taiko_params",
+    "preconf_params",
     "dora_params",
     "assertoor_params",
     "goomy_blob_params",
@@ -135,6 +137,14 @@ def input_parser(plan, input_args):
             for sub_attr in input_args["mev_params"]:
                 sub_value = input_args["mev_params"][sub_attr]
                 result["mev_params"][sub_attr] = sub_value
+        elif attr == "taiko_params":
+            for sub_attr in input_args["taiko_params"]:
+                sub_value = input_args["taiko_params"][sub_attr]
+                result["taiko_params"][sub_attr] = sub_value
+        elif attr == "preconf_params":
+            for sub_attr in input_args["preconf_params"]:
+                sub_value = input_args["preconf_params"][sub_attr]
+                result["preconf_params"][sub_attr] = sub_value
         elif attr == "tx_spammer_params":
             for sub_attr in input_args["tx_spammer_params"]:
                 sub_value = input_args["tx_spammer_params"][sub_attr]
