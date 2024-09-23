@@ -110,6 +110,8 @@ def input_parser(plan, input_args):
     result["global_tolerations"] = []
     result["global_node_selectors"] = {}
     result["port_publisher"] = get_port_publisher_params("default")
+    result["preconf_params"] = {}
+    result["taiko_params"] = {}
 
     if constants.NETWORK_NAME.shadowfork in result["network_params"]["network"]:
         shadow_base = result["network_params"]["network"].split("-shadowfork")[0]
@@ -792,6 +794,8 @@ def default_input_args(input_args):
         "disable_peer_scoring": False,
         "persistent": False,
         "mev_type": None,
+        "taiko_params": {},
+        "preconf_params": {},
         "xatu_sentry_enabled": False,
         "apache_port": None,
         "global_tolerations": [],
