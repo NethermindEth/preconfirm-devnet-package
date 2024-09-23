@@ -57,7 +57,9 @@ get_prefunded_accounts = import_module(
 
 # Preconf AVS
 taiko_contract_deployer = import_module("./src/contracts/taiko.star")
-taiko_
+eigenlayer_mvp_deployer = import_module("./src/contracts/eigenlayer_mvp.star")
+avs_contract_deployer = import_module("./src/contracts/avs.star")
+sequencer_deployer = import_module("./src/contracts/sequencer.star")
 
 GRAFANA_USER = "admin"
 GRAFANA_PASSWORD = "admin"
@@ -645,7 +647,7 @@ def run(plan, args={}):
         elif additional_service == "preconf_avs":
             plan.print("Launching preconfirmation AVS")
             # Deploy EigenLayer MVP
-            # eigenlayer_mvp_contract_deployer.deploy(
+            # eigenlayer_mvp_deployer.deploy(
             #     plan,
             #     network_params,
             #     fuzz_target,
@@ -658,7 +660,7 @@ def run(plan, args={}):
             #     final_genesis_timestamp,
             # )
             # Deploy Sequencer
-            # sequencer_contract_deployer.deploy(
+            # sequencer_deployer.deploy(
             #     plan,
             #     network_params,
             #     fuzz_target,
