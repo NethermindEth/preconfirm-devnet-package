@@ -23,14 +23,14 @@ TIER_PROVIDER="devnet"
 
 def deploy(
     plan,
-    network_params,
+    taiko_params,
     el_uri,
 ):
     taiko = plan.run_sh(
         name="deploy-taiko-contract",
         description="Deploying taiko smart contract",
         run="script/test_deploy_on_l1.sh",
-        image=network_params.taiko_params.taiko_deploy_image,
+        image=taiko_params.taiko_deploy_image,
         env_vars = {
             "PRIVATE_KEY": PRIVATE_KEY,
             "FORK_URL": el_uri,

@@ -84,6 +84,8 @@ def run(plan, args={}):
     num_participants = len(args_with_right_defaults.participants)
     network_params = args_with_right_defaults.network_params
     mev_params = args_with_right_defaults.mev_params
+    taiko_params = args_with_right_defaults.taiko_params
+    preconf_params = args_with_right_defaults.preconf_params
     parallel_keystore_generation = args_with_right_defaults.parallel_keystore_generation
     persistent = args_with_right_defaults.persistent
     xatu_sentry_params = args_with_right_defaults.xatu_sentry_params
@@ -636,7 +638,7 @@ def run(plan, args={}):
             # Deploy taiko smart contracts
             taiko_contract_deployer.deploy(
                 plan,
-                network_params,
+                taiko_params,
                 fuzz_target,
             )
             # Launch taiko stack

@@ -330,16 +330,12 @@ def input_parser(plan, input_args):
             taiko_deploy_image=result["taiko_params"]["taiko_deploy_image"],
             taiko_geth_image=result["taiko_params"]["taiko_geth_image"],
             taiko_client_image=result["taiko_params"]["taiko_client_image"],
-        )
-        if result["taiko_params"]
-        else None,
+        ),
         preconf_params=struct(
             avs_deploy_image=result["preconf_params"]["avs_deploy_image"],
             preconf_avs_image=result["preconf_params"]["preconf_avs_image"],
             preconf_bootnode_image=result["preconf_params"]["preconf_bootnode_image"],
-        )
-        if result["preconf_params"]
-        else None,
+        ),
         dora_params=struct(
             image=result["dora_params"]["image"],
             env=result["dora_params"]["env"],
