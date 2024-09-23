@@ -1,6 +1,6 @@
 participants:
 # EL
-  - el_type: geth
+  - el_type: nethermind
     el_image: nethermindeth/nethermind:pectra
     el_log_level: ""
     el_extra_env_vars: {}
