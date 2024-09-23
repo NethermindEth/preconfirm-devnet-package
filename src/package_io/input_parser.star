@@ -322,7 +322,7 @@ def input_parser(plan, input_args):
         if result["taiko_params"]
         else None,
         preconf_params=struct(
-            preconf_deploy_image=result["preconf_params"]["preconf_deploy_image"],
+            avs_deploy_image=result["preconf_params"]["avs_deploy_image"],
             preconf_avs_image=result["preconf_params"]["preconf_avs_image"],
             preconf_bootnode_image=result["preconf_params"]["preconf_bootnode_image"],
         )
