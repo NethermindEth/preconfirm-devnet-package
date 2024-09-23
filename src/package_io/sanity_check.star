@@ -219,8 +219,8 @@ ADDITIONAL_SERVICES_PARAMS = [
     "forky",
     "apache",
     "tracoor",
-    "taiko_stack": "",
-    "preconf_avs": "",
+    "taiko_stack",
+    "preconf_avs",
 ]
 
 ADDITIONAL_CATEGORY_PARAMS = {
