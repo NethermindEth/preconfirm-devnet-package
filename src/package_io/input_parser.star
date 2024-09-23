@@ -311,19 +311,21 @@ def input_parser(plan, input_args):
             mev_flood_seconds_per_bundle=result["mev_params"][
                 "mev_flood_seconds_per_bundle"
             ],
-        )
+        ),
         if result["mev_params"]
         else None,
         taiko_params=struct(
+            taiko_deploy_image=result["taiko_params"]["taiko_deploy_image"],
             taiko_geth_image=result["taiko_params"]["taiko_geth_image"],
             taiko_client_image=result["taiko_params"]["taiko_client_image"],
-        )
+        ),
         if result["taiko_params"]
         else None,
         preconf_params=struct(
+            preconf_deploy_image=result["preconf_params"]["preconf_deploy_image"],
             preconf_avs_image=result["preconf_params"]["preconf_avs_image"],
             preconf_bootnode_image=result["preconf_params"]["preconf_bootnode_image"],
-        )
+        ),
         if result["preconf_params"]
         else None,
         dora_params=struct(
