@@ -61,7 +61,7 @@ MEV_BOOST_PORT = 18550
 MEV_BOOST_SERVICE_NAME_PREFIX = "mev-boost"
 
 # Minimum number of validators required for a network to be valid is 64
-MIN_VALIDATORS = 64
+MIN_VALIDATORS = 4
 
 DEFAULT_ADDITIONAL_SERVICES = []
 
@@ -1055,6 +1055,8 @@ def get_port_publisher_params(parameter_type, input_args=None):
         "cl": {"enabled": False, "public_port_start": 33000},
         "vc": {"enabled": False, "public_port_start": 34000},
         "additional_services": {"enabled": False, "public_port_start": 35000},
+        "taiko": {"enabled": False, "public_port_start": 36000},
+        "preconf_avs": {"enabled": False, "public_port_start": 37000},
     }
     if parameter_type == "default":
         return port_publisher_parameters

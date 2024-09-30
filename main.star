@@ -56,10 +56,9 @@ get_prefunded_accounts = import_module(
 )
 
 # Preconf AVS
-taiko_contract_deployer = import_module("./src/contracts/taiko.star")
-eigenlayer_mvp_deployer = import_module("./src/contracts/eigenlayer_mvp.star")
-avs_contract_deployer = import_module("./src/contracts/avs.star")
-sequencer_deployer = import_module("./src/contracts/sequencer.star")
+contract_deployer = import_module("./src/contracts/contract_deployer.star")
+l2_taiko = import_module("./src/l2_taiko/taiko_launcher.star")
+preconf_avs = import_module("./src/preconf_avs/avs_launcher.star")
 
 GRAFANA_USER = "admin"
 GRAFANA_PASSWORD = "admin"
@@ -139,6 +138,7 @@ def run(plan, args={}):
             num_participants, network_params
         )
     )
+    plan.print(prefunded_accounts)
     (
         all_participants,
         final_genesis_timestamp,
@@ -200,6 +200,14 @@ def run(plan, args={}):
         all_el_contexts[0].rpc_port_num,
     )
 
+    # Deploy all smart contracts
+    contract_deployer.deploy(
+        plan,
+        final_genesis_timestamp,
+        all_el_contexts[0],
+        prefunded_accounts,
+    )
+
     # Broadcaster forwards requests, sent to it, to all nodes in parallel
     if "broadcaster" in args_with_right_defaults.additional_services:
         args_with_right_defaults.additional_services.remove("broadcaster")
@@ -212,7 +220,6 @@ def run(plan, args={}):
             broadcaster_service.ip_address,
             broadcaster.PORT,
         )
-
     mev_endpoints = []
     mev_endpoint_names = []
     # passed external relays get priority
@@ -261,14 +268,14 @@ def run(plan, args={}):
         first_cl_client = all_cl_contexts[0]
         first_client_beacon_name = first_cl_client.beacon_service_name
         contract_owner, normal_user = prefunded_accounts[6:8]
-        mev_flood.launch_mev_flood(
-            plan,
-            mev_params.mev_flood_image,
-            fuzz_target,
-            contract_owner.private_key,
-            normal_user.private_key,
-            global_node_selectors,
-        )
+        # mev_flood.launch_mev_flood(
+        #     plan,
+        #     mev_params.mev_flood_image,
+        #     fuzz_target,
+        #     contract_owner.private_key,
+        #     normal_user.private_key,
+        #     global_node_selectors,
+        # )
         epoch_recipe = GetHttpRequestRecipe(
             endpoint="/eth/v2/beacon/blocks/head",
             port_id=HTTP_PORT_ID_FOR_FACT,
@@ -306,14 +313,14 @@ def run(plan, args={}):
         else:
             fail("Invalid MEV type")
 
-        mev_flood.spam_in_background(
-            plan,
-            fuzz_target,
-            mev_params.mev_flood_extra_args,
-            mev_params.mev_flood_seconds_per_bundle,
-            contract_owner.private_key,
-            normal_user.private_key,
-        )
+        # mev_flood.spam_in_background(
+        #     plan,
+        #     fuzz_target,
+        #     mev_params.mev_flood_extra_args,
+        #     mev_params.mev_flood_seconds_per_bundle,
+        #     contract_owner.private_key,
+        #     normal_user.private_key,
+        # )
         mev_endpoints.append(endpoint)
         mev_endpoint_names.append(args_with_right_defaults.mev_type)
 
@@ -635,42 +642,78 @@ def run(plan, args={}):
             )
         elif additional_service == "taiko_stack":
             plan.print("Launching taiko")
-            # Deploy taiko smart contracts
-            taiko_contract_deployer.deploy(
-                plan,
-                taiko_params,
-                fuzz_target,
-            )
-            # Launch taiko stack
-            # taiko_stack.launch(
 
+            # Launch taiko stack 1
+            taiko_stack_1 = l2_taiko.launch(
+                plan,
+                all_el_contexts[0],
+                all_cl_contexts[0],
+                prefunded_accounts,
+                0,
+            )
+
+            # Launch taiko stack 2
+            taiko_stack_2 = l2_taiko.launch(
+                plan,
+                all_el_contexts[0],
+                all_cl_contexts[0],
+                prefunded_accounts,
+                1,
+            )
+
+            # Launch taiko L2 tx spammer
+            # transaction_spammer.launch_transaction_spammer(
+            #     plan,
+            #     prefunded_accounts,
+            #     taiko_stack_1.rpc_http_url,
+            #     tx_spammer_params,
+            #     network_params.electra_fork_epoch,
+            #     global_node_selectors,
             # )
-            plan.print("Successfully launched taiko")
+
+            # Launch blockscout for taiko L2
+            # blockscout.launch_blockscout(
+            #     plan,
+            #     taiko_stack_1,
+            #     persistent,
+            #     global_node_selectors,
+            #     args_with_right_defaults.port_publisher,
+            #     index,
+            # )
+
+            plan.print("Successfully launched 2 taiko stacks")
         elif additional_service == "preconf_avs":
             plan.print("Launching preconfirmation AVS")
-            # Deploy EigenLayer MVP
-            # eigenlayer_mvp_deployer.deploy(
-            #     plan,
-            #     network_params,
-            #     fuzz_target,
-            # )
-            # Deploy AVS smart contracts
-            # avs_contract_deployer.deploy(
-            #     plan,
-            #     network_params,
-            #     fuzz_target,
-            #     final_genesis_timestamp,
-            # )
-            # Deploy Sequencer
-            # sequencer_deployer.deploy(
-            #     plan,
-            #     network_params,
-            #     fuzz_target,
-            # )
-            # Launch Preconf AVS
-            # preconf_avs.launch(
 
-            # )
+            # Launch Preconf AVS 1
+            preconf_avs.launch(
+                plan,
+                network_id,
+                all_el_contexts[0],
+                all_cl_contexts[0],
+                taiko_stack_1,
+                all_mevboost_contexts[0],
+                prefunded_accounts,
+                "3219c83a76e82682c3e706902ca85777e703a06c9f0a82a5dfa6164f527c1ea6",
+                1,
+                0,
+            )
+
+            # Launch Preconf AVS 2
+            preconf_avs.launch(
+                plan,
+                network_id,
+                all_el_contexts[0],
+                all_cl_contexts[0],
+                taiko_stack_2,
+                all_mevboost_contexts[0],
+                prefunded_accounts,
+                "215768a626159445ba0d8a1afab729c5724e75aa020a480580cbf86dd2ae4d47",
+                2,
+                1,
+            )
+
+            plan.print("Successfully launched 2 preconf avs")
         else:
             fail("Invalid additional service %s" % (additional_service))
     if launch_prometheus_grafana:
