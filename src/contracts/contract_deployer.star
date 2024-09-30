@@ -8,6 +8,7 @@ def deploy(
     final_genesis_timestamp,
     el_context,
     prefunded_accounts,
+    network_id,
 ):
     # Get el rpc url
     el_rpc_url = el_context.rpc_http_url
@@ -72,6 +73,7 @@ print(new, end="")
                 "TOKEN_AMOUNT": "1000000",
                 "ERC20_ADDRESS": "0x422A3492e218383753D8006C7Bfa97815B44373F",
                 "RPC_URL": el_rpc_url,
+                "CHAIN_ID": network_id,
             },
         ),
     )

@@ -206,6 +206,7 @@ def run(plan, args={}):
         final_genesis_timestamp,
         all_el_contexts[0],
         prefunded_accounts,
+        network_id,
     )
 
     # Broadcaster forwards requests, sent to it, to all nodes in parallel
@@ -661,15 +662,7 @@ def run(plan, args={}):
                 1,
             )
 
-            # Launch taiko L2 tx spammer
-            # transaction_spammer.launch_transaction_spammer(
-            #     plan,
-            #     prefunded_accounts,
-            #     taiko_stack_1.rpc_http_url,
-            #     tx_spammer_params,
-            #     network_params.electra_fork_epoch,
-            #     global_node_selectors,
-            # )
+            plan.print("Successfully launched 2 taiko stacks")
 
             # Launch blockscout for taiko L2
             # blockscout.launch_blockscout(
@@ -681,7 +674,54 @@ def run(plan, args={}):
             #     index,
             # )
 
-            plan.print("Successfully launched 2 taiko stacks")
+            # plan.print("Successfully launchedblockscout for taiko L2")
+
+            # plan.add_service(
+            #     name = "taiko-tx-transfer",
+            #     description = "Transfer Taiko ETH",
+            #     config = ServiceConfig(
+            #         image = "nethswitchboard/taiko-spammer:e2e",
+            #         # cmd = [
+            #         #     "python tx_spammer.py",
+            #         # ],
+            #         env_vars = {
+            #             "SENDER_PRIVATE_KEY": "370e47f3c39cf4d03cb87cb71a268776421cdc22c39aa81f1e5ba19df19202f1",
+            #             "RECIPIENT_ADDRESS": "0xf93Ee4Cf8c6c40b329b0c0626F28333c132CF241",
+            #             "TX_COUNT": "1",
+            #             "TX_AMOUNT": "10",
+            #             "RPC_URL": taiko_stack_1.rpc_http_url,
+            #         },
+            #     ),
+            # )
+
+            # Launch taiko L2 tx spammer
+            # spammer_result = plan.add_service(
+            #     name = "taiko-tx-spammer",
+            #     description = "Launch Taiko L2 tx spammer",
+            #     config = ServiceConfig(
+            #         image = "nethswitchboard/taiko-spammer:e2e",
+            #         # cmd = [
+            #         #     "python",
+            #         #     "tx_spammer.py",
+            #         #     "--count",
+            #         #     "$TX_COUNT",
+            #         #     "--amount",
+            #         #     "$TX_AMOUNT",
+            #         #     "--rpc",
+            #         #     "$RPC_URL",
+            #         # ],
+            #         env_vars = {
+            #             "SENDER_PRIVATE_KEY": "370e47f3c39cf4d03cb87cb71a268776421cdc22c39aa81f1e5ba19df19202f1",
+            #             "RECIPIENT_ADDRESS": "0xf93Ee4Cf8c6c40b329b0c0626F28333c132CF241",
+            #             "TX_COUNT": "100",
+            #             "TX_AMOUNT": "0.005",
+            #             # "ERC20_ADDRESS": "0x422A3492e218383753D8006C7Bfa97815B44373F",
+            #             "RPC_URL": taiko_stack_1.rpc_http_url,
+            #         },
+            #     ),
+            # )
+
+            # plan.print(spammer_result)
         elif additional_service == "preconf_avs":
             plan.print("Launching preconfirmation AVS")
 
