@@ -1,12 +1,9 @@
-constants = import_module("../package_io/constants.star")
-input_parser = import_module("../package_io/input_parser.star")
-shared_utils = import_module("../shared_utils/shared_utils.star")
-
 def launch(
     plan,
     chain_id,
     el_context,
     cl_context,
+    p2pbootnode_context,
     taiko_stack,
     mev_boost_context,
     prefunded_accounts,
@@ -22,6 +19,7 @@ def launch(
         name = "taiko-preconf-avs-{0}".format(index),
         config = ServiceConfig(
             image = "nethswitchboard/avs-node:e2e",
+            private_ip_address_placeholder = "avs_ip_placeholder",
             env_vars={
                 "AVS_NODE_ECDSA_PRIVATE_KEY": "0x{0}".format(prefunded_accounts[index].private_key),
                 "AVS_PRECONF_TASK_MANAGER_CONTRACT_ADDRESS": "0x6064f756f7F3dc8280C1CfA01cE41a37B5f16df1",
@@ -40,30 +38,33 @@ def launch(
                 "MEV_BOOST_URL": mev_boost_url,
                 "L1_WS_RPC_URL": el_context.ws_url,
                 "L1_BEACON_URL": cl_context.beacon_http_url,
-                "ENABLE_P2P": "false",
                 "RUST_LOG": "debug,reqwest=info,hyper=info,alloy_transport=info,alloy_rpc_client=info",
+                # P2P
+                "P2P_ADDRESS": "avs_ip_placeholder",
+                "ENABLE_P2P": "true",
+                "P2P_BOOTNODE_ENR": str(p2pbootnode_context.bootnode_enr),
             },
         ),
     )
 
-    # plan.exec(
-    #     service_name = "taiko-preconf-avs-{0}".format(index),
-    #     description = "Add validator to AVS",
-    #     recipe = ExecRecipe(
-    #         command = [
-    #             "taiko_preconf_avs_node",
-    #             "--add-validator",
-    #         ],
-    #     ),
-    # )
+    plan.exec(
+        service_name = "taiko-preconf-avs-{0}".format(index),
+        description = "Register validator to AVS",
+        recipe = ExecRecipe(
+            command = [
+                "taiko_preconf_avs_node",
+                "--register",
+            ],
+        ),
+    )
 
-    # plan.exec(
-    #     service_name = "taiko-preconf-avs-{0}".format(index),
-    #     description = "Register validator to AVS",
-    #     recipe = ExecRecipe(
-    #         command = [
-    #             "taiko_preconf_avs_node",
-    #             "--register",
-    #         ],
-    #     ),
-    # )
+    plan.exec(
+        service_name = "taiko-preconf-avs-{0}".format(index),
+        description = "Add validator to AVS",
+        recipe = ExecRecipe(
+            command = [
+                "taiko_preconf_avs_node",
+                "--add-validator",
+            ],
+        ),
+    )
