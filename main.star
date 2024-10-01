@@ -667,14 +667,14 @@ def run(plan, args={}):
             plan.print("Successfully launched 2 taiko stacks")
 
             # Launch blockscout for taiko L2
-            taiko_blockscout.launch_blockscout(
-                plan,
-                taiko_stack_1,
-                persistent,
-                global_node_selectors,
-                args_with_right_defaults.port_publisher,
-                index,
-            )
+            # taiko_blockscout.launch_blockscout(
+            #     plan,
+            #     taiko_stack_1,
+            #     persistent,
+            #     global_node_selectors,
+            #     args_with_right_defaults.port_publisher,
+            #     index,
+            # )
 
             # plan.print("Successfully launchedblockscout for taiko L2")
 

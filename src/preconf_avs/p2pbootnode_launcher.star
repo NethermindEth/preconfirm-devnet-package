@@ -34,9 +34,7 @@ def launch(
         description = "Reading bootnode ENR",
     )
 
-    plan.print(bootnode_enr)
-
     return struct(
         client_name="preconf-bootnode",
-        bootnode_enr=bootnode_enr.output,
+        bootnode_enr=bootnode_enr["output"],
     )
