@@ -646,6 +646,11 @@ def run(plan, args={}):
         elif additional_service == "taiko_stack":
             plan.print("Launching taiko")
 
+            plan.upload_files(
+                src="./taiko-geth",
+                name="taiko_genesis",
+            )
+
             # Launch taiko stack 1
             taiko_stack_1 = l2_taiko.launch(
                 plan,
@@ -667,16 +672,16 @@ def run(plan, args={}):
             plan.print("Successfully launched 2 taiko stacks")
 
             # Launch blockscout for taiko L2
-            # taiko_blockscout.launch_blockscout(
-            #     plan,
-            #     taiko_stack_1,
-            #     persistent,
-            #     global_node_selectors,
-            #     args_with_right_defaults.port_publisher,
-            #     index,
-            # )
+            taiko_blockscout.launch_blockscout(
+                plan,
+                taiko_stack_1,
+                persistent,
+                global_node_selectors,
+                args_with_right_defaults.port_publisher,
+                index,
+            )
 
-            # plan.print("Successfully launchedblockscout for taiko L2")
+            plan.print("Successfully launchedblockscout for taiko L2")
 
             plan.add_service(
                 name = "taiko-tx-transfer",

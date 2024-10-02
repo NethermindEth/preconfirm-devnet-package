@@ -20,9 +20,7 @@ def launch(
         config = ServiceConfig(
             image = "nethswitchboard/taiko-geth:e2e",
             files = {
-                data_dirpath: Directory(
-                    persistent_key = "l2-execution-engine-data-{0}".format(index),
-                ),
+                data_dirpath: "taiko_genesis",
             },
             ports = {
                 "metrics": PortSpec(
@@ -76,6 +74,13 @@ def launch(
     http_url = "http://{0}:{1}".format(service.ip_address, RPC_PORT_NUM)
     ws_url = "ws://{0}:{1}".format(service.ip_address, WS_PORT_NUM)
     auth_url = "http://{0}:{1}".format(service.ip_address, ENGINE_RPC_PORT_NUM)
+
+    plan.store_service_files(
+        service_name=service.name,
+        src=data_dirpath,
+        name="taiko_genesis_{0}".format(index),
+        description="Copying taiko genesis files to the execution node",
+    )
 
     return struct(
         client_name="taiko-geth",
