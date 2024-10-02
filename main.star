@@ -739,7 +739,7 @@ def run(plan, args={}):
                 prefunded_accounts,
                 "3219c83a76e82682c3e706902ca85777e703a06c9f0a82a5dfa6164f527c1ea6",
                 1,
-                0,
+                1,
             )
 
             # Launch Preconf AVS 2
@@ -754,7 +754,7 @@ def run(plan, args={}):
                 prefunded_accounts,
                 "215768a626159445ba0d8a1afab729c5724e75aa020a480580cbf86dd2ae4d47",
                 2,
-                1,
+                2,
             )
 
             plan.print("Successfully launched 2 preconf avs")
