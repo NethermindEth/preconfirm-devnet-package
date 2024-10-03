@@ -10,6 +10,7 @@ def launch(
     el_context,
     cl_context,
     prefunded_accounts,
+    enode,
     index,
 ):
     data_dirpath = EXECUTION_DATA_DIRPATH_ON_CLIENT_CONTAINER + "-" + str(index)
@@ -19,6 +20,7 @@ def launch(
     geth = geth_launcher.launch(
         plan,
         data_dirpath,
+        enode,
         index,
     )
 
@@ -52,4 +54,6 @@ def launch(
         auth_url=geth.auth_url,
         driver_url=driver.driver_url,
         proposer_url=proposer.proposer_url,
+        enode=geth.enode,
+        enr=geth.enr,
     )

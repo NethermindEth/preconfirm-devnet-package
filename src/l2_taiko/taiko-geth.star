@@ -1,3 +1,5 @@
+el_admin_node_info = import_module("../el/el_admin_node_info.star")
+
 RPC_PORT_NUM = 8545
 WS_PORT_NUM = 8546
 DISCOVERY_PORT_NUM = 30306
@@ -13,6 +15,7 @@ EXECUTION_MAX_MEMORY = 2048
 def launch(
     plan,
     data_dirpath,
+    enode,
     index,
 ):
     service = plan.add_service(
@@ -47,13 +50,14 @@ def launch(
                 "--networkid=167",
                 "--gcmode=archive",
                 "--datadir={0}".format(data_dirpath),
+                "--bootnodes={0}".format(enode),
                 "--metrics",
                 "--metrics.expensive",
                 "--metrics.addr=0.0.0.0",
                 "--authrpc.addr=0.0.0.0",
                 "--authrpc.vhosts=*",
                 "--http",
-                "--http.api=debug,eth,net,web3,txpool,taiko",
+                "--http.api=admin,debug,eth,net,web3,txpool,taiko",
                 "--http.addr=0.0.0.0",
                 "--http.vhosts=*",
                 "--ws",
@@ -69,6 +73,10 @@ def launch(
             min_memory = EXECUTION_MIN_MEMORY,
             max_memory = EXECUTION_MAX_MEMORY,
         ),
+    )
+
+    enode, enr = el_admin_node_info.get_enode_enr_for_node(
+        plan, service.name, "http"
     )
 
     http_url = "http://{0}:{1}".format(service.ip_address, RPC_PORT_NUM)
@@ -91,5 +99,7 @@ def launch(
         rpc_http_url=http_url,
         ws_url=ws_url,
         auth_url=auth_url,
+        enode=enode,
+        enr=enr,
         service_name=service.name,
     )

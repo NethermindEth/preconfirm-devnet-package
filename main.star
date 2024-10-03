@@ -657,6 +657,7 @@ def run(plan, args={}):
                 all_el_contexts[0],
                 all_cl_contexts[0],
                 prefunded_accounts,
+                "",
                 0,
             )
 
@@ -666,6 +667,7 @@ def run(plan, args={}):
                 all_el_contexts[0],
                 all_cl_contexts[0],
                 prefunded_accounts,
+                taiko_stack_1.enode,
                 1,
             )
 
