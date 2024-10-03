@@ -79,6 +79,12 @@ def launch(
         plan, service.name, "http"
     )
 
+    enode_shell = plan.run_sh(
+        run = "echo -n '" + enode + "' | sed 's/127.0.0.1/" + service.ip_address + "/'",
+        name = "geth-enode",
+        description = "Replace enode with actual IP",
+    )
+
     http_url = "http://{0}:{1}".format(service.ip_address, RPC_PORT_NUM)
     ws_url = "ws://{0}:{1}".format(service.ip_address, WS_PORT_NUM)
     auth_url = "http://{0}:{1}".format(service.ip_address, ENGINE_RPC_PORT_NUM)
@@ -99,7 +105,7 @@ def launch(
         rpc_http_url=http_url,
         ws_url=ws_url,
         auth_url=auth_url,
-        enode=enode,
+        enode=enode_shell.output,
         enr=enr,
         service_name=service.name,
     )
