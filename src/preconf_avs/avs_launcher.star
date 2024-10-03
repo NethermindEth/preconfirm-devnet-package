@@ -38,7 +38,7 @@ def launch(
                 "MEV_BOOST_URL": mev_boost_url,
                 "L1_WS_RPC_URL": el_context.ws_url,
                 "L1_BEACON_URL": cl_context.beacon_http_url,
-                "RUST_LOG": "debug,reqwest=info,hyper=info,alloy_transport=info,alloy_rpc_client=info",
+                "RUST_LOG": "debug,reqwest=info,hyper=info,alloy_transport=info,alloy_rpc_client=info,p2p_network=info,libp2p_gossipsub=info,discv5=info,netlink_proto=info",
                 # P2P
                 "P2P_ADDRESS": "avs_ip_placeholder",
                 "ENABLE_P2P": "true",
