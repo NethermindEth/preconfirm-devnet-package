@@ -683,7 +683,7 @@ def run(plan, args={}):
                 index,
             )
 
-            plan.print("Successfully launchedblockscout for taiko L2")
+            plan.print("Successfully launched blockscout for taiko L2")
 
             plan.add_service(
                 name = "taiko-tx-transfer",

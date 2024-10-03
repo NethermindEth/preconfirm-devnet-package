@@ -22,7 +22,7 @@ def deploy(
             "TAIKO_TOKEN_SYMBOL": "TKO",
             "SHARED_ADDRESS_MANAGER": "0x0000000000000000000000000000000000000000",
             "L2_GENESIS_HASH": "0x7983c69e31da54b8d244d8fef4714ee7a8ed25d873ebef204a56f082a73c9f1e",
-            "PAUSE_TAIKO_L1": "true",
+            "PAUSE_TAIKO_L1": "false",
             "PAUSE_BRIDGE": "true",
             "NUM_MIN_MAJORITY_GUARDIANS": "7",
             "NUM_MIN_MINORITY_GUARDIANS": "2",
