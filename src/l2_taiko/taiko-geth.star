@@ -47,7 +47,7 @@ def launch(
             },
             cmd = [
                 "--taiko",
-                "--networkid=167",
+                "--networkid=167000",
                 "--gcmode=archive",
                 "--datadir={0}".format(data_dirpath),
                 "--bootnodes={0}".format(enode),

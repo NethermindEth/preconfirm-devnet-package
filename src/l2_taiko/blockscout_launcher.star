@@ -166,7 +166,7 @@ def get_config_backend(
             "PORT": "{}".format(HTTP_PORT_NUMBER),
             "SECRET_KEY_BASE": "56NtB48ear7+wMSf0IQuWDAAazhpb31qyc7GiyspBP2vh7t5zlCsF5QDv76chXeN",
             # Taiko
-            "CHAIN_ID": "167",
+            "CHAIN_ID": "167000",
             "SHOW_TESTNET_LABEL": "true",
             "DISABLE_EXCHANGE_RATES": "true",
             "DISABLE_KNOWN_TOKENS": "true",

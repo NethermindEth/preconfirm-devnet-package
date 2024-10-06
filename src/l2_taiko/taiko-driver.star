@@ -18,7 +18,7 @@ def launch(
             },
             env_vars = {
                 "DISABLE_P2P_SYNC": "false",
-                "CHAIN_ID": "167",
+                "CHAIN_ID": "167000",
                 "PORT_L2_EXECUTION_ENGINE_P2P": "30306",
                 "TXPOOL_LOCALS": "",
                 "TX_RESUBMISSION": "",
