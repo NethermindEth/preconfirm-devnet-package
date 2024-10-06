@@ -701,6 +701,10 @@ def run(plan, args={}):
                 description = "Transfer Taiko ETH",
                 config = ServiceConfig(
                     image = "nethswitchboard/taiko-spammer:e2e",
+                    cmd = [
+                        "sleep",
+                        "infinity",
+                    ],
                     env_vars = {
                         "PRIVATE_KEY": "370e47f3c39cf4d03cb87cb71a268776421cdc22c39aa81f1e5ba19df19202f1",
                         "RECIPIENT_ADDRESS": "0xf93Ee4Cf8c6c40b329b0c0626F28333c132CF241",
