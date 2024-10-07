@@ -696,10 +696,30 @@ def run(plan, args={}):
 
             plan.print("Successfully launched blockscout for taiko L2")
 
+            # Launch taiko L2 tx transfer for first transaction
+            plan.add_service(
+                name = "taiko-tx-transfer",
+                description = "Preparing to transfer Taiko ETH",
+                config = ServiceConfig(
+                    image = "nethswitchboard/taiko-spammer:e2e",
+                    cmd = [
+                        "sleep",
+                        "infinity",
+                    ],
+                    env_vars = {
+                        "PRIVATE_KEY": "370e47f3c39cf4d03cb87cb71a268776421cdc22c39aa81f1e5ba19df19202f1",
+                        "RECIPIENT_ADDRESS": "0xf93Ee4Cf8c6c40b329b0c0626F28333c132CF241",
+                        "TX_COUNT": "1",
+                        "TX_AMOUNT": "100",
+                        "RPC_URL": taiko_stack_1.rpc_http_url,
+                    },
+                ),
+            )
+
             # Launch taiko L2 tx spammer
             plan.add_service(
                 name = "taiko-tx-spammer",
-                description = "Launch Taiko L2 tx spammer",
+                description = "Launching Taiko L2 tx spammer",
                 config = ServiceConfig(
                     image = "nethswitchboard/taiko-spammer:e2e",
                     cmd = [
@@ -757,25 +777,21 @@ def run(plan, args={}):
 
             plan.print("Successfully launched 2 preconf avs")
 
-            plan.add_service(
-                name = "taiko-tx-transfer",
-                description = "Transfer Taiko ETH",
-                config = ServiceConfig(
-                    image = "nethswitchboard/taiko-spammer:e2e",
-                    cmd = [
+            plan.exec(
+                service_name = "taiko-tx-transfer",
+                description = "Pausing for 2 mins and transfering Taiko ETH",
+                recipe = ExecRecipe(
+                    command = [
                         "sh",
                         "-c",
-                        "sleep 120 && python tx_spammer.py --count $TX_COUNT --amount $TX_AMOUNT --rpc $RPC_URL",
+                        "sleep 120 && python tx_spammer.py --count $TX_COUNT --amount $TX_AMOUNT --rpc $RPC_URL | grep 'Transaction sent:' | awk '{print \"{\\\"transaction_hash\\\": \\\"\" $3 \"\\\"}\"}'",
                     ],
-                    env_vars = {
-                        "PRIVATE_KEY": "370e47f3c39cf4d03cb87cb71a268776421cdc22c39aa81f1e5ba19df19202f1",
-                        "RECIPIENT_ADDRESS": "0xf93Ee4Cf8c6c40b329b0c0626F28333c132CF241",
-                        "TX_COUNT": "1",
-                        "TX_AMOUNT": "100",
-                        "RPC_URL": taiko_stack_1.rpc_http_url,
+                    extract = {
+                        "tx_transfer_status": "fromjson | .transaction_hash",
                     },
                 ),
             )
+
         else:
             fail("Invalid additional service %s" % (additional_service))
     if launch_prometheus_grafana:
