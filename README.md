@@ -1,1079 +1,658 @@
-# Important recent update notes - temporary note
-The `ethereum-package` has been moved to the [ethpandaops organization](https://github.com/ethpandaops/).
+# Kurtosis Package Runbook - taiko-preconf-devnet
 
-The new repository is located at [github.com/ethpandaops/ethereum-package](https://github.com/ethpandaops/ethereum-package). For all your references please replace `kurtosis-tech` with `ethpandaops`.
+# Kurtosis Package Deployment
 
-If you would like to use the latest release of the package, released by kurtosis-tech, please refer to using the tag [v3.1.0](https://github.com/kurtosis-tech/ethereum-package/releases/tag/3.1.0).
+<aside>
+⏱️
 
-# Ethereum Package
+The deployment normally takes ~ 25 mins.
 
-![Run of the Ethereum Network Package](run.gif)
+</aside>
 
-This is a [Kurtosis][kurtosis-repo] package that will spin up a private Ethereum testnet over Docker or Kubernetes with multi-client support, Flashbot's `mev-boost` infrastructure for PBS-related testing/validation, and other useful network tools (transaction spammer, monitoring tools, etc). Kurtosis packages are entirely reproducible and composable, so this will work the same way over Docker or Kubernetes, in the cloud or locally on your machine.
+## Install Docker
 
-You now have the ability to spin up a private Ethereum testnet or public devnet/testnet (e.g. Goerli, Holesky, Sepolia, dencun-devnet-12, verkle-gen-devnet-2 etc) with a single command. This package is designed to be used for testing, validation, and development of Ethereum clients, and is not intended for production use. For more details check network_params.network in the [configuration section](./README.md#configuration).
+1. If you don't already have Docker installed, follow the instructions [here](https://docs.docker.com/get-docker/) to install the Docker application specific to your machine (e.g. Apple Intel, Apple M1, etc.).
+2. Start the Docker daemon (e.g. open Docker Desktop)
+3. Verify that Docker is running:
+    
+    `docker image ls`
+    
 
-Specifically, this [package][package-reference] will:
+## Install Kurtosis CLI
 
-1. Generate Execution Layer (EL) & Consensus Layer (CL) genesis information using [the Ethereum genesis generator](https://github.com/ethpandaops/ethereum-genesis-generator).
-2. Configure & bootstrap a network of Ethereum nodes of *n* size using the genesis data generated above
-3. Spin up a [transaction spammer](https://github.com/MariusVanDerWijden/tx-fuzz) to send fake transactions to the network
-4. Spin up and connect a [testnet verifier](https://github.com/ethereum/merge-testnet-verifier)
-5. Spin up a Grafana and Prometheus instance to observe the network
-6. Spin up a Blobscan instance to analyze blob transactions (EIP-4844)
+For Ubuntu:
 
-Optional features (enabled via flags or parameter files at runtime):
-
-* Block until the Beacon nodes finalize an epoch (i.e. finalized_epoch > 0)
-* Spin up & configure parameters for the infrastructure behind Flashbot's implementation of PBS using `mev-boost`, in either `full` or `mock` mode. More details [here](./README.md#proposer-builder-separation-pbs-implementation-via-flashbots-mev-boost-protocol).
-* Spin up & connect the network to a [beacon metrics gazer service](https://github.com/dapplion/beacon-metrics-gazer) to collect network-wide participation metrics.
-* Spin up and connect a [JSON RPC Snooper](https://github.com/ethDreamer/json_rpc_snoop) to the network log responses & requests between the EL engine API and the CL client.
-* Specify extra parameters to be passed in for any of the: CL client Beacon, and CL client validator, and/or EL client containers
-* Specify the required parameters for the nodes to reach an external block building network
-* Generate keystores for each node in parallel
-
-## Quickstart
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/new/?editor=code#https://github.com/ethpandaops/ethereum-package)
-
-1. [Install Docker & start the Docker Daemon if you haven't done so already][docker-installation]
-2. [Install the Kurtosis CLI, or upgrade it to the latest version if it's already installed][kurtosis-cli-installation]
-3. Run the package with default configurations from the command line:
-
-   ```bash
-   kurtosis run --enclave my-testnet github.com/ethpandaops/ethereum-package
-   ```
-
-#### Run with your own configuration
-
-Kurtosis packages are parameterizable, meaning you can customize your network and its behavior to suit your needs by storing parameters in a file that you can pass in at runtime like so:
-
-```bash
-kurtosis run --enclave my-testnet github.com/ethpandaops/ethereum-package --args-file network_params.yaml
+```jsx
+echo "deb [trusted=yes] https://apt.fury.io/kurtosis-tech/ /" | sudo tee /etc/apt/sources.list.d/kurtosis.list
+sudo apt update
+sudo apt install kurtosis-cli
 ```
 
-Where `network_params.yaml` contains the parameters for your network in your home directory.
+For MacOS:
 
-#### Run on Kubernetes
-
-Kurtosis packages work the same way over Docker or on Kubernetes. Please visit our [Kubernetes docs](https://docs.kurtosis.com/k8s) to learn how to spin up a private testnet on a Kubernetes cluster.
-
-#### Considerations for Running on a Public Testnet with a Cloud Provider
-When running on a public testnet using a cloud provider's Kubernetes cluster, there are a few important factors to consider:
-
-1. State Growth: The growth of the state might be faster than anticipated. This could potentially lead to issues if the default parameters become insufficient over time. It's important to monitor state growth and adjust parameters as necessary.
-
-2. Persistent Storage Speed: Most cloud providers provision their Kubernetes clusters with relatively slow persistent storage by default. This can cause performance issues, particularly with Execution Layer (EL) clients.
-
-3. Network Syncing: The disk speed provided by cloud providers may not be sufficient to sync with networks that have high demands, such as the mainnet. This could lead to syncing issues and delays.
-
-To mitigate these issues, you can use the `el_volume_size` and `cl_volume_size` flags to override the default settings locally. This allows you to allocate more storage to the EL and CL clients, which can help accommodate faster state growth and improve syncing performance. However, keep in mind that increasing the volume size may also increase your cloud provider costs. Always monitor your usage and adjust as necessary to balance performance and cost.
-
-For optimal performance, we recommend using a cloud provider that allows you to provision Kubernetes clusters with fast persistent storage or self hosting your own Kubernetes cluster with fast persistent storage.
-
-### Shadowforking
-In order to enable shadowfork capabilities, you can use the `network_params.network` flag. The expected value is the name of the network you want to shadowfork followed by `-shadowfork`. Please note that `persistent` configuration parameter has to be enabled for shadowforks to work! Current limitation on k8s is it is only working on a single node cluster. For example, to shadowfork the Holesky testnet, you can use the following command:
-```yaml
-...
-network_params:
-  network: "holesky-shadowfork"
-persistent: true
-...
+```jsx
+brew install kurtosis-tech/tap/kurtosis-cli
 ```
 
-##### Shadowforking custom verkle networks
-In order to enable shadowfork capabilities for verkle networks, you need to define electra and mention verkle in the network name after shadowfork.
-```yaml
-...
-network_params:
-  electra_fork_epoch: 1
-  network: "holesky-shadowfork-verkle"
-persistent: true
-...
+## Download preconfirm-devnet-package Repository and Start taiko-preconf-devnet Enclave
+
+```jsx
+git clone https://github.com/NethermindEth/preconfirm-devnet-package.git && \
+cd preconfirm-devnet-package && \
+kurtosis run --enclave taiko-preconf-devnet github.com/NethermindEth/preconfirm-devnet-package --args-file network_params.yaml
 ```
 
-#### Taints and tolerations
-It is possible to run the package on a Kubernetes cluster with taints and tolerations. This is done by adding the tolerations to the `tolerations` field in the `network_params.yaml` file. For example:
-```yaml
-participants:
-  - el_type: reth
-    cl_type: teku
-global_tolerations:
-  - key: "node-role.kubernetes.io/master6"
-    value: "true"
-    operator: "Equal"
-    effect: "NoSchedule"
+After this you should see:
+
+```jsx
+INFO[2024-10-07T11:27:43+11:00] ============================================================= 
+INFO[2024-10-07T11:27:43+11:00] ||          Created enclave: taiko-preconf-devnet          || 
+INFO[2024-10-07T11:27:43+11:00] ============================================================= 
+Name:            taiko-preconf-devnet
+UUID:            ed7a23413c9c
+Status:          RUNNING
+Creation Time:   Mon, 07 Oct 2024 11:06:28 AEDT
+Flags:           
+
+========================================= Files Artifacts =========================================
+UUID           Name
+9e64d7995948   1-lighthouse-nethermind-0-3-0
+80ab9b26dac9   1-lighthouse-nethermind-4-7-1
+321985647631   beacon-genesis-timestamp
+b81deffbc2f3   el_cl_genesis_data
+d57659ba7b37   final-genesis-timestamp
+2e280d88ec74   genesis-el-cl-env-file
+a65bd6b997a0   genesis_validators_root
+9459bfe5752b   jwt_file
+653ab9ceb151   keymanager_file
+9ee134fe95e9   looming-sun
+fbd109d12fdf   lush-comet
+c2f55a2247fb   prysm-password
+fbd5d3495f16   solemn-lilypad
+e9356ef33ebe   strong-dawn
+d87bc8f6e295   taiko_genesis
+d3e0e4b87542   taiko_genesis_0
+638e21eaac32   taiko_genesis_1
+013b2c65f70a   validator-ranges
+
+========================================== User Services ==========================================
+UUID           Name                                             Ports                                                  Status
+95124a80e7fa   adminer                                          adminer: 8080/tcp -> http://127.0.0.1:53739            RUNNING
+551131a7158a   blockscout                                       http: 4000/tcp -> http://127.0.0.1:35001               RUNNING
+ee9e546ab79e   blockscout-postgres                              postgresql: 5432/tcp -> postgresql://127.0.0.1:53755   RUNNING
+c53bfb9ecd62   blockscout-verif                                 http: 8050/tcp -> http://127.0.0.1:35000               RUNNING
+9b07c2faa739   cl-1-lighthouse-nethermind                       http: 4000/tcp -> http://127.0.0.1:33001               RUNNING
+                                                                metrics: 5054/tcp -> http://127.0.0.1:33002            
+                                                                tcp-discovery: 33000/tcp -> 127.0.0.1:33000            
+                                                                udp-discovery: 33000/udp -> 127.0.0.1:33000            
+2faef534eeb9   cl-2-lighthouse-geth-builder                     http: 4000/tcp -> http://127.0.0.1:33006               RUNNING
+                                                                metrics: 5054/tcp -> http://127.0.0.1:33007            
+                                                                tcp-discovery: 33005/tcp -> 127.0.0.1:33005            
+                                                                udp-discovery: 33005/udp -> 127.0.0.1:33005            
+2cf090e163b7   el-1-nethermind-lighthouse                       engine-rpc: 8551/tcp -> 127.0.0.1:32001                RUNNING
+                                                                metrics: 9001/tcp -> http://127.0.0.1:32004            
+                                                                rpc: 8545/tcp -> 127.0.0.1:32002                       
+                                                                tcp-discovery: 32000/tcp -> 127.0.0.1:32000            
+                                                                udp-discovery: 32000/udp -> 127.0.0.1:32000            
+                                                                ws: 8546/tcp -> 127.0.0.1:32003                        
+5662822b33b1   el-2-geth-builder-lighthouse                     engine-rpc: 8551/tcp -> 127.0.0.1:32006                RUNNING
+                                                                metrics: 9001/tcp -> http://127.0.0.1:32009            
+                                                                rpc: 8545/tcp -> 127.0.0.1:32007                       
+                                                                tcp-discovery: 32005/tcp -> 127.0.0.1:32005            
+                                                                udp-discovery: 32005/udp -> 127.0.0.1:32005            
+                                                                ws: 8546/tcp -> 127.0.0.1:32008                        
+ff67dd5d3b3e   mev-boost-1-lighthouse-nethermind                api: 18550/tcp -> 127.0.0.1:53752                      RUNNING
+4a7dfe3a92b6   mev-flood                                        <none>                                                 RUNNING
+0db85d203dfc   mev-relay-api                                    api: 9062/tcp -> 127.0.0.1:53742                       RUNNING
+0a6e00ac0fd7   mev-relay-housekeeper                            <none>                                                 RUNNING
+78e8d0520e2a   mev-relay-postgres                               postgresql: 5432/tcp -> postgresql://127.0.0.1:53736   RUNNING
+c6ab8aa53c66   mev-relay-redis                                  redis: 6379/tcp -> redis://127.0.0.1:53729             RUNNING
+9453b64f58a9   mev-relay-website                                api: 9060/tcp -> http://127.0.0.1:53749                RUNNING
+4a90b7c3db57   preconf-taiko-driver-0                           driver-port: 1235/tcp -> 127.0.0.1:53950               RUNNING
+9e56fdda201b   preconf-taiko-driver-1                           driver-port: 1235/tcp -> 127.0.0.1:53976               RUNNING
+ada2183528a6   preconf-taiko-geth-0                             authrpc: 8551/tcp -> 127.0.0.1:53930                   RUNNING
+                                                                discovery: 30306/tcp -> 127.0.0.1:53931                
+                                                                discovery-udp: 30306/udp -> 127.0.0.1:51121            
+                                                                http: 8545/tcp -> 127.0.0.1:53933                      
+                                                                metrics: 6060/tcp -> 127.0.0.1:53932                   
+                                                                ws: 8546/tcp -> 127.0.0.1:53929                        
+d151d6e3dbe0   preconf-taiko-geth-1                             authrpc: 8551/tcp -> 127.0.0.1:53956                   RUNNING
+                                                                discovery: 30306/tcp -> 127.0.0.1:53957                
+                                                                discovery-udp: 30306/udp -> 127.0.0.1:63046            
+                                                                http: 8545/tcp -> 127.0.0.1:53959                      
+                                                                metrics: 6060/tcp -> 127.0.0.1:53958                   
+                                                                ws: 8546/tcp -> 127.0.0.1:53960                        
+a41b170411ab   preconf-taiko-proposer-0                         proposer-port: 1234/tcp -> 127.0.0.1:53953             RUNNING
+323fb8836b9f   preconf-taiko-proposer-1                         proposer-port: 1234/tcp -> 127.0.0.1:53979             RUNNING
+4884b6c6ce1d   taiko-blockscout                                 http: 4000/tcp -> http://127.0.0.1:35003               RUNNING
+f835780d7888   taiko-blockscout-postgres                        postgresql: 5432/tcp -> postgresql://127.0.0.1:53982   RUNNING
+3ca370294d73   taiko-blockscout-verif                           http: 8050/tcp -> http://127.0.0.1:35002               RUNNING
+86f8fa8b30a0   taiko-preconf-avs-1                              <none>                                                 RUNNING
+0f3d951bccad   taiko-preconf-avs-1-register                     <none>                                                 RUNNING
+e56faf4970c0   taiko-preconf-avs-1-validator                    <none>                                                 RUNNING
+1c7b7ca85139   taiko-preconf-avs-2                              <none>                                                 RUNNING
+f76c51e7f83b   taiko-preconf-avs-2-register                     <none>                                                 RUNNING
+d625187a72cb   taiko-preconf-avs-2-validator                    <none>                                                 RUNNING
+04ff23674248   taiko-preconf-bootnode                           <none>                                                 RUNNING
+f43664496648   taiko-transfer                                   <none>                                                 STOPPED
+bb8ccf871c9e   taiko-tx-spammer                                 <none>                                                 RUNNING
+db77ded36780   taiko-tx-transfer                                <none>                                                 RUNNING
+c52b59d350ce   validator-key-generation-cl-validator-keystore   <none>                                                 RUNNING
+32cf448f0d06   vc-1-nethermind-lighthouse-1                     metrics: 8080/tcp -> http://127.0.0.1:34000            RUNNING
+61befb1e1fca   vc-1-nethermind-lighthouse-2                     metrics: 8080/tcp -> http://127.0.0.1:34003            RUNNING
 ```
 
-It is possible to define toleration globally, per participant or per container. The order of precedence is as follows:
-1. Container (`el_tolerations`, `cl_tolerations`, `vc_tolerations`)
-2. Participant (`tolerations`)
-3. Global (`global_tolerations`)
+## Start/Restart taiko-preconf-devnet Enclave
 
-This feature is only available for Kubernetes. To learn more about taints and tolerations, please visit the [Kubernetes documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/).
+**If you encounter an error during starting process, please retry once. If the error persists, please contact @Justin Chan.**
 
-#### Tear down
-
-The testnet will reside in an [enclave][enclave] - an isolated, ephemeral environment. The enclave and its contents (e.g. running containers, files artifacts, etc) will persist until torn down. You can remove an enclave and its contents with:
-
-```bash
-kurtosis enclave rm -f my-testnet
+```jsx
+kurtosis run --enclave taiko-preconf-devnet github.com/NethermindEth/preconfirm-devnet-package --args-file network_params.yaml
 ```
 
-## Management
+## Inspect taiko-preconf-devnet Enclave
 
-The [Kurtosis CLI](https://docs.kurtosis.com/cli) can be used to inspect and interact with the network.
-
-For example, if you need shell access, simply run:
-
-```bash
-kurtosis service shell my-testnet $SERVICE_NAME
+```jsx
+kurtosis enclave inspect taiko-preconf-devnet
 ```
 
-And if you need the logs for a service, simply run:
+## Inspect a certain service inside taiko-preconf-devnet Enclave
 
-```bash
-kurtosis service logs my-testnet $SERVICE_NAME
+***taiko-preconf-avs-1 as an example***
+
+```jsx
+kurtosis service inspect taiko-preconf-devnet taiko-preconf-avs-1
 ```
 
-Check out the full list of CLI commands [here](https://docs.kurtosis.com/cli)
+## Check logs of service inside taiko-preconf-devnet Enclave
 
-## Debugging
+***taiko-preconf-avs-1 as an example, you can add more services name to view them all***
 
-To grab the genesis files for the network, simply run:
-
-```bash
-kurtosis files download my-testnet $FILE_NAME $OUTPUT_DIRECTORY
+```jsx
+kurtosis service logs taiko-preconf-devnet taiko-preconf-avs-1
 ```
 
-For example, to retrieve the Execution Layer (EL) genesis data, run:
+## Stop a certain service inside taiko-preconf-devnet Enclave
 
-```bash
-kurtosis files download my-testnet el-genesis-data ~/Downloads
+```jsx
+kurtosis service stop taiko-preconf-devnet taiko-preconf-avs-1
 ```
 
-# Basic file sharing
+## Start a certain service inside taiko-preconf-devnet Enclave
 
-Apache is included in the package to allow for basic file sharing. The Apache service is started when additional services are enabled. It will expose the network-configs directory, which might needed if you want to share the network config publicly.
-
-```yaml
-additional_services:
-  - apache
+```jsx
+kurtosis service start taiko-preconf-devnet taiko-preconf-avs-1
 ```
 
-## Configuration
+## Remove taiko-preconf-devnet Enclave
 
-To configure the package behaviour, you can modify your `network_params.yaml` file. The full YAML schema that can be passed in is as follows with the defaults provided:
+**Please make sure this is done every time you want to restart the setup.**
 
-```yaml
-# Specification of the participants in the network
-participants:
-  # EL(Execution Layer) Specific flags
-    # The type of EL client that should be started
-    # Valid values are geth, nethermind, erigon, besu, ethereumjs, reth, nimbus-eth1
-  - el_type: geth
-
-    # The Docker image that should be used for the EL client; leave blank to use the default for the client type
-    # Defaults by client:
-    # - geth: ethereum/client-go:latest
-    # - erigon: thorax/erigon:devel
-    # - nethermind: nethermind/nethermind:latest
-    # - besu: hyperledger/besu:develop
-    # - reth: ghcr.io/paradigmxyz/reth
-    # - ethereumjs: ethpandaops/ethereumjs:master
-    # - nimbus-eth1: ethpandaops/nimbus-eth1:master
-    el_image: ""
-
-    # The log level string that this participant's EL client should log at
-    # If this is emptystring then the global `logLevel` parameter's value will be translated into a string appropriate for the client (e.g. if
-    # global `logLevel` = `info` then Geth would receive `3`, Besu would receive `INFO`, etc.)
-    # If this is not emptystring, then this value will override the global `logLevel` setting to allow for fine-grained control
-    # over a specific participant's logging
-    el_log_level: ""
-
-    # A list of optional extra env_vars the el container should spin up with
-    el_extra_env_vars: {}
-
-    # A list of optional extra labels the el container should spin up with
-    # Example; el_extra_labels: {"ethereum-package.partition": "1"}
-    el_extra_labels: {}
-
-    # A list of optional extra params that will be passed to the EL client container for modifying its behaviour
-    el_extra_params: []
-
-    # A list of tolerations that will be passed to the EL client container
-    # Only works with Kubernetes
-    # Example: el_tolerations:
-    # - key: "key"
-    #   operator: "Equal"
-    #   value: "value"
-    #   effect: "NoSchedule"
-    #   toleration_seconds: 3600
-    # Defaults to empty
-    el_tolerations: []
-
-    # Persistent storage size for the EL client container (in MB)
-    # Defaults to 0, which means that the default size for the client will be used
-    # Default values can be found in /src/package_io/constants.star VOLUME_SIZE
-    el_volume_size: 0
-
-    # Resource management for el containers
-    # CPU is milicores
-    # RAM is in MB
-    # Defaults are set per client
-    el_min_cpu: 0
-    el_max_cpu: 0
-    el_min_mem: 0
-    el_max_mem: 0
-
-  # CL(Consensus Layer) Specific flags
-    # The type of CL client that should be started
-    # Valid values are nimbus, lighthouse, lodestar, teku, prysm, and grandine
-    cl_type: lighthouse
-
-    # The Docker image that should be used for the CL client; leave blank to use the default for the client type
-    # Defaults by client:
-    # - lighthouse: sigp/lighthouse:latest
-    # - teku: consensys/teku:latest
-    # - nimbus: statusim/nimbus-eth2:multiarch-latest
-    # - prysm: gcr.io/prysmaticlabs/prysm/beacon-chain:latest
-    # - lodestar: chainsafe/lodestar:next
-    # - grandine: sifrai/grandine:stable
-    cl_image: ""
-
-    # The log level string that this participant's CL client should log at
-    # If this is emptystring then the global `logLevel` parameter's value will be translated into a string appropriate for the client (e.g. if
-    # global `logLevel` = `info` then Teku would receive `INFO`, Prysm would receive `info`, etc.)
-    # If this is not emptystring, then this value will override the global `logLevel` setting to allow for fine-grained control
-    # over a specific participant's logging
-    cl_log_level: ""
-
-    # A list of optional extra env_vars the cl container should spin up with
-    cl_extra_env_vars: {}
-
-    # A list of optional extra labels that will be passed to the CL client Beacon container.
-    # Example; cl_extra_labels: {"ethereum-package.partition": "1"}
-    cl_extra_labels: {}
-
-    # A list of optional extra params that will be passed to the CL client Beacon container for modifying its behaviour
-    # If the client combines the Beacon & validator nodes (e.g. Teku, Nimbus), then this list will be passed to the combined Beacon-validator node
-    cl_extra_params: []
-
-    # A list of tolerations that will be passed to the CL client container
-    # Only works with Kubernetes
-    # Example: el_tolerations:
-    # - key: "key"
-    #   operator: "Equal"
-    #   value: "value"
-    #   effect: "NoSchedule"
-    #   toleration_seconds: 3600
-    # Defaults to empty
-    cl_tolerations: []
-
-    # Persistent storage size for the CL client container (in MB)
-    # Defaults to 0, which means that the default size for the client will be used
-    # Default values can be found in /src/package_io/constants.star VOLUME_SIZE
-    cl_volume_size: 0
-
-    # Resource management for cl containers
-    # CPU is milicores
-    # RAM is in MB
-    # Defaults are set per client
-    cl_min_cpu: 0
-    cl_max_cpu: 0
-    cl_min_mem: 0
-    cl_max_mem: 0
-
-    # Whether to use a separate validator client attached to the CL client.
-    # Defaults to false for clients that can run both in one process (Teku, Nimbus)
-    use_separate_vc: true
-
-  # VC (Validator Client) Specific flags
-    # The type of validator client that should be used
-    # Valid values are nimbus, lighthouse, lodestar, teku, and prysm
-    # ( The prysm validator only works with a prysm CL client )
-    # Defaults to matching the chosen CL client (cl_type)
-    vc_type: ""
-
-    # The Docker image that should be used for the separate validator client
-    # Defaults by client:
-    # - lighthouse: sigp/lighthouse:latest
-    # - lodestar: chainsafe/lodestar:latest
-    # - nimbus: statusim/nimbus-validator-client:multiarch-latest
-    # - prysm: gcr.io/prysmaticlabs/prysm/validator:latest
-    # - teku: consensys/teku:latest
-    vc_image: ""
-
-    # The number of validator clients to run for this participant
-    # Defaults to 1
-    vc_count: 1
-
-    # The log level string that this participant's CL client should log at
-    # If this is emptystring then the global `logLevel` parameter's value will be translated into a string appropriate for the client (e.g. if
-    # global `logLevel` = `info` then Teku would receive `INFO`, Prysm would receive `info`, etc.)
-    # If this is not emptystring, then this value will override the global `logLevel` setting to allow for fine-grained control
-    # over a specific participant's logging
-    vc_log_level: ""
-
-    # A list of optional extra env_vars the vc container should spin up with
-    vc_extra_env_vars: {}
-
-    # A list of optional extra labels that will be passed to the CL client validator container.
-    # Example; vc_extra_labels: {"ethereum-package.partition": "1"}
-    vc_extra_labels: {}
-
-    # A list of optional extra params that will be passed to the CL client validator container for modifying its behaviour
-    # If the client combines the Beacon & validator nodes (e.g. Teku, Nimbus), then this list will also be passed to the combined Beacon-validator node
-    vc_extra_params: []
-
-    # A list of tolerations that will be passed to the validator container
-    # Only works with Kubernetes
-    # Example: el_tolerations:
-    # - key: "key"
-    #   operator: "Equal"
-    #   value: "value"
-    #   effect: "NoSchedule"
-    #   toleration_seconds: 3600
-    # Defaults to empty
-    vc_tolerations: []
-
-    # Resource management for vc containers
-    # CPU is milicores
-    # RAM is in MB
-    # Defaults are set per client
-    vc_min_cpu: 0
-    vc_max_cpu: 0
-    vc_min_mem: 0
-    vc_max_mem: 0
-
-    # Count of the number of validators you want to run for a given participant
-    # Default to null, which means that the number of validators will be using the
-    # network parameter num_validator_keys_per_node
-    validator_count: null
-
-  # Participant specific flags
-    # Node selector
-    # Only works with Kubernetes
-    # Example: node_selectors: { "disktype": "ssd" }
-    # Defaults to empty
-    node_selectors: {}
-
-    # A list of tolerations that will be passed to the EL/CL/validator containers
-    # This is to be used when you don't want to specify the tolerations for each container separately
-    # Only works with Kubernetes
-    # Example: tolerations:
-    # - key: "key"
-    #   operator: "Equal"
-    #   value: "value"
-    #   effect: "NoSchedule"
-    #   toleration_seconds: 3600
-    # Defaults to empty
-    tolerations: []
-
-    # Count of nodes to spin up for this participant
-    # Default to 1
-    count: 1
-
-    # Snooper can be enabled with the `snooper_enabled` flag per client or globally
-    # Defaults null and then set to global snooper default (false)
-    snooper_enabled: null
-
-    # Enables Ethereum Metrics Exporter for this participant. Can be set globally.
-    # Defaults null and then set to global ethereum_metrics_exporter_enabled (false)
-    ethereum_metrics_exporter_enabled: null
-
-    # Enables Xatu Sentry for this participant. Can be set globally.
-    # Defaults null and then set to global xatu_sentry_enabled (false)
-    xatu_sentry_enabled: null
-
-    # Prometheus additional configuration for a given participant prometheus target.
-    # Execution, beacon and validator client targets on prometheus will include this
-    # configuration.
-    prometheus_config:
-      # Scrape interval to be used. Default to 15 seconds
-      scrape_interval: 15s
-      # Additional labels to be added. Default to empty
-      labels: {}
-
-    # Blobber can be enabled with the `blobber_enabled` flag per client or globally
-    # Defaults to false
-    blobber_enabled: false
-
-    # Blobber extra params can be passed in to the blobber container
-    # Defaults to empty
-    blobber_extra_params: []
-
-    # A set of parameters the node needs to reach an external block building network
-    # If `null` then the builder infrastructure will not be instantiated
-    # Example:
-    #
-    # "relay_endpoints": [
-    #  "https://0xdeadbeefcafa@relay.example.com",
-    #  "https://0xdeadbeefcafb@relay.example.com",
-    #  "https://0xdeadbeefcafc@relay.example.com",
-    #  "https://0xdeadbeefcafd@relay.example.com"
-    # ]
-    builder_network_params: null
-
-    # Participant flag for keymanager api
-    # This will open up http ports to your validator services!
-    # Defaults null and then set to default global keymanager_enabled (false)
-    keymanager_enabled: null
-
-# Participants matrix creates a participant for each combination of EL, CL and VC clients
-# Each EL/CL/VC item can provide the same parameters as a standard participant
-participants_matrix: {}
-  # el:
-  #   - el_type: geth
-  #   - el_type: besu
-  # cl:
-  #   - cl_type: prysm
-  #   - cl_type: lighthouse
-  # vc:
-  #   - vc_type: prysm
-  #   - vc_type: lighthouse
-
-
-# Default configuration parameters for the network
-network_params:
-  # Network name, used to enable syncing of alternative networks
-  # Defaults to "kurtosis"
-  # You can sync any public network by setting this to the network name (e.g. "mainnet", "sepolia", "holesky")
-  # You can sync any devnet by setting this to the network name (e.g. "dencun-devnet-12", "verkle-gen-devnet-2")
-  network: "kurtosis"
-
-  # The network ID of the network.
-  network_id: "3151908"
-
-  # The address of the staking contract address on the Eth1 chain
-  deposit_contract_address: "0x4242424242424242424242424242424242424242"
-
-  # Number of seconds per slot on the Beacon chain
-  seconds_per_slot: 12
-
-  # The number of validator keys that each CL validator node should get
-  num_validator_keys_per_node: 64
-
-  # This mnemonic will a) be used to create keystores for all the types of validators that we have and b) be used to generate a CL genesis.ssz that has the children
-  # validator keys already preregistered as validators
-  preregistered_validator_keys_mnemonic: "giant issue aisle success illegal bike spike question tent bar rely arctic volcano long crawl hungry vocal artwork sniff fantasy very lucky have athlete"
-
-  # The number of pre-registered validators for genesis. If 0 or not specified then the value will be calculated from the participants
-  preregistered_validator_count: 0
-
-  # How long you want the network to wait before starting up
-  genesis_delay: 20
-
-  # The gas limit of the network set at genesis
-  genesis_gaslimit: 30000000
-
-  # Max churn rate for the network introduced by
-  # EIP-7514 https://eips.ethereum.org/EIPS/eip-7514
-  # Defaults to 8
-  max_per_epoch_activation_churn_limit: 8
-
-  # Churn limit quotient for the network
-  # Defaults to 65536
-  churn_limit_quotient: 65536
-
-  # Ejection balance
-  # Defaults to 16ETH
-  # 16000000000 gwei
-  ejection_balance: 16000000000
-
-  # ETH1 follow distance
-  # Defaults to 2048
-  eth1_follow_distance: 2048
-
-  # The number of epochs to wait validators to be able to withdraw
-  # Defaults to 256 epochs ~27 hours
-  min_validator_withdrawability_delay: 256
-
-  # The period of the shard committee
-  # Defaults to 256 epoch ~27 hours
-  shard_committee_period: 256
-
-  # The epoch at which the deneb/electra/eip7594(peerdas) forks are set to occur. Note: PeerDAS and Electra clients are currently
-  # working on forks. So set either one of the below forks.
-  deneb_fork_epoch: 0
-  electra_fork_epoch: 100000000
-  eip7594_fork_epoch: 100000001
-
-  # The fork version to set if the eip7594 fork is active
-  eip7594_fork_version: "0x60000038"
-
-  # EOF activation fork epoch (EL only fork)
-  # Defaults to None
-  eof_activation_epoch: ""
-
-  # Network sync base url for syncing public networks from a custom snapshot (mostly useful for shadowforks)
-  # Defaults to "https://snapshots.ethpandaops.io/"
-  # If you have a local snapshot, you can set this to the local url:
-  # network_snapshot_url_base = "http://10.10.101.21:10000/snapshots/"
-  # The snapshots are taken with https://github.com/ethpandaops/snapshotter
-  network_sync_base_url: https://snapshots.ethpandaops.io/
-
-  # The number of data column sidecar subnets used in the gossipsub protocol
-  data_column_sidecar_subnet_count: 128
-  # Number of DataColumn random samples a node queries per slot
-  samples_per_slot: 8
-  # Minimum number of subnets an honest node custodies and serves samples from
-  custody_requirement: 4
-  # Maximum number of blobs per block
-  max_blobs_per_block: 6
-
-  # Preset for the network
-  # Default: "mainnet"
-  # Options: "mainnet", "minimal"
-  # "minimal" preset will spin up a network with minimal preset. This is useful for rapid testing and development.
-  # 192 seconds to get to finalized epoch vs 1536 seconds with mainnet defaults
-  # Please note that minimal preset requires alternative client images.
-  # For an example of minimal preset, please refer to [minimal.yaml](.github/tests/minimal.yaml)
-  preset: "mainnet"
-
-  # Preloaded contracts for the chain
-  additional_preloaded_contracts: {}
-  # Example:
-  # additional_preloaded_contracts: '{
-  #  "0x123463a4B065722E99115D6c222f267d9cABb524":
-  #   {
-  #     balance: "1ETH",
-  #     code: "0x1234",
-  #     storage: {},
-  #     nonce: 0,
-  #     secretKey: "0x",
-  #   }
-  # }'
-
-  # Repository override for devnet networks
-  # Default: ethpandaops
-  devnet_repo: ethpandaops
-
-  # A number of prefunded accounts to be created
-  # Defaults to no prefunded accounts
-  # Example:
-  # prefunded_accounts: '{"0x25941dC771bB64514Fc8abBce970307Fb9d477e9": {"balance": "10ETH"}}'
-  # 10ETH to the account 0x25941dC771bB64514Fc8abBce970307Fb9d477e9
-  # To prefund multiple accounts, separate them with a comma
-  #
-  # prefunded_accounts: '{"0x25941dC771bB64514Fc8abBce970307Fb9d477e9": {"balance": "10ETH"}, "0x4107be99052d895e3ee461C685b042Aa975ab5c0": {"balance": "1ETH"}}'
-  prefunded_accounts: {}
-
-# Global parameters for the network
-
-# By default includes
-# - A transaction spammer & blob spammer is launched to fake transactions sent to the network
-# - Forkmon for EL will be launched
-# - A prometheus will be started, coupled with grafana
-# - A beacon metrics gazer will be launched
-# - A light beacon chain explorer will be launched
-# - Default: []
-additional_services:
-  - assertoor
-  - broadcaster
-  - tx_spammer
-  - blob_spammer
-  - custom_flood
-  - goomy_blob
-  - el_forkmon
-  - blockscout
-  - beacon_metrics_gazer
-  - dora
-  - full_beaconchain_explorer
-  - prometheus_grafana
-  - blobscan
-  - dugtrio
-  - blutgang
-  - forky
-  - apache
-  - tracoor
-
-# Configuration place for dora the explorer - https://github.com/ethpandaops/dora
-dora_params:
-  # Dora docker image to use
-  # Leave blank to use the default image according to your network params
-  image: ""
-
-  # A list of optional extra env_vars the dora container should spin up with
-  env: {}
-
-# Configuration place for transaction spammer - https://github.com/MariusVanDerWijden/tx-fuzz
-tx_spammer_params:
-  # A list of optional extra params that will be passed to the TX Spammer container for modifying its behaviour
-  tx_spammer_extra_args: []
-
-# Configuration place for goomy the blob spammer - https://github.com/ethpandaops/goomy-blob
-goomy_blob_params:
-  # A list of optional params that will be passed to the blob-spammer comamnd for modifying its behaviour
-  goomy_blob_args: []
-
-# Configuration place for the assertoor testing tool - https://github.com/ethpandaops/assertoor
-assertoor_params:
-  # Assertoor docker image to use
-  # Leave blank to use the default image according to your network params
-  image: ""
-
-  # Check chain stability
-  # This check monitors the chain and succeeds if:
-  # - all clients are synced
-  # - chain is finalizing for min. 2 epochs
-  # - >= 98% correct target votes
-  # - >= 80% correct head votes
-  # - no reorgs with distance > 2 blocks
-  # - no more than 2 reorgs per epoch
-  run_stability_check: false
-
-  # Check block propöosals
-  # This check monitors the chain and succeeds if:
-  # - all client pairs have proposed a block
-  run_block_proposal_check: false
-
-  # Run normal transaction test
-  # This test generates random EOA transactions and checks inclusion with/from all client pairs
-  # This test checks for:
-  # - block proposals with transactions from all client pairs
-  # - transaction inclusion when submitting via each client pair
-  # test is done twice, first with legacy (type 0) transactions, then with dynfee (type 2) transactions
-  run_transaction_test: false
-
-  # Run blob transaction test
-  # This test generates blob transactions and checks inclusion with/from all client pairs
-  # This test checks for:
-  # - block proposals with blobs from all client pairs
-  # - blob inclusion when submitting via each client pair
-  run_blob_transaction_test: false
-
-  # Run all-opcodes transaction test
-  # This test generates a transaction that triggers all EVM OPCODES once
-  # This test checks for:
-  # - all-opcodes transaction success
-  run_opcodes_transaction_test: false
-
-  # Run validator lifecycle test (~48h to complete)
-  # This test requires exactly 500 active validator keys.
-  # The test will cause a temporary chain unfinality when running.
-  # This test checks:
-  # - Deposit inclusion with/from all client pairs
-  # - BLS Change inclusion with/from all client pairs
-  # - Voluntary Exit inclusion with/from all client pairs
-  # - Attester Slashing inclusion with/from all client pairs
-  # - Proposer Slashing inclusion with/from all client pairs
-  # all checks are done during finality & unfinality
-  run_lifecycle_test: false
-
-  # Run additional tests from external test definitions
-  # Entries may be simple strings (link to the test file) or dictionaries with more flexibility
-  # eg:
-  #   - https://raw.githubusercontent.com/ethpandaops/assertoor/master/example/tests/block-proposal-check.yaml
-  #   - file: "https://raw.githubusercontent.com/ethpandaops/assertoor/master/example/tests/block-proposal-check.yaml"
-  #     config:
-  #       someCustomTestConfig: "some value"
-  tests: []
-
-
-# If set, the package will block until a finalized epoch has occurred.
-wait_for_finalization: false
-
-# The global log level that all clients should log at
-# Valid values are "error", "warn", "info", "debug", and "trace"
-# This value will be overridden by participant-specific values
-global_log_level: "info"
-
-# EngineAPI Snooper global flags for all participants
-# Default to false
-snooper_enabled: false
-
-# Enables Ethereum Metrics Exporter for all participants
-# Defaults to false
-ethereum_metrics_exporter_enabled: false
-
-# Parallelizes keystore generation so that each node has keystores being generated in their own container
-# This will result in a large number of containers being spun up than normal. We advise users to only enable this on a sufficiently large machine or in the cloud as it can be resource consuming on a single machine.
-parallel_keystore_generation: false
-
-# Disable peer scoring to prevent nodes impacted by faults from being permanently ejected from the network
-# Default to false
-disable_peer_scoring: false
-
-# A list of locators for grafana dashboards to be loaded be the grafana service
-grafana_additional_dashboards: []
-
-# Whether the environment should be persistent; this is WIP and is slowly being rolled out accross services
-# Note this requires Kurtosis greater than 0.85.49 to work
-# Note Erigon, Besu, Teku persistence is not currently supported with docker.
-# Defaults to false
-persistent: false
-
-# Supports three valeus
-# Default: "null" - no mev boost, mev builder, mev flood or relays are spun up
-# "mock" - mock-builder & mev-boost are spun up
-# "flashbots" - mev-boost, relays, flooder and builder are all spun up, powered by [flashbots](https://github.com/flashbots)
-# "mev-rs" - mev-boost, relays and builder are all spun up, powered by [mev-rs](https://github.com/ralexstokes/mev-rs/)
-# We have seen instances of multibuilder instances failing to start mev-relay-api with non zero epochs
-mev_type: null
-
-# Parameters if MEV is used
-mev_params:
-  # The image to use for MEV boost relay
-  mev_relay_image: flashbots/mev-boost-relay
-  # The image to use for the builder
-  mev_builder_image: ethpandaops/flashbots-builder:main
-  # The image to use for the CL builder
-  mev_builder_cl_image: sigp/lighthouse:latest
-  # The image to use for mev-boost
-  mev_boost_image: flashbots/mev-boost
-  # Parameters for MEV Boost. This overrides all arguments of the mev-boost container
-  mev_boost_args: []
-  # Extra parameters to send to the API
-  mev_relay_api_extra_args: []
-  # Extra parameters to send to the housekeeper
-  mev_relay_housekeeper_extra_args: []
-  # Extra parameters to send to the website
-  mev_relay_website_extra_args: []
-  # Extra parameters to send to the builder
-  mev_builder_extra_args: []
-  # Prometheus additional configuration for the mev builder participant.
-  # Execution, beacon and validator client targets on prometheus will include this configuration.
-  mev_builder_prometheus_config:
-    # Scrape interval to be used. Default to 15 seconds
-    scrape_interval: 15s
-    # Additional labels to be added. Default to empty
-    labels: {}
-  # Image to use for mev-flood
-  mev_flood_image: flashbots/mev-flood
-  # Extra parameters to send to mev-flood
-  mev_flood_extra_args: []
-  # Number of seconds between bundles for mev-flood
-  mev_flood_seconds_per_bundle: 15
-  # Optional parameters to send to the custom_flood script that sends reliable payloads
-  custom_flood_params:
-    interval_between_transactions: 1
-
-# Enables Xatu Sentry for all participants
-# Defaults to false
-xatu_sentry_enabled: false
-
-# Xatu Sentry params
-xatu_sentry_params:
-  # The image to use for Xatu Sentry
-  xatu_sentry_image: ethpandaops/xatu:latest
-  # GRPC Endpoint of Xatu Server to send events to
-  xatu_server_addr: localhost:8080
-  # Enables TLS to Xatu Server
-  xatu_server_tls: false
-  # Headers to add on to Xatu Server requests
-  xatu_server_headers: {}
-  # Beacon event stream topics to subscribe to
-  beacon_subscriptions:
-    - attestation
-    - block
-    - chain_reorg
-    - finalized_checkpoint
-    - head
-    - voluntary_exit
-    - contribution_and_proof
-    - blob_sidecar
-
-# Apache params
-# Apache public port to port forward to local machine
-# Default to port None, only set if apache additional service is activated
-apache_port: null
-
-# Global tolerations that will be passed to all containers (unless overridden by a more specific toleration)
-# Only works with Kubernetes
-# Example: tolerations:
-# - key: "key"
-#   operator: "Equal"
-#   value: "value"
-#   effect: "NoSchedule"
-#   toleration_seconds: 3600
-# Defaults to empty
-global_tolerations: []
-
-# Global node selector that will be passed to all containers (unless overridden by a more specific node selector)
-# Only works with Kubernetes
-# Example: global_node_selectors: { "disktype": "ssd" }
-# Defaults to empty
-global_node_selectors: {}
-
-# Global parameters for keymanager api
-# This will open up http ports to your validator services!
-# Defaults to false
-keymanager_enabled: false
-
-# Global flag to enable checkpoint sync across the network
-checkpoint_sync_enabled: false
-
-# Global flag to set checkpoint sync url
-checkpoint_sync_url: ""
-
-# Global paarameter to set the exit ip address of services and public ports
-port_publisher:
-  # if you have a service that you want to expose on a specific interfact; set that IP here
-  # if you set it to auto it gets the public ip from ident.me and sets it
-  # Defaults to constants.PRIVATE_IP_ADDRESS_PLACEHOLDER
-  # The default value just means its the IP address of the container in which the service is running
-  nat_exit_ip: KURTOSIS_IP_ADDR_PLACEHOLDER
-  # Execution Layer public port exposed to your local machine
-  # Disabled by default
-  # Public port start defaults to 32000
-  # You can't run multiple enclaves on the same port settings
-  el:
-    enabled: false
-    public_port_start: 32000
-  # Consensus Layer public port exposed to your local machine
-  # Disabled by default
-  # Public port start defaults to 33000
-  # You can't run multiple enclaves on the same port settings
-  cl:
-    enabled: false
-    public_port_start: 33000
-  # Validator client public port exposed to your local machine
-  # Disabled by default
-  # Public port start defaults to 34000
-  # You can't run multiple enclaves on the same port settings
-  vc:
-    enabled: false
-    public_port_start: 34000
-  # Additional services public port exposed to your local machine
-  # Disabled by default
-  # Public port start defaults to 35000
-  # You can't run multiple enclaves on the same port settings
-  additional_services:
-    enabled: false
-    public_port_start: 35000
+```jsx
+kurtosis enclave rm taiko-preconf-devnet --force
+kurtosis clean -a
 ```
 
-#### Example configurations
+## Pull latest images for taiko-preconf-devnet Enclave
 
-<details>
-    <summary>Verkle configuration example</summary>
+**Since kurtosis package doesn’t pull the latest images by default, if changes were made to images, we need to do it manually:**
 
-```yaml
-participants:
-  - el_type: geth
-    el_image: ethpandaops/geth:<VERKLE_IMAGE>
-    elExtraParams:
-    - "--override.verkle=<UNIXTIMESTAMP>"
-    cl_type: lighthouse
-    cl_image: sigp/lighthouse:latest
-  - el_type: geth
-    el_image: ethpandaops/geth:<VERKLE_IMAGE>
-    elExtraParams:
-    - "--override.verkle=<UNIXTIMESTAMP>"
-    cl_type: lighthouse
-    cl_image: sigp/lighthouse:latest
-  - el_type: geth
-    el_image: ethpandaops/geth:<VERKLE_IMAGE>
-    elExtraParams:
-    - "--override.verkle=<UNIXTIMESTAMP>"
-    cl_type: lighthouse
-    cl_image: sigp/lighthouse:latest
-network_params:
-  deneb_fork_epoch: 0
-wait_for_finalization: false
-wait_for_verifications: false
-global_log_level: info
+```jsx
+docker pull nethswitchboard/avs-node:e2e
+docker pull nethswitchboard/avs-deploy:e2e
+docker pull nethswitchboard/taiko-spammer:e2e
+docker pull nethswitchboard/taiko-client:e2e
+docker pull nethswitchboard/taiko-transfer:e2e
+docker pull nethswitchboard/taiko-deploy:e2e
+docker pull nethswitchboard/taiko-geth:e2e
+docker pull nethswitchboard/ethereum-genesis-generator:e2e
+docker pull nethswitchboard/bootnodep2p:e2e
+```
+
+1. L1 Genesis Generator
+    1. `docker pull nethswitchboard/ethereum-genesis-generator:e2e`
+2. L2 Taiko
+    1. `docker pull nethswitchboard/taiko-geth:e2e`
+    2. `docker pull nethswitchboard/taiko-client:e2e`
+3. Taiko Contract Deployment
+    1. `docker pull nethswitchboard/taiko-deploy:e2e` 
+4. AVS Contract Deployment
+    1. `docker pull nethswitchboard/avs-deploy:e2e` 
+5. AVS Node
+    1. `docker pull nethswitchboard/avs-node:e2e` 
+6. P2P Bootnode
+    1. `docker pull nethswitchboard/bootnodep2p:e2e`
+
+## Transaction Spammer
+
+**Adjust `$TX_COUNT`  or `$TX_AMOUNT`  to your desired value.**
+
+```jsx
+kurtosis service shell taiko-preconf-devnet taiko-tx-spammer
+
+python tx_spammer.py --count $TX_COUNT --amount $TX_AMOUNT --rpc $RPC_URL
+```
+
+## Transaction Transfer
+
+**To fund spammer.**
+
+```jsx
+kurtosis service start taiko-preconf-devnet taiko-tx-transfer
+```
+
+**or (adjust `$TX_COUNT`  or `$TX_AMOUNT`  to your desired value)**
+
+```jsx
+kurtosis service shell taiko-preconf-devnet taiko-tx-transfer
+
+python tx_spammer.py --count $TX_COUNT --amount $TX_AMOUNT --rpc $RPC_URL
+```
+
+# Network Info
+
+## Validators
+
+```jsx
+vc-1-nethermind-lighthouse-1:
+
+"0xaaf6c1251e73fb600624937760fef218aace5b253bf068ed45398aeb29d821e4d2899343ddcbbe37cb3f6cf500dff26c": {"public_key": "0xaaf6c1251e73fb600624937760fef218aace5b253bf068ed45398aeb29d821e4d2899343ddcbbe37cb3f6cf500dff26c", "private_key": "0dce41fa73ae9f6bdfd51df4d422d75eee174553dba5fd450c4437e4ed3fc903", "index": 0}, 
+
+"0x8aa5bbee21e98c7b9e7a4c8ea45aa99f89e22992fa4fc2d73869d77da4cc8a05b25b61931ff521986677dd7f7159e8e6": {"public_key": "0x8aa5bbee21e98c7b9e7a4c8ea45aa99f89e22992fa4fc2d73869d77da4cc8a05b25b61931ff521986677dd7f7159e8e6", "private_key": "3219c83a76e82682c3e706902ca85777e703a06c9f0a82a5dfa6164f527c1ea6", "index": 1}, 
+
+"0x996323af7e545fb6363ace53f1538c7ddc3eb0d985b2479da3ee4ace10cbc393b518bf02d1a2ddb2f5bdf09b473933ea": {"public_key": "0x996323af7e545fb6363ace53f1538c7ddc3eb0d985b2479da3ee4ace10cbc393b518bf02d1a2ddb2f5bdf09b473933ea", "private_key": "215768a626159445ba0d8a1afab729c5724e75aa020a480580cbf86dd2ae4d47", "index": 2}, 
+
+"0xa1584dfe1573df8ec88c7b74d76726b4821bfe84bf886dd3c0e3f74c2ea18aa62ca44c871fb1c63971fccf6937e6501f": {"public_key": "0xa1584dfe1573df8ec88c7b74d76726b4821bfe84bf886dd3c0e3f74c2ea18aa62ca44c871fb1c63971fccf6937e6501f", "private_key": "10c3db5c5bdca44958bc765e040a5cae3439551cfb4651df442cbe499b12ee69", "index": 3}, 
+
+vc-1-nethermind-lighthouse-2:
+
+"0xac69ae9e6c385a368df71d11ac68f45f05e005306df3c2bf98ed3577708256bd97f8c09d3f72115444077a9bb711d8d1": {"public_key": "0xac69ae9e6c385a368df71d11ac68f45f05e005306df3c2bf98ed3577708256bd97f8c09d3f72115444077a9bb711d8d1", "private_key": "5d6534de54d1e4112f45da73f11d265361669bf1f96816f111e67e4665a4c2ad", "index": 4}, 
+
+"0xad9222dec71ff8ee6bc0426ffe7b5e66f96738225db281dd20027a1556d089fdebd040abfbc2041d6c1a0d8fdcfce183": {"public_key": "0xad9222dec71ff8ee6bc0426ffe7b5e66f96738225db281dd20027a1556d089fdebd040abfbc2041d6c1a0d8fdcfce183", "private_key": "2799191f62a8c55708b2deab69a995d4be56e3fa736318533341ca5476df3087", "index": 5},
+
+"0xa54fe5c26059ed60b4f0b66ef7b0bf167580504525f83c169507dc812816df41b1da6128341c23977300dffd32a32f41": {"public_key": "0xa54fe5c26059ed60b4f0b66ef7b0bf167580504525f83c169507dc812816df41b1da6128341c23977300dffd32a32f41", "private_key": "41f692b9306a699ce01ba5b13fd04776ef5898e0ab09f06e37ba22abe43e403e", "index": 5}, 
+
+"0x87231421a08ed28e7d357e2b37a26a458155c8d822d829344bd1029e5d175b5edfaa78f16f784f724a2caef124944c4f": {"public_key": "0x87231421a08ed28e7d357e2b37a26a458155c8d822d829344bd1029e5d175b5edfaa78f16f784f724a2caef124944c4f", "private_key": "1c511df0a39ec614499b08cf284d2d1d1aec3c231809c1c5688a4daab09f7752", "index": 7}, 
 
 ```
 
-</details>
+## Block Explorer
 
-<details>
-    <summary>A 3-node Ethereum network with "mock" MEV mode.</summary>
-    Useful for testing mev-boost and the client implementations without adding the complexity of the relay. This can be enabled by a single config command and would deploy the [mock-builder](https://github.com/marioevz/mock-builder), instead of the relay infrastructure.
+### L1
 
-```yaml
-participants:
-  - el_type: geth
-    el_image: ''
-    cl_type: lighthouse
-    cl_image: ''
-    count: 2
-  - el_type: nethermind
-    el_image: ''
-    cl_type: teku
-    cl_image: ''
-    count: 1
-  - el_type: besu
-    el_image: ''
-    cl_type: prysm
-    cl_image: ''
-    count: 2
-mev_type: mock
+```jsx
+blockscout:
+http: 4000/tcp -> http://127.0.0.1:35001
 ```
 
-</details>
+### L2
 
-<details>
-    <summary>A 5-node Ethereum network with three different CL and EL client combinations and mev-boost infrastructure in "full" mode.</summary>
-
-```yaml
-participants:
-  - el_type: geth
-    cl_type: lighthouse
-    count: 2
-  - el_type: nethermind
-    cl_type: teku
-  - el_type: besu
-    cl_type: prysm
-    count: 2
-mev_type: flashbots
-network_params:
-  deneb_fork_epoch: 1
+```jsx
+taiko-blockscout:
+http: 4000/tcp -> http://127.0.0.1:35003
 ```
 
-</details>
+## AVS Nodes
 
-<details>
-    <summary>A 2-node geth/lighthouse network with optional services (Grafana, Prometheus, transaction-spammer, EngineAPI snooper, and a testnet verifier)</summary>
+```jsx
+taiko-preconf-avs-1:
+"AVS_NODE_ECDSA_PRIVATE_KEY": "39725efee3fb28614de3bacaffe4cc4bd8c436257e2c8bb887c4b5c4be45e76d"
+"VALIDATOR_BLS_PRIVATEKEY": "3219c83a76e82682c3e706902ca85777e703a06c9f0a82a5dfa6164f527c1ea6"
+"VALIDATOR_INDEX": 1
 
-```yaml
-participants:
-  - el_type: geth
-    cl_type: lighthouse
-    count: 2
-snooper_enabled: true
+taiko-preconf-avs-2:
+"AVS_NODE_ECDSA_PRIVATE_KEY": "53321db7c1e331d93a11a41d16f004d7ff63972ec8ec7c25db329728ceeb1710"
+"VALIDATOR_BLS_PRIVATEKEY": "215768a626159445ba0d8a1afab729c5724e75aa020a480580cbf86dd2ae4d47"
+"VALIDATOR_INDEX": 2
 ```
 
-</details>
+## Transaction Spammer
 
-## Beacon Node <> Validator Client compatibility
-
-|               | Lighthouse VC | Prysm VC | Teku VC | Lodestar VC | Nimbus VC
-|---------------|---------------|----------|---------|-------------|-----------|
-| Lighthouse BN | ✅            | ❌       | ✅      | ✅          | ✅
-| Prysm BN      | ✅            | ✅       | ✅      | ✅          | ✅
-| Teku BN       | ✅            | ✅       | ✅      | ✅          | ✅
-| Lodestar BN   | ✅            | ✅       | ✅      | ✅          | ✅
-| Nimbus BN     | ✅            | ✅       | ✅      | ✅          | ✅
-| Grandine BN   | ✅            | ✅       | ✅      | ✅          | ✅
-
-## Custom labels for Docker and Kubernetes
-
-There are 4 custom labels that can be used to identify the nodes in the network. These labels are used to identify the nodes in the network and can be used to run chaos tests on specific nodes. An example for these labels are as follows:
-
-Execution Layer (EL) nodes:
-
-```sh
-  "com.kurtosistech.custom.ethereum-package-client": "geth",
-  "com.kurtosistech.custom.ethereum-package-client-image": "ethereum-client-go-latest",
-  "com.kurtosistech.custom.ethereum-package-client-type": "execution",
-  "com.kurtosistech.custom.ethereum-package-connected-client": "lighthouse",
+```jsx
+"PRIVATE_KEY": "ab63b23eb7941c1251757e24b3d2350d2bc05c3c388d06f8fe6feafefb1e8c70"
+"RECIPIENT_ADDRESS": "0x802dCbE1B1A97554B4F50DB5119E37E8e7336417"
 ```
 
-Consensus Layer (CL) nodes - Beacon:
+## Transaction Transfer
 
-```sh
-  "com.kurtosistech.custom.ethereum-package-client": "lighthouse",
-  "com.kurtosistech.custom.ethereum-package-client-image": "sigp-lighthouse-latest",
-  "com.kurtosistech.custom.ethereum-package-client-type": "beacon",
-  "com.kurtosistech.custom.ethereum-package-connected-client": "geth",
+```jsx
+"PRIVATE_KEY": "370e47f3c39cf4d03cb87cb71a268776421cdc22c39aa81f1e5ba19df19202f1"
+"RECIPIENT_ADDRESS": "0xf93Ee4Cf8c6c40b329b0c0626F28333c132CF241"
 ```
 
-Consensus Layer (CL) nodes - Validator:
+## Pre-funded Accounts
 
-```sh
-  "com.kurtosistech.custom.ethereum-package-client": "lighthouse",
-  "com.kurtosistech.custom.ethereum-package-client-image": "sigp-lighthouse-latest",
-  "com.kurtosistech.custom.ethereum-package-client-type": "validator",
-  "com.kurtosistech.custom.ethereum-package-connected-client": "geth",
+```jsx
+# m/44'/60'/0'/0/0
+new_prefunded_account(
+    "0x8943545177806ED17B9F23F0a21ee5948eCaa776",
+    "bcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31",
+),
+# m/44'/60'/0'/0/1
+new_prefunded_account(
+    "0xE25583099BA105D9ec0A67f5Ae86D90e50036425",
+    "39725efee3fb28614de3bacaffe4cc4bd8c436257e2c8bb887c4b5c4be45e76d",
+),
+# m/44'/60'/0'/0/2
+new_prefunded_account(
+    "0x614561D2d143621E126e87831AEF287678B442b8",
+    "53321db7c1e331d93a11a41d16f004d7ff63972ec8ec7c25db329728ceeb1710",
+),
+# m/44'/60'/0'/0/3
+new_prefunded_account(
+    "0xf93Ee4Cf8c6c40b329b0c0626F28333c132CF241",
+    "ab63b23eb7941c1251757e24b3d2350d2bc05c3c388d06f8fe6feafefb1e8c70",
+),
+# m/44'/60'/0'/0/4
+new_prefunded_account(
+    "0x802dCbE1B1A97554B4F50DB5119E37E8e7336417",
+    "5d2344259f42259f82d2c140aa66102ba89b57b4883ee441a8b312622bd42491",
+),
+# m/44'/60'/0'/0/5
+new_prefunded_account(
+    "0xAe95d8DA9244C37CaC0a3e16BA966a8e852Bb6D6",
+    "27515f805127bebad2fb9b183508bdacb8c763da16f54e0678b16e8f28ef3fff",
+),
+# m/44'/60'/0'/0/6
+new_prefunded_account(
+    "0x2c57d1CFC6d5f8E4182a56b4cf75421472eBAEa4",
+    "7ff1a4c1d57e5e784d327c4c7651e952350bc271f156afb3d00d20f5ef924856",
+),
+# m/44'/60'/0'/0/7
+new_prefunded_account(
+    "0x741bFE4802cE1C4b5b00F9Df2F5f179A1C89171A",
+    "3a91003acaf4c21b3953d94fa4a6db694fa69e5242b2e37be05dd82761058899",
+),
+# m/44'/60'/0'/0/8
+new_prefunded_account(
+    "0xc3913d4D8bAb4914328651C2EAE817C8b78E1f4c",
+    "bb1d0f125b4fb2bb173c318cdead45468474ca71474e2247776b2b4c0fa2d3f5",
+),
+# m/44'/60'/0'/0/9
+new_prefunded_account(
+    "0x65D08a056c17Ae13370565B04cF77D2AfA1cB9FA",
+    "850643a0224065ecce3882673c21f56bcf6eef86274cc21cadff15930b59fc8c",
+),
+# m/44'/60'/0'/0/10
+new_prefunded_account(
+    "0x3e95dFbBaF6B348396E6674C7871546dCC568e56",
+    "94eb3102993b41ec55c241060f47daa0f6372e2e3ad7e91612ae36c364042e44",
+),
+# m/44'/60'/0'/0/11
+new_prefunded_account(
+    "0x5918b2e647464d4743601a865753e64C8059Dc4F",
+    "daf15504c22a352648a71ef2926334fe040ac1d5005019e09f6c979808024dc7",
+),
+# m/44'/60'/0'/0/12
+new_prefunded_account(
+    "0x589A698b7b7dA0Bec545177D3963A2741105C7C9",
+    "eaba42282ad33c8ef2524f07277c03a776d98ae19f581990ce75becb7cfa1c23",
+),
+# m/44'/60'/0'/0/13
+new_prefunded_account(
+    "0x4d1CB4eB7969f8806E2CaAc0cbbB71f88C8ec413",
+    "3fd98b5187bf6526734efaa644ffbb4e3670d66f5d0268ce0323ec09124bff61",
+),
+# m/44'/60'/0'/0/14
+new_prefunded_account(
+    "0xF5504cE2BcC52614F121aff9b93b2001d92715CA",
+    "5288e2f440c7f0cb61a9be8afdeb4295f786383f96f5e35eb0c94ef103996b64",
+),
+# m/44'/60'/0'/0/15
+new_prefunded_account(
+    "0xF61E98E7D47aB884C244E39E031978E33162ff4b",
+    "f296c7802555da2a5a662be70e078cbd38b44f96f8615ae529da41122ce8db05",
+),
+# m/44'/60'/0'/0/16
+new_prefunded_account(
+    "0xf1424826861ffbbD25405F5145B5E50d0F1bFc90",
+    "bf3beef3bd999ba9f2451e06936f0423cd62b815c9233dd3bc90f7e02a1e8673",
+),
+# m/44'/60'/0'/0/17
+new_prefunded_account(
+    "0xfDCe42116f541fc8f7b0776e2B30832bD5621C85",
+    "6ecadc396415970e91293726c3f5775225440ea0844ae5616135fd10d66b5954",
+),
+# m/44'/60'/0'/0/18
+new_prefunded_account(
+    "0xD9211042f35968820A3407ac3d80C725f8F75c14",
+    "a492823c3e193d6c595f37a18e3c06650cf4c74558cc818b16130b293716106f",
+),
+# m/44'/60'/0'/0/19
+new_prefunded_account(
+    "0xD8F3183DEF51A987222D845be228e0Bbb932C222",
+    "c5114526e042343c6d1899cad05e1c00ba588314de9b96929914ee0df18d46b2",
+),
+# m/44'/60'/0'/0/20
+new_prefunded_account(
+    "0xafF0CA253b97e54440965855cec0A8a2E2399896",
+    "4b9f63ecf84210c5366c66d68fa1f5da1fa4f634fad6dfc86178e4d79ff9e59",
+),
 ```
 
-`ethereum-package-client` describes which client is running on the node.
-`ethereum-package-client-image` describes the image that is used for the client.
-`ethereum-package-client-type` describes the type of client that is running on the node (`execution`,`beacon` or `validator`).
-`ethereum-package-connected-client` describes the CL/EL client that is connected to the EL/CL client.
+## MEV Builder
 
-## Proposer Builder Separation (PBS) emulation
+**MEV Builder is using the first pre-funded account as transaction signing key.**
 
-To spin up the network of Ethereum nodes with an external block building network (using Flashbot's `mev-boost` protocol), simply use:
-
-```
-kurtosis run github.com/ethpandaops/ethereum-package '{"mev_type": "full"}'
+```jsx
+"BUILDER_TX_SIGNING_KEY=0xbcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31"
 ```
 
-Starting your network up with `"mev_type": "full"` will instantiate and connect the following infrastructure to your network:
+## Contracts Addresses
 
-1. `Flashbot's block builder & CL validator + beacon` - A modified Geth client that builds blocks. The CL validator and beacon clients are lighthouse clients configured to receive payloads from the relay.
-2. `mev-relay-api` - Services that provide APIs for (a) proposers, (b) block builders, (c) data
-3. `mev-relay-website` - A website to monitor payloads that have been delivered
-4. `mev-relay-housekeeper` - Updates known validators, proposer duties, and more in the background. Only a single instance of this should run.
-5. `mev-boost` - open-source middleware instantiated for each EL/Cl pair in the network, including the builder
-6. `mev-flood` - Deploys UniV2 smart contracts, provisions liquidity on UniV2 pairs, & sends a constant stream of UniV2 swap transactions to the network's public mempool.
+**Currently contracts are all deployed using the first pre-funded account.**
 
-<details>
-    <summary>Caveats when using "mev_type": "full"</summary>
+```jsx
+**Taiko**
+shared_address_manager: 0x17435ccE3d1B4fA2e5f8A08eD921D57C6762A180
+taiko_token: 0x422A3492e218383753D8006C7Bfa97815B44373F
+signal_service: 0x8F0342A7060e76dfc7F6e9dEbfAD9b9eC919952c
+rollup_address_manager: 0x9fCF7D13d10dEdF17d0f24C62f0cf4ED462f65b7
+sequencer_registry: 0x72bCbB3f339aF622c28a26488Eed9097a2977404
+taiko: 0x086f77C5686dfe3F2f8FE487C5f8d357952C8556
+tier_sgx: 0x38435Ac0E0e9Bd8737c476F8F39a24b0735e00dc
+guardian_prover_minority: 0xE19dddcaF5dCb2Ec0Fe52229e3133B99396f22e2
+guardian_prover: 0x9ECB6f04D47FA2599449AaA523bF84476f7aD80f
+sequencer_registry (second instance): 0x3c0e871bB7337D5e6A18FDD73c4D9e7567961Ad3
 
-* Validators (64 per node by default, so 128 in the example in this guide) will get registered with the relay automatically after the 1st epoch. This registration process is simply a configuration addition to the mev-boost config - which Kurtosis will automatically take care of as part of the set up. This means that the mev-relay infrastructure only becomes aware of the existence of the validators after the 1st epoch.
-* After the 3rd epoch, the mev-relay service will begin to receive execution payloads (eth_sendPayload, which does not contain transaction content) from the mev-builder service (or mock-builder in mock-mev mode).
-* Validators will start to receive validated execution payload headers from the mev-relay service (via mev-boost) after the 4th epoch. The validator selects the most valuable header, signs the payload, and returns the signed header to the relay - effectively proposing the payload of transactions to be included in the soon-to-be-proposed block. Once the relay verifies the block proposer's signature, the relay will respond with the full execution payload body (incl. the transaction contents) for the validator to use when proposing a SignedBeaconBlock to the network.
+**Eigenlayer MVP**
+AVS Directory: 0x7E2E7DD2Aead92e2e6d05707F21D4C36004f8A2B
+Delegation Manager: 0xeB804d271b58d9405CD94e294504E56d55B6E35c
+Strategy Manager: 0xaDe68b4b6410aDB1578896dcFba75283477b6b01
+Slasher: 0x86A0679C7987B5BA9600affA994B78D0660088ff
 
-</details>
+**AVS**
+Proxy admin: 0xc6F76D133052002abdBAda02ba35dB8b7414FcAa
+Preconf Registry: 0x9D2ea2038CF6009F1Bc57E32818204726DfA63Cd
+Preconf Service Manager: 0x1912A7496314854fB890B1B88C0f1Ced653C1830
+Preconf Task Manager: 0x6064f756f7F3dc8280C1CfA01cE41a37B5f16df1
+```
 
-This package also supports a `"mev_type": "mock"` mode that will only bring up:
+## Contracts Env
 
-1. `mock-builder` - a server that listens for builder API directives and responds with payloads built using an execution client
-1. `mev-boost` - for every EL/CL pair launched
+### Taiko
 
-For more details, including a guide and architecture of the `mev-boost` infrastructure, go [here](https://docs.kurtosis.com/how-to-full-mev-with-ethereum-package/).
+```jsx
+"PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
+"PROPOSER": "0x0000000000000000000000000000000000000000",
+"TAIKO_TOKEN": "0x0000000000000000000000000000000000000000",
+"PROPOSER_ONE": "0x0000000000000000000000000000000000000000",
+"GUARDIAN_PROVERS": "0x1000777700000000000000000000000000000001,0x1000777700000000000000000000000000000002,0x1000777700000000000000000000000000000003,0x1000777700000000000000000000000000000004,0x1000777700000000000000000000000000000005,0x1000777700000000000000000000000000000006,0x1000777700000000000000000000000000000007",
+"TAIKO_L2_ADDRESS": "0x1670000000000000000000000000000000010001",
+"L2_SIGNAL_SERVICE": "0x1670000000000000000000000000000000000005",
+"CONTRACT_OWNER": contract_owner.address,
+"PROVER_SET_ADMIN": contract_owner.address,
+"TAIKO_TOKEN_PREMINT_RECIPIENT": contract_owner.address,
+"TAIKO_TOKEN_NAME": "Taiko Token",
+"TAIKO_TOKEN_SYMBOL": "TKO",
+"SHARED_ADDRESS_MANAGER": "0x0000000000000000000000000000000000000000",
+"L2_GENESIS_HASH": "0x7983c69e31da54b8d244d8fef4714ee7a8ed25d873ebef204a56f082a73c9f1e",
+"PAUSE_TAIKO_L1": "false",
+"PAUSE_BRIDGE": "true",
+"NUM_MIN_MAJORITY_GUARDIANS": "7",
+"NUM_MIN_MINORITY_GUARDIANS": "2",
+"TIER_PROVIDER": "devnet",
+"FORK_URL": el_rpc_url,
+```
 
-## Pre-funded accounts at Genesis
+### Eigenlayer MVP
 
-This package comes with [21 prefunded keys for testing](https://github.com/ethpandaops/ethereum-package/blob/main/src/prelaunch_data_generator/genesis_constants/genesis_constants.star).
+```jsx
+"PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
+"FORK_URL": el_rpc_url,
+```
 
-Here's a table of where the keys are used
+### AVS
 
-| Account Index | Component Used In   | Private Key Used | Public Key Used | Comment                     |
-|---------------|---------------------|------------------|-----------------|-----------------------------|
-| 0             | Builder             | ✅                |                 | As coinbase                |
-| 0             | mev_custom_flood    |                   | ✅              | As the receiver of balance |
-| 1             | blob_spammer        | ✅                |                 | As the sender of blobs     |
-| 3             | transaction_spammer | ✅                |                 | To spam transactions with  |
-| 4             | goomy_blob          | ✅                |                 | As the sender of blobs     |
-| 6             | mev_flood           | ✅                |                 | As the contract owner      |
-| 7             | mev_flood           | ✅                |                 | As the user_key            |
-| 8             | assertoor           | ✅                | ✅              | As the funding for tests   |
-| 11            | mev_custom_flood    | ✅                |                 | As the sender of balance   |
-| 12            | l2_contracts        | ✅                |                 | Contract deployer address  |
+```jsx
+"PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
+"FORK_URL": el_rpc_url,
+"BEACON_GENESIS_TIMESTAMP": beacon_genesis_timestamp,
+"BEACON_BLOCK_ROOT_CONTRACT": "0x000F3df6D732807Ef1319fB7B8bB8522d0Beac02",
+"SLASHER": "0x86A0679C7987B5BA9600affA994B78D0660088ff",
+"AVS_DIRECTORY": "0x7E2E7DD2Aead92e2e6d05707F21D4C36004f8A2B",
+"TAIKO_L1": "0x086f77C5686dfe3F2f8FE487C5f8d357952C8556",
+"TAIKO_TOKEN": "0x422A3492e218383753D8006C7Bfa97815B44373F",
+```
 
-## Developing On This Package
+### Add to Sequencer
 
-First, install prerequisites:
+```jsx
+"PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
+"FORK_URL": el_rpc_url,
+"PROXY_ADDRESS": "0x3c0e871bB7337D5e6A18FDD73c4D9e7567961Ad3",
+"ADDRESS": "0x6064f756f7F3dc8280C1CfA01cE41a37B5f16df1",
+"ENABLED": "true",
+```
 
-1. [Install Kurtosis itself][kurtosis-cli-installation]
+# Legacy Deployment Notes
 
-Then, run the dev loop:
+Please only use this for testings that can only be done manually. Contact @Justin Chan for more details.
 
-1. Make your code changes
-1. Rebuild and re-run the package by running the following from the root of the repo:
+## Prerequisites
 
-   ```bash
-   kurtosis run . "{}"
-   ```
+<aside>
+🛠
 
-   NOTE 1: You can change the value of the second positional argument flag to pass in extra configuration to the package per the "Configuration" section above!
-   NOTE 2: The second positional argument accepts JSON.
+Machine IP
 
-To get detailed information about the structure of the package, visit [the architecture docs](./docs/architecture.md).
+Machine SSH Access
 
-When you're happy with your changes:
+</aside>
 
-1. Create a PR
-1. Add one of the maintainers of the repo as a "Review Request":
-   * `parithosh` (Ethereum Foundation)
-   * `barnabasbusa` (Ethereum Foundation)
-   * `pk910` (Ethereum Foundation)
-   * `samcm` (Ethereum Foundation)
-   * `h4ck3rk3y` (Kurtosis)
-   * `mieubrisse` (Kurtosis)
-   * `leederek` (Kurtosis)
-1. Once everything works, merge!
+## Destroy Previous Build
 
-<!------------------------ Only links below here -------------------------------->
+```jsx
+kurtosis enclave rm taiko-preconf-devnet --force
 
-[docker-installation]: https://docs.docker.com/get-docker/
-[kurtosis-cli-installation]: https://docs.kurtosis.com/install
-[kurtosis-repo]: https://github.com/kurtosis-tech/kurtosis
-[enclave]: https://docs.kurtosis.com/advanced-concepts/enclaves/
-[package-reference]: https://docs.kurtosis.com/advanced-concepts/packages
+kurtosis clean -a
+
+cd ~/simple-taiko-node/
+
+docker compose --profile proposer down 
+
+docker volume rm simple-taiko-node_l2_execution_engine_data
+
+docker stop taiko-preconf-container
+
+docker rm taiko-preconf-container
+```
+
+## Deploy L1
+
+```jsx
+git clone https://github.com/NethermindEth/preconfirm-devnet-package.git && \
+cd preconfirm-devnet-package && \
+kurtosis run --enclave taiko-preconf-devnet github.com/NethermindEth/preconfirm-devnet-package --args-file network_params.yaml
+```
+
+## Deploy Contracts
+
+### Taiko
+
+```jsx
+docker run --rm -it \
+    -e PRIVATE_KEY="0xbcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31" \
+    -e FORK_URL="http://{{**MACHINE IP**}}:32002" \
+    -e PROPOSER="0x0000000000000000000000000000000000000000" \
+    -e TAIKO_TOKEN="0x0000000000000000000000000000000000000000" \
+    -e PROPOSER_ONE="0x0000000000000000000000000000000000000000" \
+    -e GUARDIAN_PROVERS="0x1000777700000000000000000000000000000001,0x1000777700000000000000000000000000000002,0x1000777700000000000000000000000000000003,0x1000777700000000000000000000000000000004,0x1000777700000000000000000000000000000005,0x1000777700000000000000000000000000000006,0x1000777700000000000000000000000000000007" \
+    -e TAIKO_L2_ADDRESS="0x1670000000000000000000000000000000010001" \
+    -e L2_SIGNAL_SERVICE="0x1670000000000000000000000000000000000005" \
+    -e CONTRACT_OWNER="0x8943545177806ED17B9F23F0a21ee5948eCaa776" \
+    -e PROVER_SET_ADMIN="0x8943545177806ED17B9F23F0a21ee5948eCaa776" \
+    -e TAIKO_TOKEN_PREMINT_RECIPIENT="0x8943545177806ED17B9F23F0a21ee5948eCaa776" \
+    -e TAIKO_TOKEN_NAME="Taiko Token" \
+    -e TAIKO_TOKEN_SYMBOL="TKO" \
+    -e SHARED_ADDRESS_MANAGER="0x0000000000000000000000000000000000000000" \
+    -e L2_GENESIS_HASH="0x25637bb83541ecc694ada7e12ece3e77a64db154e277fc5caae59989e3a22fca" \
+    -e PAUSE_TAIKO_L1="false" \
+    -e PAUSE_BRIDGE="true" \
+    -e NUM_MIN_MAJORITY_GUARDIANS=7 \
+    -e NUM_MIN_MINORITY_GUARDIANS=2 \
+    -e TIER_PROVIDER="devnet" \
+    nethswitchboard/taiko-deploy:e2e
+```
+
+### Eigenlayer MVP
+
+```jsx
+docker run --rm -it \
+    -e PRIVATE_KEY="0xbcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31" \
+    -e FORK_URL="http://{{**MACHINE IP**}}:32002" \
+    nethswitchboard/avs-deploy:e2e "scripts/deployment/deploy_eigenlayer_mvp.sh"
+```
+
+### AVS
+
+```jsx
+BEACON_GENESIS_TIMESTAMP=$(curl -s http://{{**MACHINE IP**}}:32001/eth/v1/beacon/genesis | grep -o '"genesis_time":"[^"]*' | grep -o '[^"]*$')
+
+docker run --rm -it \
+    -e PRIVATE_KEY="0xbcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31" \
+    -e FORK_URL="http://{{**MACHINE IP**}}:32002" \
+    -e BEACON_GENESIS_TIMESTAMP="$BEACON_GENESIS_TIMESTAMP" \
+    -e BEACON_BLOCK_ROOT_CONTRACT="0x000F3df6D732807Ef1319fB7B8bB8522d0Beac02" \
+    -e SLASHER="0x86A0679C7987B5BA9600affA994B78D0660088ff" \
+    -e AVS_DIRECTORY="0x7E2E7DD2Aead92e2e6d05707F21D4C36004f8A2B" \
+    -e TAIKO_L1="0x086f77C5686dfe3F2f8FE487C5f8d357952C8556" \
+    -e TAIKO_TOKEN="0x422A3492e218383753D8006C7Bfa97815B44373F" \
+    nethswitchboard/avs-deploy:e2e
+```
+
+### Add to Sequencer
+
+```jsx
+docker run --rm -it \
+    -e PRIVATE_KEY="0xbcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31" \
+    -e FORK_URL="http://{{**MACHINE IP**}}:32002" \
+    -e PROXY_ADDRESS="0x3c0e871bB7337D5e6A18FDD73c4D9e7567961Ad3" \
+    -e ADDRESS="0x6064f756f7F3dc8280C1CfA01cE41a37B5f16df1" \
+    -e ENABLED="true" \
+    nethswitchboard/taiko-deploy:e2e "script/add_to_sequencer.sh"
+```
+
+## Start Taiko Stack
+
+```jsx
+cd ~/simple-taiko-node/
+
+docker compose --profile proposer up -d
+```
+
+## Start AVS
+
+```jsx
+MEV_BOOST_URL=$(kurtosis service inspect taiko-preconf-devnet mev-boost-1-lighthouse-nethermind | grep '127.0.0.1' | awk -F'-> ' '{print "http://"$2}' | xargs)
+
+sed -i "s|^MEV_BOOST_URL=.*|MEV_BOOST_URL=${MEV_BOOST_URL}|" ~/Taiko-Preconf-AVS/.env
+
+docker run -d --name taiko-preconf-container --env-file .env nethswitchboard/avs-node:e2e
+```
+
+## Start P2P Bootnode
+
+```jsx
+docker run -itd --name p2pbootnode -it nethswitchboard/bootnodep2p:e2e
+```
