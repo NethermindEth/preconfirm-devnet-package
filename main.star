@@ -712,6 +712,7 @@ def run(plan, args={}):
                         "TX_COUNT": "1",
                         "TX_AMOUNT": "100",
                         "RPC_URL": taiko_stack_1.rpc_http_url,
+                        "DELAY": "3",
                     },
                 ),
             )
@@ -732,6 +733,7 @@ def run(plan, args={}):
                         "TX_COUNT": "10",
                         "TX_AMOUNT": "0.005",
                         "RPC_URL": taiko_stack_1.rpc_http_url,
+                        "DELAY": "3",
                     },
                 ),
             )

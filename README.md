@@ -232,7 +232,7 @@ docker pull nethswitchboard/bootnodep2p:e2e
 ```jsx
 kurtosis service shell taiko-preconf-devnet taiko-tx-spammer
 
-python tx_spammer.py --count $TX_COUNT --amount $TX_AMOUNT --rpc $RPC_URL
+python tx_spammer.py --count $TX_COUNT --amount $TX_AMOUNT --rpc $RPC_URL --delay $DELAY
 ```
 
 ## Transaction Transfer
@@ -248,7 +248,7 @@ kurtosis service start taiko-preconf-devnet taiko-tx-transfer
 ```jsx
 kurtosis service shell taiko-preconf-devnet taiko-tx-transfer
 
-python tx_spammer.py --count $TX_COUNT --amount $TX_AMOUNT --rpc $RPC_URL
+python tx_spammer.py --count $TX_COUNT --amount $TX_AMOUNT --rpc $RPC_URL --delay $DELAY
 ```
 
 # Network Info
