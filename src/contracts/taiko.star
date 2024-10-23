@@ -26,7 +26,7 @@ def deploy(
             "PAUSE_BRIDGE": "false",
             "NUM_MIN_MAJORITY_GUARDIANS": "7",
             "NUM_MIN_MINORITY_GUARDIANS": "2",
-            "TIER_PROVIDER": "mainnet",
+            "TIER_PROVIDER": "devnet",
             "FOUNDRY_PROFILE": "layer1",
         },
         wait=None,
