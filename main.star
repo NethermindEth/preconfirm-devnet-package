@@ -203,13 +203,13 @@ def run(plan, args={}):
     )
 
     # Deploy all smart contracts
-    # contract_deployer.deploy(
-    #     plan,
-    #     final_genesis_timestamp,
-    #     all_el_contexts[0],
-    #     prefunded_accounts,
-    #     network_id,
-    # )
+    contract_deployer.deploy(
+        plan,
+        final_genesis_timestamp,
+        all_el_contexts[0],
+        prefunded_accounts,
+        network_id,
+    )
 
     # Broadcaster forwards requests, sent to it, to all nodes in parallel
     if "broadcaster" in args_with_right_defaults.additional_services:
@@ -661,6 +661,16 @@ def run(plan, args={}):
                 src="./taiko-geth",
                 name="taiko_genesis",
             )
+
+            # l2_jwt = plan.upload_files(
+            #     src=static_files.L2_JWT_PATH,
+            #     name="l2_jwt_files",
+            # )
+
+            # taiko_files = plan.upload_files(
+            #     src=static_files.TAIKO_PATH,
+            #     name="taiko_files",
+            # )
 
             # Launch taiko stack 1
             taiko_stack_1 = l2_taiko.launch(
