@@ -39,7 +39,8 @@ brew install kurtosis-tech/tap/kurtosis-cli
 ```jsx
 git clone https://github.com/NethermindEth/preconfirm-devnet-package.git && \
 cd preconfirm-devnet-package && \
-kurtosis run --enclave taiko-preconf-devnet github.com/NethermindEth/preconfirm-devnet-package --args-file network_params.yaml
+git checkout origin/feat/core-rollup && \
+kurtosis run --enclave core-rollup . --args-file network_params.yaml
 ```
 
 After this you should see:
