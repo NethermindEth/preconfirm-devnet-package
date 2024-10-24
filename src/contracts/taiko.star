@@ -6,6 +6,7 @@ def deploy(
     taiko = plan.run_sh(
         name="deploy-taiko-contract",
         run="script/layer1/deploy_protocol_on_l1.sh > /tmp/taiko-output.txt",
+        # run="script/layer1/deploy_protocol_on_l1.sh",
         image="nethsurge/taiko-contract:core-rollup",
         env_vars={
             "PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
@@ -22,6 +23,7 @@ def deploy(
             "TAIKO_TOKEN_SYMBOL": "TKO",
             "SHARED_ADDRESS_MANAGER": "0x0000000000000000000000000000000000000000",
             "L2_GENESIS_HASH": "0xab5461f205299a3ee42bf091339504970ffe69ecac1176cb430ba8aac2b635e6",
+            "L2_SIGNAL_SERVICE": "0x1670000000000000000000000000000000000005",
             "PAUSE_TAIKO_L1": "false",
             "PAUSE_BRIDGE": "false",
             "NUM_MIN_MAJORITY_GUARDIANS": "7",

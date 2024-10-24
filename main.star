@@ -203,13 +203,13 @@ def run(plan, args={}):
     )
 
     # Deploy all smart contracts
-    # contract_deployer.deploy(
-    #     plan,
-    #     final_genesis_timestamp,
-    #     all_el_contexts[0],
-    #     prefunded_accounts,
-    #     network_id,
-    # )
+    contract_deployer.deploy(
+        plan,
+        final_genesis_timestamp,
+        all_el_contexts[0],
+        prefunded_accounts,
+        network_id,
+    )
 
     # Broadcaster forwards requests, sent to it, to all nodes in parallel
     if "broadcaster" in args_with_right_defaults.additional_services:
@@ -327,14 +327,14 @@ def run(plan, args={}):
             description = "Starting builder service",
         )
 
-        # mev_flood.spam_in_background(
-        #     plan,
-        #     fuzz_target,
-        #     mev_params.mev_flood_extra_args,
-        #     mev_params.mev_flood_seconds_per_bundle,
-        #     contract_owner.private_key,
-        #     normal_user.private_key,
-        # )
+        mev_flood.spam_in_background(
+            plan,
+            fuzz_target,
+            mev_params.mev_flood_extra_args,
+            mev_params.mev_flood_seconds_per_bundle,
+            contract_owner.private_key,
+            normal_user.private_key,
+        )
         mev_endpoints.append(endpoint)
         mev_endpoint_names.append(args_with_right_defaults.mev_type)
 
@@ -657,20 +657,20 @@ def run(plan, args={}):
         elif additional_service == "taiko_stack":
             plan.print("Launching taiko")
 
-            plan.upload_files(
-                src="./taiko-geth",
-                name="taiko_genesis",
+            # plan.upload_files(
+            #     src="./taiko-geth",
+            #     name="taiko_genesis",
+            # )
+
+            l2_jwt = plan.upload_files(
+                src=static_files.L2_JWT_PATH,
+                name="l2_jwt_files",
             )
 
-            # l2_jwt = plan.upload_files(
-            #     src=static_files.L2_JWT_PATH,
-            #     name="l2_jwt_files",
-            # )
-
-            # taiko_files = plan.upload_files(
-            #     src=static_files.TAIKO_PATH,
-            #     name="taiko_files",
-            # )
+            taiko_files = plan.upload_files(
+                src=static_files.TAIKO_PATH,
+                name="taiko_files",
+            )
 
             # Launch taiko stack 1
             taiko_stack_1 = l2_taiko.launch(
@@ -707,46 +707,46 @@ def run(plan, args={}):
             plan.print("Successfully launched blockscout for taiko L2")
 
             # Launch taiko L2 tx transfer for first transaction
-            plan.add_service(
-                name = "taiko-tx-transfer",
-                description = "Preparing to transfer Taiko ETH",
-                config = ServiceConfig(
-                    image = "nethswitchboard/taiko-spammer:e2e",
-                    cmd = [
-                        "sleep",
-                        "infinity",
-                    ],
-                    env_vars = {
-                        "PRIVATE_KEY": "370e47f3c39cf4d03cb87cb71a268776421cdc22c39aa81f1e5ba19df19202f1",
-                        "RECIPIENT_ADDRESS": "0xf93Ee4Cf8c6c40b329b0c0626F28333c132CF241",
-                        "TX_COUNT": "1",
-                        "TX_AMOUNT": "100",
-                        "RPC_URL": taiko_stack_1.rpc_http_url,
-                        "DELAY": "3",
-                    },
-                ),
-            )
+            # plan.add_service(
+            #     name = "taiko-tx-transfer",
+            #     description = "Preparing to transfer Taiko ETH",
+            #     config = ServiceConfig(
+            #         image = "nethswitchboard/taiko-spammer:e2e",
+            #         cmd = [
+            #             "sleep",
+            #             "infinity",
+            #         ],
+            #         env_vars = {
+            #             "PRIVATE_KEY": "370e47f3c39cf4d03cb87cb71a268776421cdc22c39aa81f1e5ba19df19202f1",
+            #             "RECIPIENT_ADDRESS": "0xf93Ee4Cf8c6c40b329b0c0626F28333c132CF241",
+            #             "TX_COUNT": "1",
+            #             "TX_AMOUNT": "100",
+            #             "RPC_URL": taiko_stack_1.rpc_http_url,
+            #             "DELAY": "3",
+            #         },
+            #     ),
+            # )
 
             # Launch taiko L2 tx spammer
-            plan.add_service(
-                name = "taiko-tx-spammer",
-                description = "Launching Taiko L2 tx spammer",
-                config = ServiceConfig(
-                    image = "nethswitchboard/taiko-spammer:e2e",
-                    cmd = [
-                        "sleep",
-                        "infinity",
-                    ],
-                    env_vars = {
-                        "PRIVATE_KEY": "ab63b23eb7941c1251757e24b3d2350d2bc05c3c388d06f8fe6feafefb1e8c70",
-                        "RECIPIENT_ADDRESS": "0x802dCbE1B1A97554B4F50DB5119E37E8e7336417",
-                        "TX_COUNT": "10",
-                        "TX_AMOUNT": "0.005",
-                        "RPC_URL": taiko_stack_1.rpc_http_url,
-                        "DELAY": "3",
-                    },
-                ),
-            )
+            # plan.add_service(
+            #     name = "taiko-tx-spammer",
+            #     description = "Launching Taiko L2 tx spammer",
+            #     config = ServiceConfig(
+            #         image = "nethswitchboard/taiko-spammer:e2e",
+            #         cmd = [
+            #             "sleep",
+            #             "infinity",
+            #         ],
+            #         env_vars = {
+            #             "PRIVATE_KEY": "ab63b23eb7941c1251757e24b3d2350d2bc05c3c388d06f8fe6feafefb1e8c70",
+            #             "RECIPIENT_ADDRESS": "0x802dCbE1B1A97554B4F50DB5119E37E8e7336417",
+            #             "TX_COUNT": "10",
+            #             "TX_AMOUNT": "0.005",
+            #             "RPC_URL": taiko_stack_1.rpc_http_url,
+            #             "DELAY": "3",
+            #         },
+            #     ),
+            # )
 
             # plan.print(spammer_result)
         elif additional_service == "preconf_avs":

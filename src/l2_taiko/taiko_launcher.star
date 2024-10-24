@@ -1,4 +1,5 @@
 geth_launcher = import_module("./taiko-geth.star")
+nethermind_launcher = import_module("./taiko-nethermind.star")
 driver_launcher = import_module("./taiko-driver.star")
 proposer_launcher = import_module("./taiko-proposer.star")
 
@@ -16,8 +17,16 @@ def launch(
     data_dirpath = EXECUTION_DATA_DIRPATH_ON_CLIENT_CONTAINER + "-" + str(index)
     jwtsecret_path = data_dirpath + "/geth/jwtsecret"
 
-    # Launch geth
-    geth = geth_launcher.launch(
+    # Launch EL
+
+    # geth = geth_launcher.launch(
+    #     plan,
+    #     data_dirpath,
+    #     enode,
+    #     index,
+    # )
+
+    el = nethermind_launcher.launch(
         plan,
         data_dirpath,
         enode,
@@ -31,7 +40,7 @@ def launch(
         jwtsecret_path,
         el_context,
         cl_context,
-        geth,
+        el,
         index,
     )
 
@@ -42,18 +51,18 @@ def launch(
         jwtsecret_path,
         el_context,
         cl_context,
-        geth,
+        el,
         prefunded_accounts,
         index,
     )
 
     return struct(
         client_name="taiko-stack",
-        rpc_http_url=geth.rpc_http_url,
-        ws_url=geth.ws_url,
-        auth_url=geth.auth_url,
+        rpc_http_url=el.rpc_http_url,
+        ws_url=el.ws_url,
+        auth_url=el.auth_url,
         driver_url=driver.driver_url,
         proposer_url=proposer.proposer_url,
-        enode=geth.enode,
-        enr=geth.enr,
+        enode=el.enode,
+        # enr=el.enr,
     )
