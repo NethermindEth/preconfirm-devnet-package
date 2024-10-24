@@ -203,13 +203,13 @@ def run(plan, args={}):
     )
 
     # Deploy all smart contracts
-    contract_deployer.deploy(
-        plan,
-        final_genesis_timestamp,
-        all_el_contexts[0],
-        prefunded_accounts,
-        network_id,
-    )
+    # contract_deployer.deploy(
+    #     plan,
+    #     final_genesis_timestamp,
+    #     all_el_contexts[0],
+    #     prefunded_accounts,
+    #     network_id,
+    # )
 
     # Broadcaster forwards requests, sent to it, to all nodes in parallel
     if "broadcaster" in args_with_right_defaults.additional_services:
