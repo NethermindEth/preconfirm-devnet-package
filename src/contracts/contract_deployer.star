@@ -16,6 +16,25 @@ def deploy(
     # Get first prefunded account
     first_prefunded_account = prefunded_accounts[0]
 
+    # Deposit some eths to contract owner
+    plan.add_service(
+        name="taiko-deposit-eths",
+        description="Depositing some eths to contract owner",
+        config=ServiceConfig(
+            image="nethsurge/token-transfer:latest",
+            env_vars={
+                "RPC_URL": el_rpc_url,
+                "SENDER_PRIVATE_KEY": prefunded_accounts[4].private_key,
+                "RECEIVER_ADDRESS": "0x8B52EEEC5de56a97d27376f79DCA50a25539907A",
+                "AMOUNT_IN_ETHER": "1000000",
+            },
+            cmd=[
+                "python",
+                "token_transfer.py",
+            ],
+        ),
+    )
+
     # Deploy taiko contracts
     taiko_contract_deployer.deploy(
         plan,
@@ -77,3 +96,22 @@ def deploy(
     #         },
     #     ),
     # )
+
+    # Deposit proposer and prover keys
+    result = plan.add_service(
+        name="taiko-deposit-bonds",
+        description="Depositing proposer and prover keys",
+        config=ServiceConfig(
+            image="nethsurge/deposit-bonds:latest",
+            env_vars={
+                "L1_PROPOSER_PRIVATE_KEY": prefunded_accounts[2].private_key,
+                "L1_PROVER_PRIVATE_KEY": prefunded_accounts[3].private_key,
+                "TAIKO_L1_CONTRACT_ADDRESS": "0xaE37C7A711bcab9B0f8655a97B738d6ccaB6560B",
+            },
+            cmd=[
+                "python",
+                "deposit_bonds.py",
+                "--rpc", el_rpc_url,
+            ],
+        ),
+    )

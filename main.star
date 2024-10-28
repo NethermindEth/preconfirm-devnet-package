@@ -327,14 +327,14 @@ def run(plan, args={}):
             description = "Starting builder service",
         )
 
-        mev_flood.spam_in_background(
-            plan,
-            fuzz_target,
-            mev_params.mev_flood_extra_args,
-            mev_params.mev_flood_seconds_per_bundle,
-            contract_owner.private_key,
-            normal_user.private_key,
-        )
+        # mev_flood.spam_in_background(
+        #     plan,
+        #     fuzz_target,
+        #     mev_params.mev_flood_extra_args,
+        #     mev_params.mev_flood_seconds_per_bundle,
+        #     contract_owner.private_key,
+        #     normal_user.private_key,
+        # )
         mev_endpoints.append(endpoint)
         mev_endpoint_names.append(args_with_right_defaults.mev_type)
 

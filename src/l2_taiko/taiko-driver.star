@@ -13,7 +13,7 @@ def launch(
     service = plan.add_service(
         name = "preconf-taiko-driver-{0}".format(index),
         config = ServiceConfig(
-            image = "us-docker.pkg.dev/evmchain/images/taiko-client:taiko-client-v0.38.0",
+            image = "nethsurge/taiko-client:latest",
             files = {
                 "/data/taiko-geth": "taiko_files",
                 "/tmp/jwt": "l2_jwt_files",
@@ -115,8 +115,8 @@ def launch(
                 "--l2.ws={0}".format(geth.ws_url),
                 "--l1.beacon={0}".format(cl_context.beacon_http_url),
                 "--l2.auth={0}".format(geth.auth_url),
-                "--taikoL1=0xaDe68b4b6410aDB1578896dcFba75283477b6b01",
-                "--taikoL2=00x1670000000000000000000000000000000010001",
+                "--taikoL1=0xaE37C7A711bcab9B0f8655a97B738d6ccaB6560B",
+                "--taikoL2=0x1670000000000000000000000000000000010001",
                 "--jwtSecret={0}".format(jwtsecret_file),
                 # "--p2p.sync",
                 # "--p2p.checkPointSyncUrl=https://rpc.hekla.taiko.xyz",

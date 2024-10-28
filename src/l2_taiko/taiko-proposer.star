@@ -14,7 +14,7 @@ def launch(
     service = plan.add_service(
         name = "preconf-taiko-proposer-{0}".format(index),
         config = ServiceConfig(
-            image = "us-docker.pkg.dev/evmchain/images/taiko-client:taiko-client-v0.38.0",
+            image = "nethsurge/taiko-client:latest",
             files = {
                 "/data/taiko-geth": "taiko_files",
                 "/tmp/jwt": "l2_jwt_files",
@@ -131,11 +131,11 @@ def launch(
                 # "--l1.ws=ws://195.154.100.52:8546",
                 "--l2.http={0}".format(geth.rpc_http_url),
                 "--l2.auth={0}".format(geth.auth_url),
-                "--taikoL1=0xaDe68b4b6410aDB1578896dcFba75283477b6b01",
-                "--taikoL2=00x1670000000000000000000000000000000010001",
+                "--taikoL1=0xaE37C7A711bcab9B0f8655a97B738d6ccaB6560B",
+                "--taikoL2=0x1670000000000000000000000000000000010001",
                 "--jwtSecret={0}".format(jwtsecret_file),
-                "--taikoToken=0x8F0342A7060e76dfc7F6e9dEbfAD9b9eC919952c",
-                "--l1.proposerPrivKey={0}".format(prefunded_accounts[0].private_key),
+                # "--taikoToken=0x8F0342A7060e76dfc7F6e9dEbfAD9b9eC919952c",
+                "--l1.proposerPrivKey={0}".format(prefunded_accounts[2].private_key),
                 "--l2.suggestedFeeRecipient=0xD51a7E12997f6f1D04AcCC2b4053307a62b373cb",
             ],
         ),
