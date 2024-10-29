@@ -29,7 +29,7 @@ def launch(
                 "--taikoL2=0x1670000000000000000000000000000000010001",
                 # "--jwtSecret={0}".format(jwtsecret_path),
                 # "--taikoToken=0x8F0342A7060e76dfc7F6e9dEbfAD9b9eC919952c",
-                "--l1.proposerPrivKey={0}".format(prefunded_accounts[3].private_key),
+                "--l1.proverPrivKey={0}".format(prefunded_accounts[3].private_key),
                 "--l2.suggestedFeeRecipient=0x8e81D13339eE01Bb2080EBf9796c5F2e5621f7E1",
                 "--tierFee.optimistic=1",
                 "--tierFee.sgx=1",
