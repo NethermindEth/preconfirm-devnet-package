@@ -31,10 +31,8 @@ def launch(
                 # "--taikoToken=0x8F0342A7060e76dfc7F6e9dEbfAD9b9eC919952c",
                 "--l1.proverPrivKey={0}".format(prefunded_accounts[3].private_key),
                 "--l2.suggestedFeeRecipient=0x8e81D13339eE01Bb2080EBf9796c5F2e5621f7E1",
-                "--tierFee.optimistic=1",
-                "--tierFee.sgx=1",
-                "--l1.blobAllowed",
-                "--tx.gasLimit=3000000",
+                "--prover.capacity=1",
+                # "--raiko.host="
             ],
         ),
     )
