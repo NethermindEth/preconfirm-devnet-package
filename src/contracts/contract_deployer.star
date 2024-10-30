@@ -2,6 +2,7 @@ taiko_contract_deployer = import_module("./taiko.star")
 eigenlayer_contract_deployer = import_module("./eigenlayer_mvp.star")
 avs_contract_deployer = import_module("./preconf_avs.star")
 sequencer_contract_deployer = import_module("./sequencer.star")
+taiko_sgx_contract_deployer = import_module("./taiko-sgx.star")
 
 def deploy(
     plan,
@@ -17,26 +18,33 @@ def deploy(
     first_prefunded_account = prefunded_accounts[0]
 
     # Deposit some eths to contract owner
-    plan.add_service(
-        name="taiko-deposit-eths",
-        description="Depositing some eths to contract owner",
-        config=ServiceConfig(
-            image="nethsurge/token-transfer:latest",
-            env_vars={
-                "RPC_URL": el_rpc_url,
-                "SENDER_PRIVATE_KEY": prefunded_accounts[4].private_key,
-                "RECEIVER_ADDRESS": "0x8B52EEEC5de56a97d27376f79DCA50a25539907A",
-                "AMOUNT_IN_ETHER": "1000000",
-            },
-            cmd=[
-                "python",
-                "token_transfer.py",
-            ],
-        ),
-    )
+    # plan.add_service(
+    #     name="taiko-deposit-eths",
+    #     description="Depositing some eths to contract owner",
+    #     config=ServiceConfig(
+    #         image="nethsurge/token-transfer:latest",
+    #         env_vars={
+    #             "RPC_URL": el_rpc_url,
+    #             "SENDER_PRIVATE_KEY": prefunded_accounts[4].private_key,
+    #             "RECEIVER_ADDRESS": "0x8B52EEEC5de56a97d27376f79DCA50a25539907A",
+    #             "AMOUNT_IN_ETHER": "1000000",
+    #         },
+    #         cmd=[
+    #             "python",
+    #             "token_transfer.py",
+    #         ],
+    #     ),
+    # )
 
     # Deploy taiko contracts
     taiko_contract_deployer.deploy(
+        plan,
+        el_rpc_url,
+        first_prefunded_account,
+    )
+
+    # Deploy taiko sgx contracts
+    taiko_sgx_contract_deployer.deploy(
         plan,
         el_rpc_url,
         first_prefunded_account,

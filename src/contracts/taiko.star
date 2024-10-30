@@ -10,7 +10,7 @@ def deploy(
         image="nethsurge/taiko-contract:remove-taiko-token",
         env_vars={
             "PRIVATE_KEY": "0x{0}".format(prefunded_account.private_key),
-            "CONTRACT_OWNER": "0x8B52EEEC5de56a97d27376f79DCA50a25539907A",
+            "CONTRACT_OWNER": prefunded_account.address,
             "FORK_URL": el_rpc_url,
             "PROPOSER": "0x0000000000000000000000000000000000000000",
             "PROPOSER_ONE": "0x0000000000000000000000000000000000000000",
