@@ -17,5 +17,5 @@ def deploy(
             "FORK_URL": el_rpc_url,
         },
         wait=None,
-        description="Deploying taiko bridgesmart contract",
+        description="Deploying taiko bridge smart contract",
     )

@@ -139,7 +139,7 @@ def launch(
                 "--l2.suggestedFeeRecipient=0xD51a7E12997f6f1D04AcCC2b4053307a62b373cb",
                 "--surge.gasNeededForProposingBlock=165000",
                 "--surge.gasNeededForProvingBlock=100000",
-                "--surge.offChainCosts='50,000,000,000,000'",
+                "--surge.offChainCosts=50000000000000",
                 "--surge.priceFluctuationModifier=15",
             ],
         ),
