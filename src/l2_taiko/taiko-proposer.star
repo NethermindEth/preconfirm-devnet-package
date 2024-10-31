@@ -137,6 +137,10 @@ def launch(
                 # "--taikoToken=0x8F0342A7060e76dfc7F6e9dEbfAD9b9eC919952c",
                 "--l1.proposerPrivKey={0}".format(prefunded_accounts[2].private_key),
                 "--l2.suggestedFeeRecipient=0xD51a7E12997f6f1D04AcCC2b4053307a62b373cb",
+                "--surge.gasNeededForProposingBlock=165000",
+                "--surge.gasNeededForProvingBlock=100000",
+                "--surge.offChainCosts='50,000,000,000,000'",
+                "--surge.priceFluctuationModifier=15",
             ],
         ),
     )
