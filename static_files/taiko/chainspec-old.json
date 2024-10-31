@@ -44,15 +44,15 @@
     "eip1559FeeCollectorTransition": "0x0",
     "networkID": "0x28c58",
     "chainID": "0x28c58",
-    "eip1559BaseFeeMinValueTransition": "0x836c0",
+    "eip1559BaseFeeMinValueTransition": "0x0",
     "eip1559BaseFeeMinValue": "0x86ff51",
-    "ontakeTransition": "0x836c0"
+    "ontakeTransition": "0x0"
   },
   "genesis": {
     "seal": {
       "ethereum": {}
     },
-    "difficulty": "0x0",
+    "difficulty": "1",
     "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000df08f82de32b8d460adbe8d72043e3a7e25a3b390000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
     "gasLimit": "30000000"
   },

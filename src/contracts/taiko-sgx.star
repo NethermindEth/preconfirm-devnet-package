@@ -5,8 +5,7 @@ def deploy(
 ):
     taiko = plan.run_sh(
         name="deploy-taiko-sgx-contract",
-        run="script/layer1/config_sgx_tcb.sh > /tmp/taiko-sgx.txt",
-        # run="script/layer1/config_sgx_tcb.sh",
+        run="script/layer1/config_sgx_tcb.sh",
         image="nethsurge/taiko-contract:sgx-tcb",
         env_vars={
             "SGX_VERIFIER_ADDRESS": "0x86A0679C7987B5BA9600affA994B78D0660088ff",
@@ -17,7 +16,4 @@ def deploy(
         },
         wait=None,
         description="Deploying taiko sgx contract",
-        store=[
-            "/tmp/taiko-sgx.txt"
-        ],
     )

@@ -3,6 +3,7 @@ eigenlayer_contract_deployer = import_module("./eigenlayer_mvp.star")
 avs_contract_deployer = import_module("./preconf_avs.star")
 sequencer_contract_deployer = import_module("./sequencer.star")
 taiko_sgx_contract_deployer = import_module("./taiko-sgx.star")
+taiko_bridge_contract_deployer = import_module("./taiko-bridge.star")
 
 def deploy(
     plan,
@@ -49,6 +50,13 @@ def deploy(
     #     el_rpc_url,
     #     first_prefunded_account,
     # )
+
+    # Deploy taiko bridge contracts
+    taiko_bridge_contract_deployer.deploy(
+        plan,
+        el_rpc_url,
+        first_prefunded_account,
+    )
 
     # Deploy eigenlayer mvp contracts
     # eigenlayer_contract_deployer.deploy(
