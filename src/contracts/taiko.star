@@ -7,7 +7,7 @@ def deploy(
         name="deploy-taiko-contract",
         # run="script/layer1/deploy_protocol_on_l1.sh > /tmp/taiko-output.txt",
         run="script/layer1/deploy_protocol_on_l1.sh",
-        image="nethsurge/taiko-contract:fixed-ontake",
+        image="nethsurge/taiko-contract:risc0",
         env_vars={
             "PRIVATE_KEY": "0x{0}".format(prefunded_account.private_key),
             "CONTRACT_OWNER": prefunded_account.address,
