@@ -44,9 +44,9 @@
     "eip1559FeeCollectorTransition": "0x0",
     "networkID": "0x28c58",
     "chainID": "0x28c58",
-    "eip1559BaseFeeMinValueTransition": "0x1",
+    "eip1559BaseFeeMinValueTransition": "0x836c0",
     "eip1559BaseFeeMinValue": "0x86ff51",
-    "ontakeTransition": "0x1",
+    "ontakeTransition": "0x836c0",
     "terminalTotalDifficulty": "0x0"
   },
   "genesis": {
