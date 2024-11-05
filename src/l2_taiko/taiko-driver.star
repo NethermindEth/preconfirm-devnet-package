@@ -116,7 +116,7 @@ def launch(
                 "--l1.beacon={0}".format(cl_context.beacon_http_url),
                 "--l2.auth={0}".format(geth.auth_url),
                 "--taikoL1=0xaE37C7A711bcab9B0f8655a97B738d6ccaB6560B",
-                "--taikoL2=0x1670000000000000000000000000000000010001",
+                "--taikoL2=0x7633730000000000000000000000000000010001",
                 "--jwtSecret={0}".format(jwtsecret_file),
                 # "--p2p.sync",
                 # "--p2p.checkPointSyncUrl=https://rpc.hekla.taiko.xyz",
