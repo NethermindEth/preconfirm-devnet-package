@@ -6,10 +6,10 @@ def deploy(
     taiko = plan.run_sh(
         name="deploy-taiko-bridge",
         run="script/layer1/deploy_bridge.sh",
-        image="nethsurge/taiko-contract:taiko-bridge",
+        image="nethsurge/taiko-contract:chainid-change",
         env_vars={
             "FOUNDRY_PROFILE": "layer1",
-            "DOMAIN": "167000",
+            "DOMAIN": "763373",
             "ADDRESS": "0x7633730000000000000000000000000000000001",
             "NAME": "0x6272696467650000000000000000000000000000000000000000000000000000",
             "PROXY_ADDRESS": "0x0643D39D47CF0ea95Dbea69Bf11a7F8C4Bc34968",
