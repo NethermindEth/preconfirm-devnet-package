@@ -202,6 +202,8 @@ def get_config(
         "--Metrics.Enabled=true",
         "--Metrics.ExposePort={0}".format(METRICS_PORT_NUM),
         "--Metrics.ExposeHost=0.0.0.0",
+        # change none.cfg
+        "--config=none",
     ]
 
     if constants.NETWORK_NAME.shadowfork in network:
@@ -210,17 +212,17 @@ def get_config(
             + constants.GENESIS_CONFIG_MOUNT_PATH_ON_CONTAINER
             + "/chainspec.json"
         )
-        cmd.append("--config=" + network.split("-")[0])
+        # cmd.append("--config=" + network.split("-")[0])
         cmd.append("--Init.BaseDbPath=" + network.split("-")[0])
     elif network not in constants.PUBLIC_NETWORKS:
-        cmd.append("--config=none.cfg")
+        # cmd.append("--config=none.cfg")
         cmd.append(
             "--Init.ChainSpecPath="
             + constants.GENESIS_CONFIG_MOUNT_PATH_ON_CONTAINER
             + "/chainspec.json"
         )
-    else:
-        cmd.append("--config=" + network)
+    # else:
+        # cmd.append("--config=" + network)
 
     if (
         network == constants.NETWORK_NAME.kurtosis
