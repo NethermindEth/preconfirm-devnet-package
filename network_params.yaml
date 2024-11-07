@@ -1,7 +1,7 @@
 participants:
 # EL
   - el_type: nethermind
-    el_image: nethermindeth/nethermind:surge-1d20805
+    el_image: nethermindeth/nethermind:surge-f80182a
     el_log_level: "debug"
     el_extra_env_vars: {}
     el_extra_labels: {}
