@@ -1,7 +1,7 @@
 participants:
 # EL
   - el_type: nethermind
-    el_image: nethermind/nethermind:latest
+    el_image: nethermindeth/nethermind:surge-f80182a
     el_log_level: "debug"
     el_extra_env_vars: {}
     el_extra_labels: {}
@@ -88,7 +88,7 @@ network_params:
   prefunded_accounts: {}
 additional_services:
   - blockscout
-  - taiko_stack
+  # - taiko_stack
   # - preconf_avs
 dora_params:
   image: ""
