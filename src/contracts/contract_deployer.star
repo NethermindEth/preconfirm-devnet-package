@@ -45,18 +45,18 @@ def deploy(
     )
 
     # Deploy taiko sgx contracts
-    taiko_sgx_contract_deployer.deploy(
-        plan,
-        el_rpc_url,
-        first_prefunded_account,
-    )
+    # taiko_sgx_contract_deployer.deploy(
+    #     plan,
+    #     el_rpc_url,
+    #     first_prefunded_account,
+    # )
 
     # Deploy taiko bridge contracts
-    taiko_bridge_contract_deployer.deploy(
-        plan,
-        el_rpc_url,
-        first_prefunded_account,
-    )
+    # taiko_bridge_contract_deployer.deploy(
+    #     plan,
+    #     el_rpc_url,
+    #     first_prefunded_account,
+    # )
 
     # Deploy eigenlayer mvp contracts
     # eigenlayer_contract_deployer.deploy(

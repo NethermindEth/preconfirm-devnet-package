@@ -5,9 +5,8 @@ def deploy(
 ):
     taiko = plan.run_sh(
         name="deploy-taiko-contract",
-        # run="script/layer1/deploy_protocol_on_l1.sh > /tmp/taiko-output.txt",
         run="script/layer1/deploy_protocol_on_l1.sh",
-        image="nethsurge/taiko-contract:chain-763374",
+        image="nethsurge/taiko-contract:surge-devnet",
         env_vars={
             "PRIVATE_KEY": "0x{0}".format(prefunded_account.private_key),
             "CONTRACT_OWNER": prefunded_account.address,
@@ -23,12 +22,9 @@ def deploy(
             "PAUSE_BRIDGE": "false",
             "NUM_MIN_MAJORITY_GUARDIANS": "7",
             "NUM_MIN_MINORITY_GUARDIANS": "2",
-            "TIER_PROVIDER": "devnet",
+            "TIER_PROVIDER": "devnet_sgx",
             "FOUNDRY_PROFILE": "layer1",
         },
         wait=None,
         description="Deploying taiko smart contract",
-        # store=[
-        #     "/tmp/taiko-output.txt"
-        # ],
     )
