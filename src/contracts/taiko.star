@@ -5,8 +5,8 @@ def deploy(
 ):
     taiko = plan.run_sh(
         name="deploy-taiko-contract",
-        run="script/layer1/deploy_protocol_on_l1.sh",
-        image="nethsurge/taiko-contract:surge-devnet",
+        run='forge script ./script/layer1/DeployProtocolOnL1.s.sol:DeployProtocolOnL1 --fork-url "$FORK_URL" --private-key "$PRIVATE_KEY" $FORGE_FLAGS',
+        image="nethsurge/protocol:risc0",
         env_vars={
             "PRIVATE_KEY": "0x{0}".format(prefunded_account.private_key),
             "CONTRACT_OWNER": prefunded_account.address,
@@ -22,8 +22,9 @@ def deploy(
             "PAUSE_BRIDGE": "false",
             "NUM_MIN_MAJORITY_GUARDIANS": "7",
             "NUM_MIN_MINORITY_GUARDIANS": "2",
-            "TIER_PROVIDER": "devnet_sgx",
+            "TIER_PROVIDER": "devnet_risc0",
             "FOUNDRY_PROFILE": "layer1",
+            "FORGE_FLAGS": "--broadcast --ffi -vv --block-gas-limit 100000000",
         },
         wait=None,
         description="Deploying taiko smart contract",
