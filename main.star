@@ -55,8 +55,10 @@ get_prefunded_accounts = import_module(
     "./src/prefunded_accounts/get_prefunded_accounts.star"
 )
 
+# Taiko
+taiko_protocol = import_module("./src/contracts/taiko-protocol.star")
+
 # Preconf AVS
-contract_deployer = import_module("./src/contracts/contract_deployer.star")
 l2_taiko = import_module("./src/l2_taiko/taiko_launcher.star")
 taiko_blockscout = import_module("./src/l2_taiko/blockscout_launcher.star")
 preconf_avs = import_module("./src/preconf_avs/avs_launcher.star")
@@ -140,7 +142,7 @@ def run(plan, args={}):
             num_participants, network_params
         )
     )
-    plan.print(prefunded_accounts)
+
     (
         all_participants,
         final_genesis_timestamp,
@@ -203,13 +205,15 @@ def run(plan, args={}):
     )
 
     # Deploy all smart contracts
-    contract_deployer.deploy(
-        plan,
-        final_genesis_timestamp,
-        all_el_contexts[0],
-        prefunded_accounts,
-        network_id,
-    )
+    if "taiko" in args_with_right_defaults.additional_services:
+        taiko_params = args_with_right_defaults.taiko_params
+        taiko_protocol.deploy(
+            plan,
+            taiko_params,
+            prefunded_accounts, # L1 Prefunded Accounts
+            final_genesis_timestamp, # L1 Genesis Timestamp
+            all_el_contexts[0].rpc_http_url, # L1 RPC URL
+        )
 
     # Broadcaster forwards requests, sent to it, to all nodes in parallel
     if "broadcaster" in args_with_right_defaults.additional_services:
@@ -654,9 +658,15 @@ def run(plan, args={}):
                 args_with_right_defaults.custom_flood_params,
                 global_node_selectors,
             )
-        elif additional_service == "taiko_stack":
-            plan.print("Launching taiko")
+        elif additional_service == "taiko":
 
+            plan.print("Preparing taiko")
+            taiko_params = args_with_right_defaults.taiko_params
+            plan.print("Taiko Params: {0}".format(taiko_params))
+
+        elif additional_service == "taiko_stack":
+
+            plan.print("Launching taiko")
             # plan.upload_files(
             #     src="./taiko-geth",
             #     name="taiko_genesis",

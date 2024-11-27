@@ -185,6 +185,7 @@ SUBCATEGORY_PARAMS = {
         "custom_flood_params",
     ],
     "taiko_params": [
+        "taiko_protocol",
         "taiko_deploy_image",
         "taiko_geth_image",
         "taiko_client_image",
@@ -233,6 +234,7 @@ ADDITIONAL_SERVICES_PARAMS = [
     "tracoor",
     "taiko_stack",
     "preconf_avs",
+    "taiko",
 ]
 
 ADDITIONAL_CATEGORY_PARAMS = {

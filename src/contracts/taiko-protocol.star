@@ -1,23 +1,23 @@
-taiko_contract_deployer = import_module("./taiko.star")
-eigenlayer_contract_deployer = import_module("./eigenlayer_mvp.star")
-avs_contract_deployer = import_module("./preconf_avs.star")
-sequencer_contract_deployer = import_module("./sequencer.star")
-taiko_sgx_contract_deployer = import_module("./taiko-sgx.star")
-taiko_bridge_contract_deployer = import_module("./taiko-bridge.star")
+# Taiko on L1
+taiko_on_l1 = import_module("./taiko-on-l1.star")
+
+# Taiko SetDcapParams
+set_dcap_params = import_module("./set-dcap-params.star")
+
+# Taiko SetAddress
+set_address = import_module("./set-address.star")
+
+# eigenlayer_contract_deployer = import_module("./eigenlayer_mvp.star")
+# avs_contract_deployer = import_module("./preconf_avs.star")
+# sequencer_contract_deployer = import_module("./sequencer.star")
 
 def deploy(
     plan,
-    final_genesis_timestamp,
-    el_context,
+    taiko_params,
     prefunded_accounts,
-    network_id,
+    final_genesis_timestamp,
+    el_rpc_url,
 ):
-    # Get el rpc url
-    el_rpc_url = el_context.rpc_http_url
-
-    # Get first prefunded account
-    first_prefunded_account = prefunded_accounts[0]
-
     # Deposit some eths to contract owner
     # plan.add_service(
     #     name="taiko-deposit-eths",
@@ -37,26 +37,29 @@ def deploy(
     #     ),
     # )
 
-    # Deploy taiko contracts
-    taiko_contract_deployer.deploy(
+    # Deploy Taiko on L1
+    taiko_on_l1.deploy(
         plan,
+        taiko_params,
+        prefunded_accounts[0],
         el_rpc_url,
-        first_prefunded_account,
     )
 
-    # Deploy taiko sgx contracts
-    # taiko_sgx_contract_deployer.deploy(
-    #     plan,
-    #     el_rpc_url,
-    #     first_prefunded_account,
-    # )
+    # Deploy Taiko SGX SetDcapParams
+    set_dcap_params.deploy(
+        plan,
+        taiko_params,
+        prefunded_accounts[0],
+        el_rpc_url,
+    )
 
-    # Deploy taiko bridge contracts
-    # taiko_bridge_contract_deployer.deploy(
-    #     plan,
-    #     el_rpc_url,
-    #     first_prefunded_account,
-    # )
+    # Deploy Taiko SetAddress
+    set_address.deploy(
+        plan,
+        taiko_params,
+        prefunded_accounts[0],
+        el_rpc_url,
+    )
 
     # Deploy eigenlayer mvp contracts
     # eigenlayer_contract_deployer.deploy(
@@ -114,20 +117,20 @@ def deploy(
     # )
 
     # Deposit proposer and prover keys
-    result = plan.add_service(
-        name="taiko-deposit-bonds",
-        description="Depositing proposer and prover keys",
-        config=ServiceConfig(
-            image="nethsurge/deposit-bonds:latest",
-            env_vars={
-                "L1_PROPOSER_PRIVATE_KEY": prefunded_accounts[2].private_key,
-                "L1_PROVER_PRIVATE_KEY": prefunded_accounts[3].private_key,
-                "TAIKO_L1_CONTRACT_ADDRESS": "0xaE37C7A711bcab9B0f8655a97B738d6ccaB6560B",
-            },
-            cmd=[
-                "python",
-                "deposit_bonds.py",
-                "--rpc", el_rpc_url,
-            ],
-        ),
-    )
+    # result = plan.add_service(
+    #     name="taiko-deposit-bonds",
+    #     description="Depositing proposer and prover keys",
+    #     config=ServiceConfig(
+    #         image="nethsurge/deposit-bonds:latest",
+    #         env_vars={
+    #             "L1_PROPOSER_PRIVATE_KEY": prefunded_accounts[2].private_key,
+    #             "L1_PROVER_PRIVATE_KEY": prefunded_accounts[3].private_key,
+    #             "TAIKO_L1_CONTRACT_ADDRESS": "0xaE37C7A711bcab9B0f8655a97B738d6ccaB6560B",
+    #         },
+    #         cmd=[
+    #             "python",
+    #             "deposit_bonds.py",
+    #             "--rpc", el_rpc_url,
+    #         ],
+    #     ),
+    # )
