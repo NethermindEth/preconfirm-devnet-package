@@ -22,6 +22,7 @@ def deploy(
     taiko_params,
     prefunded_account,
     el_rpc_url,
+    deployment_result,
 ):
     FORK_URL_COMMAND = "--fork-url {0}".format(el_rpc_url)
 
@@ -34,9 +35,9 @@ def deploy(
         "QEID_PATH": QEID_PATH,
         "TCB_INFO_PATH": TCB_INFO_PATH,
         "V3_QUOTE_BYTES": taiko_params.taiko_protocol_v3_quote_bytes,
-        "SGX_VERIFIER_ADDRESS": "0xdceA5C391F6dCfA2a1796fd1a19B6E30569508EF",
-        "ATTESTATION_ADDRESS": "0x23B4c59C3B67A512563D8650d2C78Ec3861c4648",
-        "PEM_CERTCHAIN_ADDRESS": "0xa4fD91B3b1032e1fd0d7623A54B1a399aaaF9ab5",
+        "SGX_VERIFIER_ADDRESS": deployment_result.tier_sgx,
+        "ATTESTATION_ADDRESS": deployment_result.automata_dcap_attestation,
+        "PEM_CERTCHAIN_ADDRESS": deployment_result.pem_cert_chain_lib,
         "PRIVATE_KEY": "0x{0}".format(prefunded_account.private_key),
         "FORK_URL": el_rpc_url,
         "FORGE_FLAGS": "--broadcast --evm-version cancun --ffi -vvvv --block-gas-limit 100000000 --legacy",

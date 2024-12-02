@@ -5,8 +5,9 @@ def deploy(
     taiko_params,
     prefunded_account,
     el_rpc_url,
+    deployment_result,
 ):
-    L1_SHARED_ADDRESS_MANAGER_ADDRESS = "0x0643D39D47CF0ea95Dbea69Bf11a7F8C4Bc34968"
+    L1_SHARED_ADDRESS_MANAGER_ADDRESS = "0x8F0342A7060e76dfc7F6e9dEbfAD9b9eC919952c"
 
     L2_BRIDGE_ADDRESS = "0x{0}0000000000000000000000000000000001".format(taiko_params.taiko_protocol_l2_network_id)
 

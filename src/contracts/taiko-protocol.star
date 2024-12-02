@@ -38,7 +38,7 @@ def deploy(
     # )
 
     # Deploy Taiko on L1
-    taiko_on_l1.deploy(
+    result = taiko_on_l1.deploy(
         plan,
         taiko_params,
         prefunded_accounts[0],
@@ -51,6 +51,7 @@ def deploy(
         taiko_params,
         prefunded_accounts[0],
         el_rpc_url,
+        result,
     )
 
     # Deploy Taiko SetAddress
@@ -59,6 +60,7 @@ def deploy(
     #     taiko_params,
     #     prefunded_accounts[0],
     #     el_rpc_url,
+    #     result,
     # )
 
     # Deploy eigenlayer mvp contracts
