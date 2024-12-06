@@ -1,4 +1,5 @@
 SOLIDITY_SCRIPT_PATH = "./script/shared/SetAddress.s.sol"
+FORGE_FLAGS = "--broadcast -vvv"
 
 def deploy(
     plan,
@@ -7,7 +8,7 @@ def deploy(
     el_rpc_url,
     deployment_result,
 ):
-    L1_SHARED_ADDRESS_MANAGER_ADDRESS = "0x8F0342A7060e76dfc7F6e9dEbfAD9b9eC919952c"
+    L1_SHARED_ADDRESS_MANAGER_ADDRESS = deployment_result.shared_address_manager
 
     L2_BRIDGE_ADDRESS = "0x{0}0000000000000000000000000000000001".format(taiko_params.taiko_protocol_l2_network_id)
 
@@ -30,6 +31,7 @@ def deploy(
         "NAME": BRIDGE_32_BYTES,
         # L1 Shared Address Manager Address
         "PROXY_ADDRESS": L1_SHARED_ADDRESS_MANAGER_ADDRESS,
+        "FORGE_FLAGS": FORGE_FLAGS,
         "PRIVATE_KEY": "0x{0}".format(prefunded_account.private_key),
     }
 
@@ -42,6 +44,7 @@ def deploy(
         "NAME": SIGNAL_SERVICE_32_BYTES,
         # L1 Shared Address Manager Address
         "PROXY_ADDRESS": L1_SHARED_ADDRESS_MANAGER_ADDRESS,
+        "FORGE_FLAGS": FORGE_FLAGS,
         "PRIVATE_KEY": "0x{0}".format(prefunded_account.private_key),
     }
 

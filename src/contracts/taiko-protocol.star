@@ -55,13 +55,13 @@ def deploy(
     )
 
     # Deploy Taiko SetAddress
-    # set_address.deploy(
-    #     plan,
-    #     taiko_params,
-    #     prefunded_accounts[0],
-    #     el_rpc_url,
-    #     result,
-    # )
+    set_address.deploy(
+        plan,
+        taiko_params,
+        prefunded_accounts[0],
+        el_rpc_url,
+        result,
+    )
 
     # Deploy eigenlayer mvp contracts
     # eigenlayer_contract_deployer.deploy(

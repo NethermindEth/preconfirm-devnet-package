@@ -1,4 +1,4 @@
-SOLIDITY_SCRIPT_PATH = "./script/layer1/DeploySurgeOnL1.s.sol:DeploySurgeOnL1"
+SOLIDITY_SCRIPT_PATH = "./script/layer1/DeployProtocolOnL1.s.sol:DeployProtocolOnL1"
 
 def deploy(
     plan,
@@ -11,13 +11,25 @@ def deploy(
     PRIVATE_KEY_COMMAND = "--private-key {0}".format(prefunded_account.private_key)
 
     ENV_VARS = {
+        "PROPOSER": "0x0000000000000000000000000000000000000000",
+        "PROPOSER_ONE": "0x0000000000000000000000000000000000000000",
+        "GUARDIAN_PROVERS": "0x1000777700000000000000000000000000000001,0x1000777700000000000000000000000000000002,0x1000777700000000000000000000000000000003,0x1000777700000000000000000000000000000004,0x1000777700000000000000000000000000000005,0x1000777700000000000000000000000000000006,0x1000777700000000000000000000000000000007",
+        "TAIKO_L2_ADDRESS": "0x{0}0000000000000000000000000000000001".format(taiko_params.taiko_protocol_l2_network_id),
+        "L2_SIGNAL_SERVICE": "0x{0}0000000000000000000000000000000005".format(taiko_params.taiko_protocol_l2_network_id),
+        "CONTRACT_OWNER": prefunded_account.address,
+        "SHARED_ADDRESS_MANAGER": "0x0000000000000000000000000000000000000000",
+        "PAUSE_TAIKO_L1": "false",
+        "PAUSE_BRIDGE": "false",
+        "NUM_MIN_MAJORITY_GUARDIANS": "7",
+        "NUM_MIN_MINORITY_GUARDIANS": "2",
+        "TIER_PROVIDER": "devnet",
         "PRIVATE_KEY": "0x{0}".format(prefunded_account.private_key),
-        "L2_CHAINID": taiko_params.taiko_protocol_l2_network_id,
+        # "L2_CHAINID": taiko_params.taiko_protocol_l2_network_id,
         "L2_GENESIS_HASH": taiko_params.taiko_protocol_l2_genesis_hash,
-        "OWNER_MULTISIG": "0x{0}0000000000000000000000000000000001".format(taiko_params.taiko_protocol_l2_network_id),
-        "OWNER_MULTISIG_SIGNERS": "0x{0}0000000000000000000000000000000002,0x{0}0000000000000000000000000000000003,0x{0}0000000000000000000000000000000004".format(taiko_params.taiko_protocol_l2_network_id),
-        "ATTESTATION_CONTRACT_OWNER": prefunded_account.address,
-        "RISC0_VERIFIER_OWNER": prefunded_account.address,
+        # "OWNER_MULTISIG": "0x{0}0000000000000000000000000000000001".format(taiko_params.taiko_protocol_l2_network_id),
+        # "OWNER_MULTISIG_SIGNERS": "0x{0}0000000000000000000000000000000002,0x{0}0000000000000000000000000000000003,0x{0}0000000000000000000000000000000004".format(taiko_params.taiko_protocol_l2_network_id),
+        # "ATTESTATION_CONTRACT_OWNER": prefunded_account.address,
+        # "RISC0_VERIFIER_OWNER": prefunded_account.address,
         "FOUNDRY_PROFILE": taiko_params.taiko_protocol_foundry_profile,
         "FORGE_FLAGS": "--broadcast --ffi -vv --block-gas-limit 200000000",
     }
@@ -59,11 +71,9 @@ def deploy(
                 "signal_service": "fromjson | .signal_service",
                 "taiko": "fromjson | .taiko",
                 "tier_sgx": "fromjson | .tier_sgx",
-                "tier_tee_any": "fromjson | .tier_tee_any",
-                "tier_zkvm_and_tee": "fromjson | .tier_zkvm_and_tee",
-                "tier_zkvm_any": "fromjson | .tier_zkvm_any",
                 "tier_zkvm_risc0": "fromjson | .tier_zkvm_risc0",
                 "tier_zkvm_sp1": "fromjson | .tier_zkvm_sp1",
+                "two_of_three_verifier": "fromjson | .two_of_three_verifier",
             }
         ),
     )
@@ -80,9 +90,7 @@ def deploy(
         signal_service = result["extract.signal_service"],
         taiko = result["extract.taiko"],
         tier_sgx = result["extract.tier_sgx"],
-        tier_tee_any = result["extract.tier_tee_any"],
-        tier_zkvm_and_tee = result["extract.tier_zkvm_and_tee"],
-        tier_zkvm_any = result["extract.tier_zkvm_any"],
         tier_zkvm_risc0 = result["extract.tier_zkvm_risc0"],
         tier_zkvm_sp1 = result["extract.tier_zkvm_sp1"],
+        two_of_three_verifier = result["extract.two_of_three_verifier"],
     )
