@@ -22,7 +22,7 @@ def deploy(
         "PAUSE_BRIDGE": "false",
         "NUM_MIN_MAJORITY_GUARDIANS": "7",
         "NUM_MIN_MINORITY_GUARDIANS": "2",
-        "TIER_PROVIDER": "devnet",
+        "TIER_PROVIDER": "composite",
         "PRIVATE_KEY": "0x{0}".format(prefunded_account.private_key),
         # "L2_CHAINID": taiko_params.taiko_protocol_l2_network_id,
         "L2_GENESIS_HASH": taiko_params.taiko_protocol_l2_genesis_hash,
