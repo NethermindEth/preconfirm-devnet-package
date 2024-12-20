@@ -73,7 +73,7 @@ def deploy(
                 "tier_sgx": "fromjson | .tier_sgx",
                 "tier_zkvm_risc0": "fromjson | .tier_zkvm_risc0",
                 "tier_zkvm_sp1": "fromjson | .tier_zkvm_sp1",
-                "two_of_three_verifier": "fromjson | .two_of_three_verifier",
+                "tier_two_of_three": "fromjson | .tier_two_of_three",
             }
         ),
     )
@@ -92,5 +92,5 @@ def deploy(
         tier_sgx = result["extract.tier_sgx"],
         tier_zkvm_risc0 = result["extract.tier_zkvm_risc0"],
         tier_zkvm_sp1 = result["extract.tier_zkvm_sp1"],
-        two_of_three_verifier = result["extract.two_of_three_verifier"],
+        tier_two_of_three = result["extract.tier_two_of_three"],
     )
