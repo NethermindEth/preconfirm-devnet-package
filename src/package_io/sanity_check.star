@@ -183,6 +183,10 @@ SUBCATEGORY_PARAMS = {
         "mev_flood_extra_args",
         "mev_flood_seconds_per_bundle",
         "custom_flood_params",
+        "bolt_sidecar_image",
+        "bolt_boost_image",
+        "helix_relay_image",
+        "helix_relay_config_extension",
     ],
     "taiko_params": [
         "taiko_deploy_image",

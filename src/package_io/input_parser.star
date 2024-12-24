@@ -59,6 +59,9 @@ HIGH_DENEB_VALUE_FORK_VERKLE = 2000000000
 # MEV Params
 MEV_BOOST_PORT = 18550
 MEV_BOOST_SERVICE_NAME_PREFIX = "mev-boost"
+BOLT_SIDECAR_CONSTRAINTS_PROXY_PORT = 18551
+BOLT_BOOST_SERVICE_NAME_PREFIX = "bolt-boost"
+BOLT_SIDECAR_SERVICE_NAME_PREFIX = "bolt-sidecar"
 
 # Minimum number of validators required for a network to be valid is 64
 MIN_VALIDATORS = 4
@@ -189,8 +192,8 @@ def input_parser(plan, input_args):
         pass
     else:
         fail(
-            "Unsupported MEV type: {0}, please use 'mock', 'flashbots', 'mev-rs' or 'commit-boost' type".format(
-                result.get("mev_type")
+            "Unsupported MEV type: {0}, -{1}- please use 'mock', 'flashbots', 'mev-rs' or 'commit-boost' type".format(
+                result.get("mev_type"), constants.COMMIT_BOOST_MEV_TYPE
             )
         )
 
@@ -324,6 +327,10 @@ def input_parser(plan, input_args):
             mev_flood_seconds_per_bundle=result["mev_params"][
                 "mev_flood_seconds_per_bundle"
             ],
+            bolt_sidecar_image=result["mev_params"]["bolt_sidecar_image"],
+            bolt_boost_image=result["mev_params"]["bolt_boost_image"],
+            helix_relay_image=result["mev_params"]["helix_relay_image"],
+            helix_relay_config_extension=result["mev_params"]["helix_relay_config_extension"],
         )
         if result["mev_params"]
         else None,
