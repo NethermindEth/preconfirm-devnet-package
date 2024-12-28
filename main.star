@@ -301,7 +301,7 @@ def run(plan, args={}):
         )
 
         # Get real genesis timestamp for helix
-        helix_genesis_timestamp = plan.run_python(
+        bolt_genesis_timestamp = plan.run_python(
             description="Getting real genesis timestamp for helix",
             run="""
 import sys
@@ -321,7 +321,7 @@ print(int(a+b), end="")
             builder_uri,
             network_params.seconds_per_slot,
             persistent,
-            helix_genesis_timestamp,
+            bolt_genesis_timestamp,
             global_node_selectors,
         )
 
@@ -454,7 +454,7 @@ print(int(a+b), end="")
                         relays_config,
                         bolt_sidecar_config,
                         network_params,
-                        final_genesis_timestamp,
+                        bolt_genesis_timestamp,
                         global_node_selectors,
                     )
                 else:
