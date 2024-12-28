@@ -299,33 +299,18 @@ def run(plan, args={}):
             timeout="20m",
             service_name=first_client_beacon_name,
         )
-        # if (
-        #     args_with_right_defaults.mev_type == constants.FLASHBOTS_MEV_TYPE
-        #     or args_with_right_defaults.mev_type == constants.COMMIT_BOOST_MEV_TYPE
-        # ):
-        #     endpoint = flashbots_mev_relay.launch_mev_relay(
-        #         plan,
-        #         mev_params,
-        #         network_id,
-        #         beacon_uris,
-        #         genesis_validators_root,
-        #         builder_uri,
-        #         network_params.seconds_per_slot,
-        #         persistent,
-        #         global_node_selectors,
-        #     )
-        # elif args_with_right_defaults.mev_type == constants.MEV_RS_MEV_TYPE:
-        #     endpoint, relay_ip_address, relay_port = mev_rs_mev_relay.launch_mev_relay(
-        #         plan,
-        #         mev_params,
-        #         network_params.network,
-        #         beacon_uri,
-        #         el_cl_data_files_artifact_uuid,
-        #         global_node_selectors,
-        #     )
-        # else:
-        #     fail("Invalid MEV type")
 
+        # Get real genesis timestamp for helix
+        helix_genesis_timestamp = plan.run_python(
+            description="Getting real genesis timestamp for helix",
+            run="""
+import sys
+a = int(sys.argv[1])
+b = int(sys.argv[2])
+print(int(a+b), end="")
+""",
+            args=[str(final_genesis_timestamp),str(network_params.genesis_delay)],
+        ).output
         # Run helix relay
         helix_endpoint = helix_relay.launch_helix_relay(
             plan,
@@ -336,7 +321,7 @@ def run(plan, args={}):
             builder_uri,
             network_params.seconds_per_slot,
             persistent,
-            final_genesis_timestamp,
+            helix_genesis_timestamp,
             global_node_selectors,
         )
 
@@ -472,31 +457,25 @@ def run(plan, args={}):
                         final_genesis_timestamp,
                         global_node_selectors,
                     )
-
-                    # plan.print("Launching commit-boost PBS service")
-                    # mev_boost_launcher = commit_boost_mev_boost.new_mev_boost_launcher(
-                    #     MEV_BOOST_SHOULD_CHECK_RELAY,
-                    #     mev_endpoints,
-                    # )
-                    # mev_boost_service_name = "{0}-{1}-{2}-{3}".format(
-                    #     input_parser.MEV_BOOST_SERVICE_NAME_PREFIX,
-                    #     index_str,
-                    #     participant.cl_type,
-                    #     participant.el_type,
-                    # )
-                    # mev_boost_context = commit_boost_mev_boost.launch(
-                    #     plan,
-                    #     mev_boost_launcher,
-                    #     mev_boost_service_name,
-                    #     network_params.network,
-                    #     mev_params,
-                    #     mev_endpoints,
-                    #     el_cl_data_files_artifact_uuid,
-                    #     global_node_selectors,
-                    # )
                 else:
                     fail("Invalid MEV type")
                 all_mevboost_contexts.append(mev_boost_context)
+
+                if bolt_sidecar_config != None:
+                    service_name = "{0}-{1}-{2}-{3}".format(
+                        input_parser.BOLT_SIDECAR_SERVICE_NAME_PREFIX,
+                        index_str,
+                        participant.cl_type,
+                        participant.el_type,
+                    )
+                    bolt_sidecar_config["service_name"] = service_name
+                    bolt_sidecar_context = bolt_sidecar.launch_bolt_sidecar(
+                        plan,
+                        mev_params.bolt_sidecar_image,
+                        bolt_sidecar_config,
+                        network_params,
+                        global_node_selectors,
+                    )
 
     if len(args_with_right_defaults.additional_services) == 0:
         output = struct(

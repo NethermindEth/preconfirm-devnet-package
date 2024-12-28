@@ -115,14 +115,13 @@ grafana_additional_dashboards: []
 persistent: false
 mev_type: commit-boost
 mev_params:
-  mev_relay_image: flashbots/mev-boost-relay:latest
-  mev_builder_image: flashbots/builder:latest
+  mev_relay_image: ghcr.io/chainbound/bolt-relay:v0.2.1-alpha
+  mev_builder_image: ghcr.io/chainbound/bolt-builder:v0.3.0-alpha.rc3
   mev_builder_cl_image: sigp/lighthouse:latest
-  #mev_boost_image: ghcr.io/commit-boost/pbs:latest
   mev_boost_image: ghcr.io/chainbound/bolt-boost:v0.3.0-alpha
   bolt_sidecar_image: ghcr.io/chainbound/bolt-sidecar:v0.3.0-alpha
   bolt_boost_image: ghcr.io/chainbound/bolt-boost:v0.3.0-alpha
-  helix_relay_image: ghcr.io/chainbound/helix:v0.3.0-alpha.rc2
+  helix_relay_image: helix-debug:debug # TODO upload image
   helix_relay_config_extension: {}
   mev_boost_args: ["mev-boost", "--relay-check"]
   mev_relay_api_extra_args: []

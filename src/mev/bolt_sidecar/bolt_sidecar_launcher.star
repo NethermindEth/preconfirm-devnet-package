@@ -25,9 +25,8 @@ def launch_bolt_sidecar(
         "RUST_LOG": "bolt_sidecar=trace",
     }
 
-    node_keystore_path = validator_keystore_generator.NODE_KEYSTORES_OUTPUT_DIRPATH_FORMAT_STR.format(sidecar_config["participant_index"])
-    full_keystore_path = "{0}{1}/keys".format(BOLT_SIDECAR_KEYS_DIRMOUNT_PATH_ON_SERVICE, node_keystore_path)
-    full_keystore_secrets_path = "{0}{1}/secrets".format(BOLT_SIDECAR_KEYS_DIRMOUNT_PATH_ON_SERVICE, node_keystore_path)
+    full_keystore_path = "{0}/keys".format(BOLT_SIDECAR_KEYS_DIRMOUNT_PATH_ON_SERVICE)
+    full_keystore_secrets_path = "{0}/secrets".format(BOLT_SIDECAR_KEYS_DIRMOUNT_PATH_ON_SERVICE)
 
     api = plan.add_service(
         name=sidecar_config["service_name"],
