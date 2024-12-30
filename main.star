@@ -823,10 +823,10 @@ print(int(a+b), end="")
             p2pbootnode_context = p2p_bootnode.launch(
                 plan,
             )
-
             # Launch Preconf AVS 1
             preconf_avs.launch(
                 plan,
+                preconf_params.preconf_avs_image,
                 network_id,
                 all_el_contexts[0],
                 all_cl_contexts[0],
@@ -844,6 +844,7 @@ print(int(a+b), end="")
             # Launch Preconf AVS 2
             preconf_avs.launch(
                 plan,
+                preconf_params.preconf_avs_image,
                 network_id,
                 all_el_contexts[0],
                 all_cl_contexts[0],
