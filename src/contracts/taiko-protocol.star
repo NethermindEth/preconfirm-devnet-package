@@ -38,7 +38,7 @@ def deploy(
     # )
 
     # Deploy Taiko on L1
-    taiko_on_l1.deploy(
+    result = taiko_on_l1.deploy(
         plan,
         taiko_params,
         prefunded_accounts[0],
@@ -51,6 +51,7 @@ def deploy(
         taiko_params,
         prefunded_accounts[0],
         el_rpc_url,
+        result,
     )
 
     # Deploy Taiko SetAddress
@@ -59,6 +60,7 @@ def deploy(
         taiko_params,
         prefunded_accounts[0],
         el_rpc_url,
+        result,
     )
 
     # Deploy eigenlayer mvp contracts
@@ -117,20 +119,20 @@ def deploy(
     # )
 
     # Deposit proposer and prover keys
-    # result = plan.add_service(
-    #     name="taiko-deposit-bonds",
-    #     description="Depositing proposer and prover keys",
-    #     config=ServiceConfig(
-    #         image="nethsurge/deposit-bonds:latest",
-    #         env_vars={
-    #             "L1_PROPOSER_PRIVATE_KEY": prefunded_accounts[2].private_key,
-    #             "L1_PROVER_PRIVATE_KEY": prefunded_accounts[3].private_key,
-    #             "TAIKO_L1_CONTRACT_ADDRESS": "0xaE37C7A711bcab9B0f8655a97B738d6ccaB6560B",
-    #         },
-    #         cmd=[
-    #             "python",
-    #             "deposit_bonds.py",
-    #             "--rpc", el_rpc_url,
-    #         ],
-    #     ),
-    # )
+    plan.add_service(
+        name="taiko-deposit-bonds",
+        description="Depositing proposer and prover keys",
+        config=ServiceConfig(
+            image="nethsurge/deposit-bonds:latest",
+            env_vars={
+                "L1_PROPOSER_PRIVATE_KEY": prefunded_accounts[2].private_key,
+                "L1_PROVER_PRIVATE_KEY": prefunded_accounts[3].private_key,
+                "TAIKO_L1_CONTRACT_ADDRESS": result.taiko,
+            },
+            cmd=[
+                "python",
+                "deposit_bonds.py",
+                "--rpc", el_rpc_url,
+            ],
+        ),
+    )
