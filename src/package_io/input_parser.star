@@ -59,6 +59,9 @@ HIGH_DENEB_VALUE_FORK_VERKLE = 2000000000
 # MEV Params
 MEV_BOOST_PORT = 18550
 MEV_BOOST_SERVICE_NAME_PREFIX = "mev-boost"
+BOLT_SIDECAR_CONSTRAINTS_PROXY_PORT = 18551
+BOLT_BOOST_SERVICE_NAME_PREFIX = "bolt-boost"
+BOLT_SIDECAR_SERVICE_NAME_PREFIX = "bolt-sidecar"
 
 # Minimum number of validators required for a network to be valid is 64
 MIN_VALIDATORS = 4
@@ -177,6 +180,7 @@ def input_parser(plan, input_args):
         constants.MOCK_MEV_TYPE,
         constants.FLASHBOTS_MEV_TYPE,
         constants.MEV_RS_MEV_TYPE,
+        constants.COMMIT_BOOST_MEV_TYPE,
     ):
         result = enrich_mev_extra_params(
             result,
@@ -188,8 +192,8 @@ def input_parser(plan, input_args):
         pass
     else:
         fail(
-            "Unsupported MEV type: {0}, please use 'mock', 'flashbots' or 'mev-rs' type".format(
-                result.get("mev_type")
+            "Unsupported MEV type: {0}, -{1}- please use 'mock', 'flashbots', 'mev-rs' or 'commit-boost' type".format(
+                result.get("mev_type"), constants.COMMIT_BOOST_MEV_TYPE
             )
         )
 
@@ -323,6 +327,10 @@ def input_parser(plan, input_args):
             mev_flood_seconds_per_bundle=result["mev_params"][
                 "mev_flood_seconds_per_bundle"
             ],
+            bolt_sidecar_image=result["mev_params"]["bolt_sidecar_image"],
+            bolt_boost_image=result["mev_params"]["bolt_boost_image"],
+            helix_relay_image=result["mev_params"]["helix_relay_image"],
+            helix_relay_config_extension=result["mev_params"]["helix_relay_config_extension"],
         )
         if result["mev_params"]
         else None,
@@ -978,6 +986,15 @@ def get_default_mev_params(mev_type, preset):
         mev_builder_extra_data = "0x68656C6C6F20776F726C640A"  # "hello world\n"
         mev_builder_extra_args = ["--mev-builder-config=" + "/config/config.toml"]
 
+    if mev_type == constants.COMMIT_BOOST_MEV_TYPE:
+        mev_relay_image = constants.DEFAULT_FLASHBOTS_RELAY_IMAGE
+        mev_builder_image = constants.DEFAULT_FLASHBOTS_BUILDER_IMAGE
+        mev_boost_image = constants.DEFAULT_COMMIT_BOOST_MEV_BOOST_IMAGE
+        mev_builder_cl_image = DEFAULT_CL_IMAGES[constants.CL_TYPE.lighthouse]
+        mev_builder_extra_data = (
+            "0x436f6d6d69742d426f6f737420f09f93bb"  # Commit-Boost 📻
+        )
+
     return {
         "mev_relay_image": mev_relay_image,
         "mev_builder_image": mev_builder_image,
@@ -1143,7 +1160,10 @@ def enrich_mev_extra_params(parsed_arguments_dict, mev_prefix, mev_port, mev_typ
     index_str = shared_utils.zfill_custom(
         num_participants + 1, len(str(num_participants + 1))
     )
-    if mev_type == constants.FLASHBOTS_MEV_TYPE:
+    if (
+        mev_type == constants.FLASHBOTS_MEV_TYPE
+        or mev_type == constants.COMMIT_BOOST_MEV_TYPE
+    ):
         mev_participant = default_participant()
         mev_participant["el_type"] = "geth-builder"
         mev_participant.update(
@@ -1160,7 +1180,7 @@ def enrich_mev_extra_params(parsed_arguments_dict, mev_prefix, mev_port, mev_typ
                 # TODO(maybe) make parts of this more passable like the mev-relay-endpoint & forks
                 "el_extra_params": [
                     "--builder",
-                    "--builder.remote_relay_endpoint=http://mev-relay-api:9062",
+                    "--builder.remote_relay_endpoint=http://helix-relay:4040",
                     "--builder.beacon_endpoints=http://cl-{0}-lighthouse-geth-builder:4000".format(
                         index_str
                     ),

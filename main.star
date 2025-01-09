@@ -33,6 +33,11 @@ full_beaconchain_explorer = import_module(
 blockscout = import_module("./src/blockscout/blockscout_launcher.star")
 prometheus = import_module("./src/prometheus/prometheus_launcher.star")
 grafana = import_module("./src/grafana/grafana_launcher.star")
+commit_boost_mev_boost = import_module(
+    "./src/mev/commit-boost/mev_boost/mev_boost_launcher.star"
+)
+bolt_boost = import_module("./src/mev/bolt_boost/bolt_boost_launcher.star")
+bolt_sidecar = import_module("./src/mev/bolt_sidecar/bolt_sidecar_launcher.star")
 mev_rs_mev_boost = import_module("./src/mev/mev-rs/mev_boost/mev_boost_launcher.star")
 mev_rs_mev_relay = import_module("./src/mev/mev-rs/mev_relay/mev_relay_launcher.star")
 mev_rs_mev_builder = import_module(
@@ -44,6 +49,7 @@ flashbots_mev_boost = import_module(
 flashbots_mev_relay = import_module(
     "./src/mev/flashbots/mev_relay/mev_relay_launcher.star"
 )
+helix_relay = import_module("./src/mev/mev_relay/helix_launcher.star")
 mock_mev = import_module("./src/mev/flashbots/mock_mev/mock_mev_launcher.star")
 mev_flood = import_module("./src/mev/flashbots/mev_flood/mev_flood_launcher.star")
 mev_custom_flood = import_module(
@@ -259,6 +265,7 @@ def run(plan, args={}):
     elif args_with_right_defaults.mev_type and (
         args_with_right_defaults.mev_type == constants.FLASHBOTS_MEV_TYPE
         or args_with_right_defaults.mev_type == constants.MEV_RS_MEV_TYPE
+        or args_with_right_defaults.mev_type == constants.COMMIT_BOOST_MEV_TYPE
     ):
         builder_uri = "http://{0}:{1}".format(
             all_el_contexts[-1].ip_addr, all_el_contexts[-1].rpc_port_num
@@ -292,29 +299,31 @@ def run(plan, args={}):
             timeout="20m",
             service_name=first_client_beacon_name,
         )
-        if args_with_right_defaults.mev_type == constants.FLASHBOTS_MEV_TYPE:
-            endpoint = flashbots_mev_relay.launch_mev_relay(
-                plan,
-                mev_params,
-                network_id,
-                beacon_uris,
-                genesis_validators_root,
-                builder_uri,
-                network_params.seconds_per_slot,
-                persistent,
-                global_node_selectors,
-            )
-        elif args_with_right_defaults.mev_type == constants.MEV_RS_MEV_TYPE:
-            endpoint, relay_ip_address, relay_port = mev_rs_mev_relay.launch_mev_relay(
-                plan,
-                mev_params,
-                network_params.network,
-                beacon_uri,
-                el_cl_data_files_artifact_uuid,
-                global_node_selectors,
-            )
-        else:
-            fail("Invalid MEV type")
+
+        # Get real genesis timestamp for helix
+        bolt_genesis_timestamp = plan.run_python(
+            description="Getting real genesis timestamp for helix",
+            run="""
+import sys
+a = int(sys.argv[1])
+b = int(sys.argv[2])
+print(int(a+b), end="")
+""",
+            args=[str(final_genesis_timestamp),str(network_params.genesis_delay)],
+        ).output
+        # Run helix relay
+        helix_endpoint = helix_relay.launch_helix_relay(
+            plan,
+            mev_params,
+            network_params,
+            beacon_uris,
+            genesis_validators_root,
+            builder_uri,
+            network_params.seconds_per_slot,
+            persistent,
+            bolt_genesis_timestamp,
+            global_node_selectors,
+        )
 
         # Restart MEV builder
         plan.stop_service(
@@ -335,7 +344,7 @@ def run(plan, args={}):
             contract_owner.private_key,
             normal_user.private_key,
         )
-        mev_endpoints.append(endpoint)
+        mev_endpoints.append(helix_endpoint)
         mev_endpoint_names.append(args_with_right_defaults.mev_type)
 
     # spin up the mev boost contexts if some endpoints for relays have been passed
@@ -351,6 +360,25 @@ def run(plan, args={}):
                 )
             )
             if args_with_right_defaults.participants[index].validator_count != 0:
+             # Initialize the Bolt Sidecar configure if needed
+                bolt_sidecar_config = None
+                if mev_params.bolt_sidecar_image != None:
+                    # NOTE: this is a stub missing the `"constraints_api_url"` entry
+                    bolt_sidecar_config = {
+                        "beacon_api_url": participant.cl_context.beacon_http_url,
+                        "execution_api_url": "http://{0}:{1}".format(
+                            participant.el_context.ip_addr,
+                            participant.el_context.rpc_port_num,
+                        ),
+                        "engine_api_url": "http://{0}:{1}".format(
+                            participant.el_context.ip_addr,
+                            participant.el_context.engine_rpc_port_num
+                        ),
+                        "jwt_hex": raw_jwt_secret,
+                        "metrics_port": bolt_sidecar.BOLT_SIDECAR_METRICS_PORT,
+                        "validator_keystore_files_artifact_uuid": participant.cl_context.validator_keystore_files_artifact_uuid,
+                        "participant_index": index,
+                    }
                 if (
                     args_with_right_defaults.mev_type == constants.FLASHBOTS_MEV_TYPE
                     or args_with_right_defaults.mev_type == constants.MOCK_MEV_TYPE
@@ -396,9 +424,58 @@ def run(plan, args={}):
                         el_cl_data_files_artifact_uuid,
                         global_node_selectors,
                     )
+                elif (
+                    args_with_right_defaults.mev_type == constants.COMMIT_BOOST_MEV_TYPE
+                ):
+                    plan.print("Launching bolt boost service")
+                    mev_boost_launcher = commit_boost_mev_boost.new_mev_boost_launcher(
+                        MEV_BOOST_SHOULD_CHECK_RELAY,
+                        mev_endpoints,
+                    )
+
+                    bolt_boost_service_name = "{0}-{1}-{2}-{3}".format(
+                        input_parser.MEV_BOOST_SERVICE_NAME_PREFIX,
+                        index_str,
+                        participant.cl_type,
+                        participant.el_type,
+                    )
+                    relays_config = [{
+                        "id": "helix_relay",
+                        "url": helix_endpoint,
+                    }]
+                    if bolt_sidecar_config != None:
+                        bolt_sidecar_config["constraints_api_url"] = "http://{0}:{1}".format(
+                            bolt_boost_service_name, input_parser.MEV_BOOST_PORT
+                        )
+                    mev_boost_context = bolt_boost.launch(
+                        plan,
+                        bolt_boost_service_name,
+                        mev_params.bolt_boost_image,
+                        relays_config,
+                        bolt_sidecar_config,
+                        network_params,
+                        bolt_genesis_timestamp,
+                        global_node_selectors,
+                    )
                 else:
                     fail("Invalid MEV type")
                 all_mevboost_contexts.append(mev_boost_context)
+
+                if bolt_sidecar_config != None:
+                    service_name = "{0}-{1}-{2}-{3}".format(
+                        input_parser.BOLT_SIDECAR_SERVICE_NAME_PREFIX,
+                        index_str,
+                        participant.cl_type,
+                        participant.el_type,
+                    )
+                    bolt_sidecar_config["service_name"] = service_name
+                    bolt_sidecar_context = bolt_sidecar.launch_bolt_sidecar(
+                        plan,
+                        mev_params.bolt_sidecar_image,
+                        bolt_sidecar_config,
+                        network_params,
+                        global_node_selectors,
+                    )
 
     if len(args_with_right_defaults.additional_services) == 0:
         output = struct(
@@ -746,10 +823,10 @@ def run(plan, args={}):
             p2pbootnode_context = p2p_bootnode.launch(
                 plan,
             )
-
             # Launch Preconf AVS 1
             preconf_avs.launch(
                 plan,
+                preconf_params.preconf_avs_image,
                 network_id,
                 all_el_contexts[0],
                 all_cl_contexts[0],
@@ -767,6 +844,7 @@ def run(plan, args={}):
             # Launch Preconf AVS 2
             preconf_avs.launch(
                 plan,
+                preconf_params.preconf_avs_image,
                 network_id,
                 all_el_contexts[0],
                 all_cl_contexts[0],

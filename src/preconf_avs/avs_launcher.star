@@ -1,5 +1,6 @@
 def launch(
     plan,
+    image,
     chain_id,
     el_context,
     cl_context,
@@ -20,7 +21,7 @@ def launch(
     plan.add_service(
         name = "taiko-preconf-avs-{0}-register".format(index),
         config = ServiceConfig(
-            image = "nethswitchboard/avs-node:e2e",
+            image = image,
             private_ip_address_placeholder = "avs_ip_placeholder",
             entrypoint = [
                 "/bin/bash",
@@ -71,7 +72,7 @@ def launch(
     plan.add_service(
         name = "taiko-preconf-avs-{0}-validator-1".format(index),
         config = ServiceConfig(
-            image = "nethswitchboard/avs-node:e2e",
+            image = image,
             private_ip_address_placeholder = "avs_ip_placeholder",
             entrypoint = [
                 "/bin/bash",
@@ -173,7 +174,7 @@ def launch(
     plan.add_service(
         name = "taiko-preconf-avs-{0}".format(index),
         config = ServiceConfig(
-            image = "nethswitchboard/avs-node:e2e",
+            image = image,
             private_ip_address_placeholder = "avs_ip_placeholder",
             env_vars={
                 "AVS_NODE_ECDSA_PRIVATE_KEY": "0x{0}".format(prefunded_accounts[index].private_key),
