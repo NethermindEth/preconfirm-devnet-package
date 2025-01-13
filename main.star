@@ -889,6 +889,19 @@ print(int(a+b), end="")
                     }
                 ),
             )
+
+            pytest_result = plan.exec(
+                name = "preconf-pytest",
+                description = "Running preconf pytest",
+                recipe = ExecRecipe(
+                    command = [
+                        "pytest"
+                    ],
+                ),
+            )
+
+            plan.print(pytest_result["output"])
+
         else:
             fail("Invalid additional service %s" % (additional_service))
     if launch_prometheus_grafana:
