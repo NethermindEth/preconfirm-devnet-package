@@ -880,7 +880,7 @@ print(int(a+b), end="")
                 name = "preconf-pytest",
                 description = "Launching preconf pytest",
                 config = ServiceConfig(
-                    image = "e2e-tests",
+                    image = "nethsurge/test-pytest",
                     env_vars = {
                         "L1_RPC_URL": all_el_contexts[0].rpc_http_url,
                         "L2_RPC_URL_NODE1": taiko_stack_1.rpc_http_url,
@@ -891,7 +891,7 @@ print(int(a+b), end="")
             )
 
             pytest_result = plan.exec(
-                name = "preconf-pytest",
+                service_name = "preconf-pytest",
                 description = "Running preconf pytest",
                 recipe = ExecRecipe(
                     command = [
