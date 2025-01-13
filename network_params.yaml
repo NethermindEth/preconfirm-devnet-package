@@ -87,6 +87,7 @@ network_params:
   devnet_repo: ethpandaops
   prefunded_accounts: {}
 additional_services:
+  - taiko
   - blockscout
   - taiko_stack
   - preconf_avs
@@ -137,6 +138,14 @@ mev_params:
   custom_flood_params:
     interval_between_transactions: 1
 taiko_params:
+  taiko_protocol:
+     image: nethswitchboard/taiko-deploy:e2e
+     l2_network_id: "763374"
+     l2_genesis_hash: 0xbeced3738f1246571cccabc82a1e6cbd9ed9d5f7ed2b6c7ded28f9722317bd9e
+     foundry_profile: layer1
+     mr_enclave:
+     mr_signer:
+     v3_quote_bytes:
   taiko_deploy_image: nethswitchboard/taiko-deploy:e2e
   taiko_geth_image: nethswitchboard/taiko-geth:e2e
   taiko_client_image: nethswitchboard/taiko-client:e2e

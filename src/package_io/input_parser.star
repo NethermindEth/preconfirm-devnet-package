@@ -335,6 +335,13 @@ def input_parser(plan, input_args):
         if result["mev_params"]
         else None,
         taiko_params=struct(
+            taiko_protocol_image=result["taiko_params"]["taiko_protocol"]["image"],
+            taiko_protocol_l2_network_id=result["taiko_params"]["taiko_protocol"]["l2_network_id"],
+            taiko_protocol_l2_genesis_hash=result["taiko_params"]["taiko_protocol"]["l2_genesis_hash"],
+            taiko_protocol_foundry_profile=result["taiko_params"]["taiko_protocol"]["foundry_profile"],
+            taiko_protocol_mr_enclave=result["taiko_params"]["taiko_protocol"]["mr_enclave"],
+            taiko_protocol_mr_signer=result["taiko_params"]["taiko_protocol"]["mr_signer"],
+            taiko_protocol_v3_quote_bytes=result["taiko_params"]["taiko_protocol"]["v3_quote_bytes"],
             taiko_deploy_image=result["taiko_params"]["taiko_deploy_image"],
             taiko_geth_image=result["taiko_params"]["taiko_geth_image"],
             taiko_client_image=result["taiko_params"]["taiko_client_image"],

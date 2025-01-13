@@ -10,12 +10,14 @@ def launch(
     prefunded_accounts,
     index,
 ):
+    jwtsecret_file = "/tmp/jwt/jwtsecret"
     service = plan.add_service(
         name = "preconf-taiko-proposer-{0}".format(index),
         config = ServiceConfig(
             image = "nethswitchboard/taiko-client:e2e",
             files = {
-                data_dirpath: "taiko_genesis_{0}".format(index),
+                "/data/taiko-geth": "taiko_files",
+                "/tmp/jwt": "l2_jwt_files",
             },
             env_vars = {
                 "SGX_RAIKO_HOST": "",

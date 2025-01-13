@@ -1,6 +1,8 @@
 geth_launcher = import_module("./taiko-geth.star")
+nethermind_launcher = import_module("./taiko-nethermind.star")
 driver_launcher = import_module("./taiko-driver.star")
 proposer_launcher = import_module("./taiko-proposer.star")
+prover_launcher = import_module("./taiko-prover.star")
 
 # The dirpath of the execution data directory on the client container
 EXECUTION_DATA_DIRPATH_ON_CLIENT_CONTAINER = "/data/taiko-geth"
