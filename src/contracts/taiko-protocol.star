@@ -1,3 +1,6 @@
+# Surge on L1
+surge_on_l1 = import_module("./surge-on-l1.star")
+
 # Taiko on L1
 taiko_on_l1 = import_module("./taiko-on-l1.star")
 
@@ -38,7 +41,15 @@ def deploy(
     # )
 
     # Deploy Taiko on L1
-    result = taiko_on_l1.deploy(
+    # result = taiko_on_l1.deploy(
+    #     plan,
+    #     taiko_params,
+    #     prefunded_accounts[0],
+    #     el_rpc_url,
+    # )
+
+    # Deploy Taiko on L1
+    result = surge_on_l1.deploy(
         plan,
         taiko_params,
         prefunded_accounts[0],
@@ -54,14 +65,14 @@ def deploy(
         result,
     )
 
-    # Deploy Taiko SetAddress
-    set_address.deploy(
-        plan,
-        taiko_params,
-        prefunded_accounts[0],
-        el_rpc_url,
-        result,
-    )
+    # Deploy Taiko SetAddress (Handled by surge on l1 now)
+    # set_address.deploy(
+    #     plan,
+    #     taiko_params,
+    #     prefunded_accounts[0],
+    #     el_rpc_url,
+    #     result,
+    # )
 
     # Deploy eigenlayer mvp contracts
     # eigenlayer_contract_deployer.deploy(
