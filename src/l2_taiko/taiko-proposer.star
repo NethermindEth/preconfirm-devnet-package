@@ -95,8 +95,8 @@ def launch(
                 "--taikoToken=0x1788a5D023bac58bAF55a92153192a6568E42BAD " +
                 "--l1.proposerPrivKey={0} ".format(prefunded_accounts[0].private_key) +
                 "--l2.suggestedFeeRecipient=0x8e81D13339eE01Bb2080EBf9796c5F2e5621f7E1 " +
-                "--tierFee.optimistic=1 " +
-                "--tierFee.sgx=1 " +
+                # "--tierFee.optimistic=1 " +
+                # "--tierFee.sgx=1 " +
                 "--l1.blobAllowed " +
                 "--tx.gasLimit=3000000",
             ],
