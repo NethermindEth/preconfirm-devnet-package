@@ -35,7 +35,5 @@ def deploy(
         },
         wait=None,
         description="Deploying taiko smart contract",
-        # store=[
-        #     "/tmp/taiko-output.txt"
-        # ],
+        store = [StoreSpec(src = "app/deployments/deploy_l1.json", name = "taiko_on_l1_deployment")],
     )

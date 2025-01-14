@@ -51,29 +51,29 @@ print(new, end="")
     )
 
     # Deploy add to sequencer contracts
-    # sequencer_contract_deployer.deploy(
-    #     plan,
-    #     el_rpc_url,
-    #     first_prefunded_account,
-    # )
+    sequencer_contract_deployer.deploy(
+        plan,
+        el_rpc_url,
+        first_prefunded_account,
+    )
 
     # Transfer taiko tokens
-    # transfer_result = plan.add_service(
-    #     name = "taiko-transfer",
-    #     description = "Transferring taiko tokens",
-    #     config = ServiceConfig(
-    #         image = "nethswitchboard/taiko-transfer:e2e",
-    #         cmd = [
-    #             "python",
-    #             "transfer.py",
-    #         ],
-    #         env_vars = {
-    #             "SENDER_PRIVATE_KEY": first_prefunded_account.private_key,
-    #             "RECIPIENT_ADDRESS": "0x6064f756f7F3dc8280C1CfA01cE41a37B5f16df1",
-    #             "TOKEN_AMOUNT": "1000000",
-    #             "ERC20_ADDRESS": "0x422A3492e218383753D8006C7Bfa97815B44373F",
-    #             "RPC_URL": el_rpc_url,
-    #             "CHAIN_ID": network_id,
-    #         },
-    #     ),
-    # )
+    transfer_result = plan.add_service(
+        name = "taiko-transfer",
+        description = "Transferring taiko tokens",
+        config = ServiceConfig(
+            image = "nethswitchboard/taiko-transfer:e2e",
+            cmd = [
+                "python",
+                "transfer.py",
+            ],
+            env_vars = {
+                "SENDER_PRIVATE_KEY": first_prefunded_account.private_key,
+                "RECIPIENT_ADDRESS": "0x6064f756f7F3dc8280C1CfA01cE41a37B5f16df1",
+                "TOKEN_AMOUNT": "1000000",
+                "ERC20_ADDRESS": "0x422A3492e218383753D8006C7Bfa97815B44373F",
+                "RPC_URL": el_rpc_url,
+                "CHAIN_ID": network_id,
+            },
+        ),
+    )
