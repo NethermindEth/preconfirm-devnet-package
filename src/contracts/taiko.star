@@ -5,7 +5,7 @@ def deploy(
 ):
     taiko = plan.run_sh(
         name="deploy-taiko-contract",
-        run="script/layer1/deploy_protocol_on_l1.sh > /tmp/taiko-output.txt",
+        run="script/layer1/deploy_protocol_on_l1.sh",
         # image="nethswitchboard/taiko-deploy:e2e",
         image="nethsurge/test-protocol",
         env_vars={
@@ -35,7 +35,7 @@ def deploy(
         },
         wait=None,
         description="Deploying taiko smart contract",
-        store=[
-            "/tmp/taiko-output.txt"
-        ],
+        # store=[
+        #     "/tmp/taiko-output.txt"
+        # ],
     )
