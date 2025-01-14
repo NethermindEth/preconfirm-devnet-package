@@ -43,12 +43,12 @@ print(new, end="")
     )
 
     # Deploy avs contracts
-    # avs_contract_deployer.deploy(
-    #     plan,
-    #     el_rpc_url,
-    #     beacon_genesis_timestamp.output,
-    #     first_prefunded_account,
-    # )
+    avs_contract_deployer.deploy(
+        plan,
+        el_rpc_url,
+        beacon_genesis_timestamp.output,
+        first_prefunded_account,
+    )
 
     # Deploy add to sequencer contracts
     # sequencer_contract_deployer.deploy(
