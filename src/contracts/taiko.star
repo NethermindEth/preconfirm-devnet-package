@@ -32,7 +32,6 @@ def deploy(
             "TIER_PROVIDER": "devnet",
             "FORK_URL": el_rpc_url,
             "SECURITY_COUNCIL": contract_owner.address,
-            "TAIKO_TOKEN_PREMINT_RECIPIENT": contract_owner.address,
         },
         wait=None,
         description="Deploying taiko smart contract",
