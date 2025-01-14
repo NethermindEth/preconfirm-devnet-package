@@ -6,7 +6,7 @@ def deploy(
     sequencer = plan.run_sh(
         name="deploy-add-to-sequencer",
         run="script/add_to_sequencer.sh",
-        image="nethswitchboard/taiko-deploy:e2e",
+        image="nethsurge/test-protocol",
         env_vars={
             "PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
             "FORK_URL": el_rpc_url,
