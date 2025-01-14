@@ -875,7 +875,32 @@ print(int(a+b), end="")
                     },
                 ),
             )
+            
+            plan.add_service(
+                name = "preconf-pytest",
+                description = "Launching preconf pytest",
+                config = ServiceConfig(
+                    image = "nethsurge/test-pytest",
+                    env_vars = {
+                        "L1_RPC_URL": all_el_contexts[0].rpc_http_url,
+                        "L2_RPC_URL_NODE1": taiko_stack_1.rpc_http_url,
+                        "L2_RPC_URL_NODE2": taiko_stack_2.rpc_http_url,
+                        "TEST_L2_PREFUNDED_PRIVATE_KEY": "0x370e47f3c39cf4d03cb87cb71a268776421cdc22c39aa81f1e5ba19df19202f1",
+                    }
+                ),
+            )
 
+            pytest_result = plan.exec(
+                service_name = "preconf-pytest",
+                description = "Running preconf pytest",
+                recipe = ExecRecipe(
+                    command = [
+                        "pytest"
+                    ],
+                ),
+            )
+
+            plan.print(pytest_result["output"])
         else:
             fail("Invalid additional service %s" % (additional_service))
     if launch_prometheus_grafana:
