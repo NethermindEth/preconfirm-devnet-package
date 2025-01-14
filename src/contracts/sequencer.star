@@ -10,7 +10,7 @@ def deploy(
         env_vars={
             "PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
             "FORK_URL": el_rpc_url,
-            "PROXY_ADDRESS": "0x3c0e871bB7337D5e6A18FDD73c4D9e7567961Ad3",
+            "PROXY_ADDRESS": "0x454A310f46C8d9403ba6F6c514aD3fDE1ad97a5E",
             "ADDRESS": "0x6064f756f7F3dc8280C1CfA01cE41a37B5f16df1",
             "ENABLED": "true",
         },
