@@ -5,7 +5,7 @@ def deploy(
 ):
     sequencer = plan.run_sh(
         name="deploy-add-to-sequencer",
-        run="script/add_to_sequencer.sh > /tmp/sequencer-output.txt",
+        run="script/add_to_sequencer.sh",
         image="nethswitchboard/taiko-deploy:e2e",
         env_vars={
             "PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
@@ -16,7 +16,7 @@ def deploy(
         },
         wait=None,
         description="Deploying add to sequencer",
-        store=[
-            "/tmp/sequencer-output.txt"
-        ],
+        # store=[
+        #     "/tmp/sequencer-output.txt"
+        # ],
     )
