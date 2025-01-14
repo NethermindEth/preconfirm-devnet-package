@@ -29,7 +29,7 @@ def deploy(
             "PAUSE_BRIDGE": "true",
             "NUM_MIN_MAJORITY_GUARDIANS": "7",
             "NUM_MIN_MINORITY_GUARDIANS": "2",
-            "TIER_PROVIDER": "devnet",
+            "TIER_ROUTER": "devnet",
             "FORK_URL": el_rpc_url,
             "SECURITY_COUNCIL": contract_owner.address,
         },
