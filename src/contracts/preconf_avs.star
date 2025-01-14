@@ -7,7 +7,7 @@ def deploy(
     preconf_avs = plan.run_sh(
         name="deploy-preconf-avs-contract",
         description="Deploying preconf avs contract",
-        run="scripts/deployment/deploy_avs.sh > /tmp/avs-output.txt",
+        run="scripts/deployment/deploy_avs.sh",
         image="nethswitchboard/avs-deploy:e2e",
         env_vars = {
             "PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
@@ -20,7 +20,7 @@ def deploy(
             "TAIKO_TOKEN": "0x72ae2643518179cF01bcA3278a37ceAD408DE8b2",
         },
         wait=None,
-        store=[
-            "/tmp/avs-output.txt"
-        ],
+        # store=[
+        #     "/tmp/avs-output.txt"
+        # ],
     )
