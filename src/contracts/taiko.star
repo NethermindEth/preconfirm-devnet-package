@@ -5,9 +5,11 @@ def deploy(
 ):
     taiko = plan.run_sh(
         name="deploy-taiko-contract",
-        run="script/test_deploy_on_l1.sh > /tmp/taiko-output.txt",
-        image="nethswitchboard/taiko-deploy:e2e",
+        run="script/layer1/deploy_protocol_on_l1.sh > /tmp/taiko-output.txt",
+        # image="nethswitchboard/taiko-deploy:e2e",
+        image="nethsurge/test-protocol",
         env_vars={
+            "FOUNDRY_PROFILE": "layer1",
             "PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
             "PROPOSER": "0x0000000000000000000000000000000000000000",
             "TAIKO_TOKEN": "0x0000000000000000000000000000000000000000",
@@ -19,7 +21,7 @@ def deploy(
             "PROVER_SET_ADMIN": contract_owner.address,
             "TAIKO_TOKEN_PREMINT_RECIPIENT": contract_owner.address,
             "TAIKO_TOKEN_NAME": "Taiko Token",
-            "TAIKO_TOKEN_SYMBOL": "TKO",
+            "TAIKO_TOKEN_SYMBOL": "TAIKO",
             "SHARED_ADDRESS_MANAGER": "0x0000000000000000000000000000000000000000",
             # "L2_GENESIS_HASH": "0x7983c69e31da54b8d244d8fef4714ee7a8ed25d873ebef204a56f082a73c9f1e",
             "L2_GENESIS_HASH": "0x25637bb83541ecc694ada7e12ece3e77a64db154e277fc5caae59989e3a22fca",
@@ -29,6 +31,8 @@ def deploy(
             "NUM_MIN_MINORITY_GUARDIANS": "2",
             "TIER_PROVIDER": "devnet",
             "FORK_URL": el_rpc_url,
+            "SECURITY_COUNCIL": contract_owner.address,
+            "TAIKO_TOKEN_PREMINT_RECIPIENT": contract_owner.address,
         },
         wait=None,
         description="Deploying taiko smart contract",
