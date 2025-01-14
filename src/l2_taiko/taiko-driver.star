@@ -12,7 +12,7 @@ def launch(
     service = plan.add_service(
         name = "preconf-taiko-driver-{0}".format(index),
         config = ServiceConfig(
-            image = "nethswitchboard/taiko-client:e2e",
+            image = "nethsurge/taiko-client:test-client",
             files = {
                 data_dirpath: "taiko_genesis_{0}".format(index),
             },
