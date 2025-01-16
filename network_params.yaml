@@ -135,7 +135,7 @@ mev_params:
     interval_between_transactions: 1
 taiko_params:
   taiko_protocol:
-     image: nethsurge/protocol:surge-prep
+     image: nethsurge/protocol:surge-prep-v2
      l2_network_id: "763374"
      l2_genesis_hash: 0xf1b4d345e9315f67daca6172b681b9bcd75eb1963e772cfda16f9410cf5c9c24
      foundry_profile: layer1
