@@ -137,7 +137,7 @@ taiko_params:
   taiko_protocol:
      image: nethsurge/protocol:surge-prep-v2
      l2_network_id: "763374"
-     l2_genesis_hash: 0xf1b4d345e9315f67daca6172b681b9bcd75eb1963e772cfda16f9410cf5c9c24
+     l2_genesis_hash: 0xb2b340ca20f8771e5f0a1dbe1c4eafed9bed75b784c2a26661b1efb9f25570f1
      foundry_profile: layer1
      mr_enclave: 14c4362d5dd0af9721ef9bdea2c92bf84b67fe34a102c892182ce2be7a81f2c5
      mr_signer: ca0583a715534a8c981b914589a7f0dc5d60959d9ae79fb5353299a4231673d5
