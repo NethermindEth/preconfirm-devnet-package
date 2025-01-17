@@ -178,7 +178,7 @@ def launch(
             private_ip_address_placeholder = "avs_ip_placeholder",
             env_vars={
                 "AVS_NODE_ECDSA_PRIVATE_KEY": "0x{0}".format(prefunded_accounts[index].private_key),
-                "AVS_PRECONF_TASK_MANAGER_CONTRACT_ADDRESS": "0x6064f756f7F3dc8280C1CfA01cE41a37B5f16df1",
+                "AVS_PRECONF_TASK_MANAGER_CONTRACT_ADDRESS": "0x9BDD6f66532C9355178B715F2383761045e6095f",
                 "AVS_DIRECTORY_CONTRACT_ADDRESS": "0x7E2E7DD2Aead92e2e6d05707F21D4C36004f8A2B",
                 "AVS_SERVICE_MANAGER_CONTRACT_ADDRESS": "0x1912A7496314854fB890B1B88C0f1Ced653C1830",
                 "AVS_PRECONF_REGISTRY_CONTRACT_ADDRESS": "0x9D2ea2038CF6009F1Bc57E32818204726DfA63Cd",
