@@ -1,11 +1,18 @@
+TAIKO_SCRIPT_PATH = "./script/layer1/DeployProtocolOnL1.s.sol:DeployProtocolOnL1"
+TOKEN_SCRIPT_PATH = "./script/layer1/DeployTaikoToken.s.sol:DeployTaikoToken"
+
 def deploy(
     plan,
     el_rpc_url,
     contract_owner,
 ):
-    taiko = plan.run_sh(
+    FORK_URL_COMMAND = "--fork-url {0}".format(el_rpc_url)
+
+    PRIVATE_KEY_COMMAND = "--private-key {0}".format(contract_owner.private_key)
+
+    plan.run_sh(
         name="deploy-taiko-contract",
-        run="script/layer1/deploy_protocol_on_l1.sh",
+        run="forge script {0} {1} {2} $FORGE_FLAGS".format(TAIKO_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
         # image="nethswitchboard/taiko-deploy:e2e",
         image="nethsurge/test-protocol",
         env_vars={
@@ -32,8 +39,29 @@ def deploy(
             "TIER_ROUTER": "devnet",
             "FORK_URL": el_rpc_url,
             "SECURITY_COUNCIL": contract_owner.address,
+            "FORGE_FLAGS": "--broadcast --ffi -vvvv --block-gas-limit 200000000",
         },
         wait=None,
         description="Deploying taiko smart contract",
         store = [StoreSpec(src = "app/deployments/deploy_l1.json", name = "taiko_on_l1_deployment")],
+    )
+
+    plan.run_sh(
+        name="deploy-taiko-token",
+        run="forge script {0} {1} {2} $FORGE_FLAGS".format(TOKEN_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
+        # image="nethswitchboard/taiko-deploy:e2e",
+        image="nethsurge/test-protocol",
+        env_vars={
+            "FOUNDRY_PROFILE": "layer1",
+            "PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
+            "TAIKO_TOKEN_PREMINT_RECIPIENT": contract_owner.address,
+            "TAIKO_TOKEN_NAME": "Taiko Token",
+            "TAIKO_TOKEN_SYMBOL": "TAIKO",
+            "FORK_URL": el_rpc_url,
+            "SECURITY_COUNCIL": contract_owner.address,
+            "FORGE_FLAGS": "--broadcast --skip-simulation --ffi -vvvv --block-gas-limit 200000000",
+        },
+        wait=None,
+        description="Deploying taiko smart contract",
+        store = [StoreSpec(src = "app/deployments/deploy_l1.json", name = "taiko_token_deployment")],
     )
