@@ -143,7 +143,7 @@ def deploy(
             cmd=[
                 "python",
                 "deposit_bonds.py",
-                "--amount", "10",
+                "--amount", "100",
                 "--rpc", el_rpc_url,
             ],
         ),
