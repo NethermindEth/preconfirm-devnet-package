@@ -134,7 +134,7 @@ def deploy(
         name="taiko-deposit-bonds",
         description="Depositing proposer and prover keys",
         config=ServiceConfig(
-            image="nethsurge/deposit-bonds:devnet",
+            image="nethsurge/deposit-bonds:latest",
             env_vars={
                 "L1_PROPOSER_PRIVATE_KEY": prefunded_accounts[2].private_key,
                 "L1_PROVER_PRIVATE_KEY": prefunded_accounts[3].private_key,
