@@ -62,23 +62,25 @@ def deploy(
         "PRIVATE_KEY": "0x{0}".format(prefunded_account.private_key),
     }
 
-    bridge_deployment_result = plan.run_sh(
-        run = "forge script {0} {1} {2} $FORGE_FLAGS".format(SOLIDITY_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
-        name = "bridge-set-address",
-        image = taiko_params.taiko_protocol_image,
-        env_vars = BRIDGE_ENV_VARS,
-        wait = None,
-        description = "Deploying taiko bridge set address",
-    )
+    # (Handled by surge on l1 now)
+    # bridge_deployment_result = plan.run_sh(
+    #     run = "forge script {0} {1} {2} $FORGE_FLAGS".format(SOLIDITY_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
+    #     name = "bridge-set-address",
+    #     image = taiko_params.taiko_protocol_image,
+    #     env_vars = BRIDGE_ENV_VARS,
+    #     wait = None,
+    #     description = "Deploying taiko bridge set address",
+    # )
 
-    signal_service_deployment_result = plan.run_sh(
-        run = "forge script {0} {1} {2} $FORGE_FLAGS".format(SOLIDITY_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
-        name = "bridge-set-address",
-        image = taiko_params.taiko_protocol_image,
-        env_vars = SIGNAL_SERVICE_ENV_VARS,
-        wait = None,
-        description = "Deploying taiko signal service set address",
-    )
+    # (Handled by surge on l1 now)
+    # signal_service_deployment_result = plan.run_sh(
+    #     run = "forge script {0} {1} {2} $FORGE_FLAGS".format(SOLIDITY_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
+    #     name = "bridge-set-address",
+    #     image = taiko_params.taiko_protocol_image,
+    #     env_vars = SIGNAL_SERVICE_ENV_VARS,
+    #     wait = None,
+    #     description = "Deploying taiko signal service set address",
+    # )
 
     erc20_vault_deployment_result = plan.run_sh(
         run = "forge script {0} {1} {2} $FORGE_FLAGS".format(SOLIDITY_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),

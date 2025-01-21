@@ -57,22 +57,22 @@ def deploy(
     )
 
     # Deploy Taiko SGX SetDcapParams
-    set_dcap_params.deploy(
-        plan,
-        taiko_params,
-        prefunded_accounts[0],
-        el_rpc_url,
-        result,
-    )
-
-    # Deploy Taiko SetAddress (Handled by surge on l1 now)
-    # set_address.deploy(
+    # set_dcap_params.deploy(
     #     plan,
     #     taiko_params,
     #     prefunded_accounts[0],
     #     el_rpc_url,
     #     result,
     # )
+
+    # Deploy Taiko SetAddress (Handled by surge on l1 now)
+    set_address.deploy(
+        plan,
+        taiko_params,
+        prefunded_accounts[0],
+        el_rpc_url,
+        result,
+    )
 
     # Deploy eigenlayer mvp contracts
     # eigenlayer_contract_deployer.deploy(
@@ -134,7 +134,7 @@ def deploy(
         name="taiko-deposit-bonds",
         description="Depositing proposer and prover keys",
         config=ServiceConfig(
-            image="nethsurge/deposit-bonds:latest",
+            image="nethsurge/deposit-bonds:devnet",
             env_vars={
                 "L1_PROPOSER_PRIVATE_KEY": prefunded_accounts[2].private_key,
                 "L1_PROVER_PRIVATE_KEY": prefunded_accounts[3].private_key,
@@ -143,6 +143,7 @@ def deploy(
             cmd=[
                 "python",
                 "deposit_bonds.py",
+                "--amount", "10",
                 "--rpc", el_rpc_url,
             ],
         ),
