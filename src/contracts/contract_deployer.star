@@ -1,7 +1,6 @@
 taiko_contract_deployer = import_module("./taiko.star")
 eigenlayer_contract_deployer = import_module("./eigenlayer_mvp.star")
 avs_contract_deployer = import_module("./preconf_avs.star")
-sequencer_contract_deployer = import_module("./sequencer.star")
 
 def deploy(
     plan,
@@ -47,13 +46,6 @@ print(new, end="")
         plan,
         el_rpc_url,
         beacon_genesis_timestamp.output,
-        first_prefunded_account,
-    )
-
-    # Deploy add to sequencer contracts
-    sequencer_contract_deployer.deploy(
-        plan,
-        el_rpc_url,
         first_prefunded_account,
     )
 
