@@ -24,11 +24,10 @@ def launch(
             image = image,
             private_ip_address_placeholder = "avs_ip_placeholder",
             entrypoint = [
-                "/bin/bash",
+                "sleep",
             ],
             cmd = [
-                "-c",
-                "sleep infinity",
+                "infinity",
             ],
             env_vars={
                 "AVS_NODE_ECDSA_PRIVATE_KEY": "0x{0}".format(prefunded_accounts[index].private_key),
@@ -75,11 +74,10 @@ def launch(
             image = image,
             private_ip_address_placeholder = "avs_ip_placeholder",
             entrypoint = [
-                "/bin/bash",
+                "sleep",
             ],
             cmd = [
-                "-c",
-                "sleep infinity",
+                "infinity",
             ],
             env_vars={
                 "AVS_NODE_ECDSA_PRIVATE_KEY": "0x{0}".format(prefunded_accounts[index].private_key),
