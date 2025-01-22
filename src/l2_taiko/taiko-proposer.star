@@ -13,7 +13,7 @@ def launch(
     service = plan.add_service(
         name = "preconf-taiko-proposer-{0}".format(index),
         config = ServiceConfig(
-            image = "nethsurge/taiko-client:test-client",
+            image = "nethswitchboard/taiko-client:e2e",
             files = {
                 data_dirpath: "taiko_genesis_{0}".format(index),
             },
@@ -99,6 +99,7 @@ def launch(
                 # "--tierFee.sgx=1 " +
                 "--l1.blobAllowed " +
                 "--tx.gasLimit=3000000",
+                "--verbosity=4"
             ],
         ),
     )
