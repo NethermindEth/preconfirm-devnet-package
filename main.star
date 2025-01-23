@@ -205,6 +205,11 @@ def run(plan, args={}):
     )
 
     # Deploy all smart contracts
+    plan.run_sh(
+        run = "sleep 60",
+        description = "Waiting for L1 to sync",
+    )
+
     if "taiko" in args_with_right_defaults.additional_services:
         taiko_params = args_with_right_defaults.taiko_params
         taiko_protocol.deploy(
