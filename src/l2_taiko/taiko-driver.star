@@ -27,14 +27,14 @@ def launch(
                 "ENABLE_PROPOSER": "true",
                 "BLOB_ALLOWED": "true",
                 "TX_RECEIPT_QUERY": "",
-                "BOOT_NODES": "enode://7a8955b27eda2ddf361b59983fce9c558b18ad60d996ac106629f7f913247ef13bc842c7cf6ec6f87096a3ea8048b04873c40d3d873c0276d38e222bddd72e88@43.153.44.186:30303,enode://704a50da7e727aa10c45714beb44ece04ca1280ad63bb46bb238a01bf55c19c9702b469fb12c63824fa90f5051f7091b1c5069df1ec9a0ba1e943978c09d270f@49.51.202.127:30303,enode://f52e4e212a15cc4f68df27282e616d51d7823596c83c8c8e3b3416d7ab531cefc7b8a493d01964e1918315e6b0c7a4806634aeabb9013642a9159a53f4ebc094@43.153.16.47:30303,enode://57f4b29cd8b59dc8db74be51eedc6425df2a6265fad680c843be113232bbe632933541678783c2a5759d65eac2e2241c45a34e1c36254bccfe7f72e52707e561@104.197.107.1:30303,enode://87a68eef46cc1fe862becef1185ac969dfbcc050d9304f6be21599bfdcb45a0eb9235d3742776bc4528ac3ab631eba6816e9b47f6ee7a78cc5fcaeb10cd32574@35.232.246.122:30303",
+                # "BOOT_NODES": "enode://7a8955b27eda2ddf361b59983fce9c558b18ad60d996ac106629f7f913247ef13bc842c7cf6ec6f87096a3ea8048b04873c40d3d873c0276d38e222bddd72e88@43.153.44.186:30303,enode://704a50da7e727aa10c45714beb44ece04ca1280ad63bb46bb238a01bf55c19c9702b469fb12c63824fa90f5051f7091b1c5069df1ec9a0ba1e943978c09d270f@49.51.202.127:30303,enode://f52e4e212a15cc4f68df27282e616d51d7823596c83c8c8e3b3416d7ab531cefc7b8a493d01964e1918315e6b0c7a4806634aeabb9013642a9159a53f4ebc094@43.153.16.47:30303,enode://57f4b29cd8b59dc8db74be51eedc6425df2a6265fad680c843be113232bbe632933541678783c2a5759d65eac2e2241c45a34e1c36254bccfe7f72e52707e561@104.197.107.1:30303,enode://87a68eef46cc1fe862becef1185ac969dfbcc050d9304f6be21599bfdcb45a0eb9235d3742776bc4528ac3ab631eba6816e9b47f6ee7a78cc5fcaeb10cd32574@35.232.246.122:30303",
                 "L1_ENDPOINT_HTTP": el_context.rpc_http_url,
                 "L1_ENDPOINT_WS": el_context.ws_url,
                 "L1_BEACON_HTTP": cl_context.beacon_http_url,
                 "TX_MIN_TIP_CAP": "",
                 "TX_FEE_LIMIT_THRESHOLD": "",
                 "P2P_SYNC_URL": "https://rpc.mainnet.taiko.xyz",
-                "TAIKO_L1_ADDRESS": "0x086f77C5686dfe3F2f8FE487C5f8d357952C8556",
+                "TAIKO_L1_ADDRESS": "0x57E5d642648F54973e504f10D21Ea06360151cAf",
                 "PORT_PROVER_SERVER": "9876",
                 "TX_MIN_BASEFEE": "",
                 "PORT_PROMETHEUS": "9091",
@@ -58,7 +58,7 @@ def launch(
                 "COMPOSE_PROFILES": "l2_execution_engine",
                 "PORT_L2_EXECUTION_ENGINE_METRICS": "6060",
                 "SGX_RAIKO_HOST": "",
-                "TAIKO_TOKEN_L1_ADDRESS": "0x422A3492e218383753D8006C7Bfa97815B44373F",
+                "TAIKO_TOKEN_L1_ADDRESS": "0x1788a5D023bac58bAF55a92153192a6568E42BAD",
                 "PORT_GRAFANA": "3001",
                 "PORT_L2_EXECUTION_ENGINE_HTTP": "8547",
                 "TOKEN_ALLOWANCE": "",
@@ -74,7 +74,7 @@ def launch(
                 "--l2.ws={0} ".format(geth.ws_url) +
                 "--l1.beacon={0} ".format(cl_context.beacon_http_url) +
                 "--l2.auth={0} ".format(geth.auth_url) +
-                "--taikoL1=0x086f77C5686dfe3F2f8FE487C5f8d357952C8556 " +
+                "--taikoL1=0x57E5d642648F54973e504f10D21Ea06360151cAf " +
                 "--taikoL2=0x1670000000000000000000000000000000010001 " +
                 "--jwtSecret={0} ".format(jwtsecret_path) +
                 "--verbosity=4"

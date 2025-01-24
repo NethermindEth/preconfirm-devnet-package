@@ -784,7 +784,7 @@ print(int(a+b), end="")
                         "infinity",
                     ],
                     env_vars = {
-                        "PRIVATE_KEY": "370e47f3c39cf4d03cb87cb71a268776421cdc22c39aa81f1e5ba19df19202f1",
+                        "PRIVATE_KEY": "bcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31",
                         "RECIPIENT_ADDRESS": "0xf93Ee4Cf8c6c40b329b0c0626F28333c132CF241",
                         "TX_COUNT": "1",
                         "TX_AMOUNT": "100",
@@ -901,7 +901,6 @@ print(int(a+b), end="")
             )
 
             plan.print(pytest_result["output"])
-
         else:
             fail("Invalid additional service %s" % (additional_service))
     if launch_prometheus_grafana:
