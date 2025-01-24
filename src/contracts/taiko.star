@@ -13,8 +13,7 @@ def deploy(
     plan.run_sh(
         name="deploy-taiko-contract",
         run="forge script {0} {1} {2} $FORGE_FLAGS".format(TAIKO_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
-        # image="nethswitchboard/taiko-deploy:e2e",
-        image="nethsurge/test-protocol",
+        image="nethswitchboard/taiko-protocol-dev:latest",
         env_vars={
             "FOUNDRY_PROFILE": "layer1",
             "PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
@@ -49,8 +48,7 @@ def deploy(
     plan.run_sh(
         name="deploy-taiko-token",
         run="forge script {0} {1} {2} $FORGE_FLAGS".format(TOKEN_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
-        # image="nethswitchboard/taiko-deploy:e2e",
-        image="nethsurge/test-protocol",
+        image="nethswitchboard/taiko-protocol-dev:latest",
         env_vars={
             "FOUNDRY_PROFILE": "layer1",
             "PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
@@ -62,6 +60,6 @@ def deploy(
             "FORGE_FLAGS": "--broadcast --skip-simulation --ffi -vvvv --block-gas-limit 200000000",
         },
         wait=None,
-        description="Deploying taiko smart contract",
+        description="Deploying taiko token contract",
         store = [StoreSpec(src = "app/deployments/deploy_l1.json", name = "taiko_token_deployment")],
     )
