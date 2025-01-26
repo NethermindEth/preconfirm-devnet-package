@@ -14,45 +14,61 @@ def launch(
     # second_validator_index,
     index,
 ):
+    # Centralized contract addresses
+    contract_addresses = {
+        "AVS_PRECONF_TASK_MANAGER": "0x55F28E20b194f31D473D901342a3c04932129bDC",
+        "AVS_DIRECTORY": "0xe21c9cfea094aAbE99C96D56281a00876F97258a",
+        "AVS_SERVICE_MANAGER": "0x9BDD6f66532C9355178B715F2383761045e6095f",
+        "AVS_PRECONF_REGISTRY": "0xf2bD68421A73821368eEefaCB420FFdFa0237c86",
+        "EIGEN_LAYER_STRATEGY_MANAGER": "0xDeeea509217cACA34A4f42ae76B046F263b06494",
+        "EIGEN_LAYER_SLASHER": "0x545Bf1989eb37DE660600D9F1b7eFEBcb8199561",
+        "TAIKO_L1": "0x57E5d642648F54973e504f10D21Ea06360151cAf",
+    }
+
     mev_boost_url = "http://{0}:{1}".format(
         mev_boost_context.private_ip_address, mev_boost_context.port
     )
+
+    # Common environment variables
+    base_env_vars = {
+        "AVS_PRECONF_TASK_MANAGER_CONTRACT_ADDRESS": contract_addresses["AVS_PRECONF_TASK_MANAGER"],
+        "AVS_DIRECTORY_CONTRACT_ADDRESS": contract_addresses["AVS_DIRECTORY"],
+        "AVS_SERVICE_MANAGER_CONTRACT_ADDRESS": contract_addresses["AVS_SERVICE_MANAGER"],
+        "AVS_PRECONF_REGISTRY_CONTRACT_ADDRESS": contract_addresses["AVS_PRECONF_REGISTRY"],
+        "EIGEN_LAYER_STRATEGY_MANAGER_CONTRACT_ADDRESS": contract_addresses["EIGEN_LAYER_STRATEGY_MANAGER"],
+        "EIGEN_LAYER_SLASHER_CONTRACT_ADDRESS": contract_addresses["EIGEN_LAYER_SLASHER"],
+        "TAIKO_L1_ADDRESS": contract_addresses["TAIKO_L1"],
+        "TAIKO_CHAIN_ID": "167000",
+        "L1_CHAIN_ID": chain_id,
+        "VALIDATOR_BLS_PRIVATEKEY": first_validator_bls_private_key,
+        "VALIDATOR_INDEX": str(first_validator_index),
+        "TAIKO_PROPOSER_URL": taiko_stack.proposer_url,
+        "TAIKO_DRIVER_URL": taiko_stack.driver_url,
+        "MEV_BOOST_URL": mev_boost_url,
+        "L1_WS_RPC_URL": el_context.ws_url,
+        "L1_BEACON_URL": cl_context.beacon_http_url,
+        "RUST_LOG": "debug,reqwest=info,hyper=info,alloy_transport=info,alloy_rpc_client=info,p2p_network=info,libp2p_gossipsub=info,discv5=info,netlink_proto=info",
+        "P2P_ADDRESS": "avs_ip_placeholder",
+        "P2P_BOOTNODE_ENR": str(p2pbootnode_context.bootnode_enr),
+    }
+
+    # For each service, we'll create env_vars by combining base_env_vars with service-specific vars
+    def create_service_env_vars(additional_vars):
+        env_vars = dict(base_env_vars)
+        env_vars.update(additional_vars)
+        return env_vars
 
     plan.add_service(
         name = "taiko-preconf-avs-{0}-register".format(index),
         config = ServiceConfig(
             image = image,
             private_ip_address_placeholder = "avs_ip_placeholder",
-            entrypoint = [
-                "sleep",
-            ],
-            cmd = [
-                "infinity",
-            ],
-            env_vars={
+            entrypoint = ["sleep"],
+            cmd = ["infinity"],
+            env_vars = create_service_env_vars({
                 "AVS_NODE_ECDSA_PRIVATE_KEY": "0x{0}".format(prefunded_accounts[index].private_key),
-                "AVS_PRECONF_TASK_MANAGER_CONTRACT_ADDRESS": "0x9BDD6f66532C9355178B715F2383761045e6095f",
-                "AVS_DIRECTORY_CONTRACT_ADDRESS": "0xa3027Ac27EF8Ec6C3F2863Deb1D4e84a433F69Fc",
-                "AVS_SERVICE_MANAGER_CONTRACT_ADDRESS": "0xf2bD68421A73821368eEefaCB420FFdFa0237c86",
-                "AVS_PRECONF_REGISTRY_CONTRACT_ADDRESS": "0xEFC846aa6d4FbFd669b3620624351B66CB6AD25C",
-                "EIGEN_LAYER_STRATEGY_MANAGER_CONTRACT_ADDRESS": "0x700420690932eeB22bCd01fBf537d37BeCa5577C",
-                "EIGEN_LAYER_SLASHER_CONTRACT_ADDRESS": "0xDeeea509217cACA34A4f42ae76B046F263b06494",
-                "VALIDATOR_BLS_PRIVATEKEY": first_validator_bls_private_key,
-                "TAIKO_CHAIN_ID": "167000",
-                "L1_CHAIN_ID": chain_id,
-                "TAIKO_L1_ADDRESS": "0x57E5d642648F54973e504f10D21Ea06360151cAf",
-                "VALIDATOR_INDEX": str(first_validator_index),
-                "TAIKO_PROPOSER_URL": taiko_stack.proposer_url,
-                "TAIKO_DRIVER_URL": taiko_stack.driver_url,
-                "MEV_BOOST_URL": mev_boost_url,
-                "L1_WS_RPC_URL": el_context.ws_url,
-                "L1_BEACON_URL": cl_context.beacon_http_url,
-                "RUST_LOG": "debug,reqwest=info,hyper=info,alloy_transport=info,alloy_rpc_client=info,p2p_network=info,libp2p_gossipsub=info,discv5=info,netlink_proto=info",
-                # P2P
-                "P2P_ADDRESS": "avs_ip_placeholder",
-                "ENABLE_P2P": "true",
-                "P2P_BOOTNODE_ENR": str(p2pbootnode_context.bootnode_enr),
-            },
+                "ENABLE_P2P": "false",
+            }),
         ),
         description = "Start AVS container for registering",
     )
@@ -69,46 +85,22 @@ def launch(
     )
 
     plan.add_service(
-        name = "taiko-preconf-avs-{0}-validator-1".format(index),
+        name = "taiko-preconf-avs-{0}-validator".format(index),
         config = ServiceConfig(
             image = image,
             private_ip_address_placeholder = "avs_ip_placeholder",
-            entrypoint = [
-                "sleep",
-            ],
-            cmd = [
-                "infinity",
-            ],
-            env_vars={
+            entrypoint = ["sleep"],
+            cmd = ["infinity"],
+            env_vars=create_service_env_vars({
                 "AVS_NODE_ECDSA_PRIVATE_KEY": "0x{0}".format(prefunded_accounts[index].private_key),
-                "AVS_PRECONF_TASK_MANAGER_CONTRACT_ADDRESS": "0x9BDD6f66532C9355178B715F2383761045e6095f",
-                "AVS_DIRECTORY_CONTRACT_ADDRESS": "0xa3027Ac27EF8Ec6C3F2863Deb1D4e84a433F69Fc",
-                "AVS_SERVICE_MANAGER_CONTRACT_ADDRESS": "0xf2bD68421A73821368eEefaCB420FFdFa0237c86",
-                "AVS_PRECONF_REGISTRY_CONTRACT_ADDRESS": "0xEFC846aa6d4FbFd669b3620624351B66CB6AD25C",
-                "EIGEN_LAYER_STRATEGY_MANAGER_CONTRACT_ADDRESS": "0x700420690932eeB22bCd01fBf537d37BeCa5577C",
-                "EIGEN_LAYER_SLASHER_CONTRACT_ADDRESS": "0xDeeea509217cACA34A4f42ae76B046F263b06494",
-                "VALIDATOR_BLS_PRIVATEKEY": first_validator_bls_private_key,
-                "TAIKO_CHAIN_ID": "167000",
-                "L1_CHAIN_ID": chain_id,
-                "TAIKO_L1_ADDRESS": "0x57E5d642648F54973e504f10D21Ea06360151cAf",
-                "VALIDATOR_INDEX": str(first_validator_index),
-                "TAIKO_PROPOSER_URL": taiko_stack.proposer_url,
-                "TAIKO_DRIVER_URL": taiko_stack.driver_url,
-                "MEV_BOOST_URL": mev_boost_url,
-                "L1_WS_RPC_URL": el_context.ws_url,
-                "L1_BEACON_URL": cl_context.beacon_http_url,
-                "RUST_LOG": "debug,reqwest=info,hyper=info,alloy_transport=info,alloy_rpc_client=info,p2p_network=info,libp2p_gossipsub=info,discv5=info,netlink_proto=info",
-                # P2P
-                "P2P_ADDRESS": "avs_ip_placeholder",
-                "ENABLE_P2P": "true",
-                "P2P_BOOTNODE_ENR": str(p2pbootnode_context.bootnode_enr),
-            },
+                "ENABLE_P2P": "false",
+            }),
         ),
         description = "Start AVS container for adding validator",
     )
 
     plan.exec(
-        service_name = "taiko-preconf-avs-{0}-validator-1".format(index),
+        service_name = "taiko-preconf-avs-{0}-validator".format(index),
         description = "Add validator to AVS",
         recipe = ExecRecipe(
             command = [
@@ -118,86 +110,15 @@ def launch(
         ),
     )
 
-    # plan.add_service(
-    #     name = "taiko-preconf-avs-{0}-validator-2".format(index),
-    #     config = ServiceConfig(
-    #         image = "nethswitchboard/avs-node:e2e",
-    #         private_ip_address_placeholder = "avs_ip_placeholder",
-    #         entrypoint = [
-    #             "/bin/bash",
-    #         ],
-    #         cmd = [
-    #             "-c",
-    #             "sleep infinity",
-    #         ],
-    #         env_vars={
-    #             "AVS_NODE_ECDSA_PRIVATE_KEY": "0x{0}".format(prefunded_accounts[index].private_key),
-    #             "AVS_PRECONF_TASK_MANAGER_CONTRACT_ADDRESS": "0x6064f756f7F3dc8280C1CfA01cE41a37B5f16df1",
-    #             "AVS_DIRECTORY_CONTRACT_ADDRESS": "0x7E2E7DD2Aead92e2e6d05707F21D4C36004f8A2B",
-    #             "AVS_SERVICE_MANAGER_CONTRACT_ADDRESS": "0x1912A7496314854fB890B1B88C0f1Ced653C1830",
-    #             "AVS_PRECONF_REGISTRY_CONTRACT_ADDRESS": "0x9D2ea2038CF6009F1Bc57E32818204726DfA63Cd",
-    #             "EIGEN_LAYER_STRATEGY_MANAGER_CONTRACT_ADDRESS": "0xaDe68b4b6410aDB1578896dcFba75283477b6b01",
-    #             "EIGEN_LAYER_SLASHER_CONTRACT_ADDRESS": "0x86A0679C7987B5BA9600affA994B78D0660088ff",
-    #             "VALIDATOR_BLS_PRIVATEKEY": second_validator_bls_private_key,
-    #             "TAIKO_CHAIN_ID": "167000",
-    #             "L1_CHAIN_ID": chain_id,
-    #             "TAIKO_L1_ADDRESS": "0x086f77C5686dfe3F2f8FE487C5f8d357952C8556",
-    #             "VALIDATOR_INDEX": str(second_validator_index),
-    #             "TAIKO_PROPOSER_URL": taiko_stack.proposer_url,
-    #             "TAIKO_DRIVER_URL": taiko_stack.driver_url,
-    #             "MEV_BOOST_URL": mev_boost_url,
-    #             "L1_WS_RPC_URL": el_context.ws_url,
-    #             "L1_BEACON_URL": cl_context.beacon_http_url,
-    #             "RUST_LOG": "debug,reqwest=info,hyper=info,alloy_transport=info,alloy_rpc_client=info,p2p_network=info,libp2p_gossipsub=info,discv5=info,netlink_proto=info",
-    #             # P2P
-    #             "P2P_ADDRESS": "avs_ip_placeholder",
-    #             "ENABLE_P2P": "true",
-    #             "P2P_BOOTNODE_ENR": str(p2pbootnode_context.bootnode_enr),
-    #         },
-    #     ),
-    #     description = "Start AVS container for adding validator",
-    # )
-
-    # plan.exec(
-    #     service_name = "taiko-preconf-avs-{0}-validator-2".format(index),
-    #     description = "Add validator to AVS",
-    #     recipe = ExecRecipe(
-    #         command = [
-    #             "taiko_preconf_avs_node",
-    #             "--add-validator",
-    #         ],
-    #     ),
-    # )
-
     plan.add_service(
         name = "taiko-preconf-avs-{0}".format(index),
         config = ServiceConfig(
             image = image,
             private_ip_address_placeholder = "avs_ip_placeholder",
-            env_vars={
+            env_vars=create_service_env_vars({
                 "AVS_NODE_ECDSA_PRIVATE_KEY": "0x{0}".format(prefunded_accounts[index].private_key),
-                "AVS_PRECONF_TASK_MANAGER_CONTRACT_ADDRESS": "0x9BDD6f66532C9355178B715F2383761045e6095f",
-                "AVS_DIRECTORY_CONTRACT_ADDRESS": "0x7E2E7DD2Aead92e2e6d05707F21D4C36004f8A2B",
-                "AVS_SERVICE_MANAGER_CONTRACT_ADDRESS": "0x1912A7496314854fB890B1B88C0f1Ced653C1830",
-                "AVS_PRECONF_REGISTRY_CONTRACT_ADDRESS": "0x9D2ea2038CF6009F1Bc57E32818204726DfA63Cd",
-                "EIGEN_LAYER_STRATEGY_MANAGER_CONTRACT_ADDRESS": "0xaDe68b4b6410aDB1578896dcFba75283477b6b01",
-                "EIGEN_LAYER_SLASHER_CONTRACT_ADDRESS": "0x86A0679C7987B5BA9600affA994B78D0660088ff",
-                "VALIDATOR_BLS_PRIVATEKEY": first_validator_bls_private_key,
-                "TAIKO_CHAIN_ID": "167000",
-                "L1_CHAIN_ID": chain_id,
-                "TAIKO_L1_ADDRESS": "0x086f77C5686dfe3F2f8FE487C5f8d357952C8556",
-                "VALIDATOR_INDEX": str(first_validator_index),
-                "TAIKO_PROPOSER_URL": taiko_stack.proposer_url,
-                "TAIKO_DRIVER_URL": taiko_stack.driver_url,
-                "MEV_BOOST_URL": mev_boost_url,
-                "L1_WS_RPC_URL": el_context.ws_url,
-                "L1_BEACON_URL": cl_context.beacon_http_url,
-                "RUST_LOG": "debug,reqwest=info,hyper=info,alloy_transport=info,alloy_rpc_client=info,p2p_network=info,libp2p_gossipsub=info,discv5=info,netlink_proto=info",
-                # P2P
-                "P2P_ADDRESS": "avs_ip_placeholder",
                 "ENABLE_P2P": "true",
-                "P2P_BOOTNODE_ENR": str(p2pbootnode_context.bootnode_enr),
-            },
+            }),
         ),
         description = "Start AVS",
     )

@@ -201,11 +201,10 @@ kurtosis clean -a
 
 ```jsx
 docker pull nethswitchboard/avs-node:e2e
-docker pull nethswitchboard/avs-deploy:e2e
 docker pull nethswitchboard/taiko-spammer:e2e
 docker pull nethswitchboard/taiko-client:e2e
 docker pull nethswitchboard/taiko-transfer:e2e
-docker pull nethswitchboard/taiko-deploy:e2e
+docker pull nethswitchboard/taiko-protocol-dev:latest
 docker pull nethswitchboard/taiko-geth:e2e
 docker pull nethswitchboard/ethereum-genesis-generator:e2e
 docker pull nethswitchboard/bootnodep2p:e2e
@@ -217,9 +216,9 @@ docker pull nethswitchboard/bootnodep2p:e2e
     1. `docker pull nethswitchboard/taiko-geth:e2e`
     2. `docker pull nethswitchboard/taiko-client:e2e`
 3. Taiko Contract Deployment
-    1. `docker pull nethswitchboard/taiko-deploy:e2e`
+    1. `docker pull nethswitchboard/taiko-protocol-dev:latest`
 4. AVS Contract Deployment
-    1. `docker pull nethswitchboard/avs-deploy:e2e`
+    1. `docker pull nethswitchboard/taiko-protocol-dev:latest`
 5. AVS Node
     1. `docker pull nethswitchboard/avs-node:e2e`
 6. P2P Bootnode
@@ -458,16 +457,16 @@ guardian_prover: 0x9ECB6f04D47FA2599449AaA523bF84476f7aD80f
 sequencer_registry (second instance): 0x3c0e871bB7337D5e6A18FDD73c4D9e7567961Ad3
 
 **Eigenlayer MVP**
-AVS Directory: 0x7E2E7DD2Aead92e2e6d05707F21D4C36004f8A2B
-Delegation Manager: 0xeB804d271b58d9405CD94e294504E56d55B6E35c
-Strategy Manager: 0xaDe68b4b6410aDB1578896dcFba75283477b6b01
-Slasher: 0x86A0679C7987B5BA9600affA994B78D0660088ff
+ AVS Directory:  0xe21c9cfea094aAbE99C96D56281a00876F97258a
+ Delegation Manager:  0x700420690932eeB22bCd01fBf537d37BeCa5577C
+ Strategy Manager:  0xDeeea509217cACA34A4f42ae76B046F263b06494
+ Slasher:  0x545Bf1989eb37DE660600D9F1b7eFEBcb8199561
 
 **AVS**
-Proxy admin: 0xc6F76D133052002abdBAda02ba35dB8b7414FcAa
-Preconf Registry: 0x9D2ea2038CF6009F1Bc57E32818204726DfA63Cd
-Preconf Service Manager: 0x1912A7496314854fB890B1B88C0f1Ced653C1830
-Preconf Task Manager: 0x6064f756f7F3dc8280C1CfA01cE41a37B5f16df1
+Proxy admin:  0xEFC846aa6d4FbFd669b3620624351B66CB6AD25C
+Preconf Registry:  0xf2bD68421A73821368eEefaCB420FFdFa0237c86
+Preconf Service Manager:  0x9BDD6f66532C9355178B715F2383761045e6095f
+Preconf Task Manager:  0x55F28E20b194f31D473D901342a3c04932129bDC
 ```
 
 ## Contracts Env
