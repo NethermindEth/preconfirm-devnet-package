@@ -32,7 +32,7 @@ def launch(
                 "PROVER_SET": "",
                 "PORT_PROMETHEUS": "9091",
                 "P2P_SYNC_URL": "https://rpc.mainnet.taiko.xyz",
-                "TAIKO_TOKEN_L1_ADDRESS": "0x1788a5D023bac58bAF55a92153192a6568E42BAD",
+                "TAIKO_TOKEN_L1_ADDRESS": "0xC2d8B5248F7A6439E667eAAB6148eC68abCC516B",
                 "MIN_TAIKO_BALANCE": "",
                 "PROVE_UNASSIGNED_BLOCKS": "false",
                 "PROVER_ENDPOINTS": "http://taiko_client_prover_relayer:9876",
@@ -92,13 +92,13 @@ def launch(
                 "--taikoL1=0x57E5d642648F54973e504f10D21Ea06360151cAf "+
                 "--taikoL2=0x1670000000000000000000000000000000010001 " +
                 "--jwtSecret={0} ".format(jwtsecret_path) +
-                "--taikoToken=0x1788a5D023bac58bAF55a92153192a6568E42BAD " +
+                "--taikoToken=0xC2d8B5248F7A6439E667eAAB6148eC68abCC516B " +
                 "--l1.proposerPrivKey={0} ".format(prefunded_accounts[0].private_key) +
                 "--l2.suggestedFeeRecipient=0x8e81D13339eE01Bb2080EBf9796c5F2e5621f7E1 " +
                 # "--tierFee.optimistic=1 " +
                 # "--tierFee.sgx=1 " +
                 "--l1.blobAllowed " +
-                "--tx.gasLimit=3000000",
+                "--tx.gasLimit=3000000 " +
                 "--verbosity=4"
             ],
         ),

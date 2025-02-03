@@ -215,6 +215,8 @@ def run(plan, args={}):
         all_el_contexts[0],
         prefunded_accounts,
         network_id,
+        taiko_params.taiko_deploy_image,
+        preconf_params.avs_deploy_image,
     )
 
     # Broadcaster forwards requests, sent to it, to all nodes in parallel
@@ -747,6 +749,7 @@ print(int(a+b), end="")
                 prefunded_accounts,
                 "",
                 0,
+                args_with_right_defaults.taiko_params.taiko_geth_image,
             )
 
             # Launch taiko stack 2
@@ -757,6 +760,7 @@ print(int(a+b), end="")
                 prefunded_accounts,
                 taiko_stack_1.enode,
                 1,
+                args_with_right_defaults.taiko_params.taiko_geth_image,
             )
 
             plan.print("Successfully launched 2 taiko stacks")

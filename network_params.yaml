@@ -141,7 +141,7 @@ taiko_params:
   taiko_geth_image: nethswitchboard/taiko-geth:e2e
   taiko_client_image: nethswitchboard/taiko-client:e2e
 preconf_params:
-  avs_deploy_image: nethswitchboard/taiko-protocol-dev:latest
+  avs_deploy_image: nethswitchboard/preconf-avs-protocol:latest
   preconf_avs_image: nethswitchboard/avs-node:e2e
   preconf_bootnode_image: nethswitchboard/bootnodep2p:e2e
 xatu_sentry_enabled: false

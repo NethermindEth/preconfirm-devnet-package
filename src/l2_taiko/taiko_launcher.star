@@ -12,6 +12,7 @@ def launch(
     prefunded_accounts,
     enode,
     index,
+    taiko_geth_image,
 ):
     data_dirpath = EXECUTION_DATA_DIRPATH_ON_CLIENT_CONTAINER + "-" + str(index)
     jwtsecret_path = data_dirpath + "/geth/jwtsecret"
@@ -22,6 +23,7 @@ def launch(
         data_dirpath,
         enode,
         index,
+        taiko_geth_image,
     )
 
     # Launch driver

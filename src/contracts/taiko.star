@@ -5,6 +5,7 @@ def deploy(
     plan,
     el_rpc_url,
     contract_owner,
+    taiko_protocol_image,
 ):
     FORK_URL_COMMAND = "--fork-url {0}".format(el_rpc_url)
 
@@ -13,7 +14,7 @@ def deploy(
     plan.run_sh(
         name="deploy-taiko-contract",
         run="forge script {0} {1} {2} $FORGE_FLAGS".format(TAIKO_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
-        image="nethswitchboard/taiko-protocol-dev:latest",
+        image=taiko_protocol_image,
         env_vars={
             "FOUNDRY_PROFILE": "layer1",
             "PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
@@ -35,7 +36,7 @@ def deploy(
             "PAUSE_BRIDGE": "true",
             "NUM_MIN_MAJORITY_GUARDIANS": "7",
             "NUM_MIN_MINORITY_GUARDIANS": "2",
-            "TIER_ROUTER": "devnet",
+            "TIER_ROUTER": "mainnet",
             "FORK_URL": el_rpc_url,
             "SECURITY_COUNCIL": contract_owner.address,
             "FORGE_FLAGS": "--broadcast --ffi -vvvv --block-gas-limit 200000000",
@@ -48,7 +49,7 @@ def deploy(
     plan.run_sh(
         name="deploy-taiko-token",
         run="forge script {0} {1} {2} $FORGE_FLAGS".format(TOKEN_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
-        image="nethswitchboard/taiko-protocol-dev:latest",
+        image=taiko_protocol_image,
         env_vars={
             "FOUNDRY_PROFILE": "layer1",
             "PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
