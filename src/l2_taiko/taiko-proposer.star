@@ -19,7 +19,7 @@ def launch(
             },
             env_vars = {
                 "SGX_RAIKO_HOST": "",
-                "TAIKO_L1_ADDRESS": "0x57E5d642648F54973e504f10D21Ea06360151cAf",
+                "TAIKO_L1_ADDRESS": "0xbFaC9e95F250952630Eef4ef62E602d0D37844fe",
                 "TAIKO_L2_ADDRESS": "0x1670000000000000000000000000000000010001",
                 "TX_RECEIPT_QUERY": "",
                 "PORT_L2_EXECUTION_ENGINE_P2P": "30306",
@@ -89,7 +89,7 @@ def launch(
                 "taiko-client proposer --l1.ws={0} ".format(el_context.ws_url) +
                 "--l2.http={0} ".format(geth.rpc_http_url) +
                 "--l2.auth={0} ".format(geth.auth_url) +
-                "--taikoL1=0x57E5d642648F54973e504f10D21Ea06360151cAf "+
+                "--taikoL1=0xbFaC9e95F250952630Eef4ef62E602d0D37844fe "+
                 "--taikoL2=0x1670000000000000000000000000000000010001 " +
                 "--jwtSecret={0} ".format(jwtsecret_path) +
                 "--taikoToken=0xD10154F563387CAa0D65E536Fda09cc8178ee07A " +

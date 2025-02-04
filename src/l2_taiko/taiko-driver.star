@@ -34,7 +34,7 @@ def launch(
                 "TX_MIN_TIP_CAP": "",
                 "TX_FEE_LIMIT_THRESHOLD": "",
                 "P2P_SYNC_URL": "https://rpc.mainnet.taiko.xyz",
-                "TAIKO_L1_ADDRESS": "0x57E5d642648F54973e504f10D21Ea06360151cAf",
+                "TAIKO_L1_ADDRESS": "0xbFaC9e95F250952630Eef4ef62E602d0D37844fe",
                 "PORT_PROVER_SERVER": "9876",
                 "TX_MIN_BASEFEE": "",
                 "PORT_PROMETHEUS": "9091",
@@ -74,7 +74,7 @@ def launch(
                 "--l2.ws={0} ".format(geth.ws_url) +
                 "--l1.beacon={0} ".format(cl_context.beacon_http_url) +
                 "--l2.auth={0} ".format(geth.auth_url) +
-                "--taikoL1=0x57E5d642648F54973e504f10D21Ea06360151cAf " +
+                "--taikoL1=0xbFaC9e95F250952630Eef4ef62E602d0D37844fe " +
                 "--taikoL2=0x1670000000000000000000000000000000010001 " +
                 "--jwtSecret={0} ".format(jwtsecret_path) +
                 "--verbosity=4"
