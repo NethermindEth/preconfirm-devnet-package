@@ -137,12 +137,12 @@ mev_params:
   custom_flood_params:
     interval_between_transactions: 1
 taiko_params:
-  taiko_deploy_image: nethswitchboard/taiko-protocol-dev:latest
-  taiko_geth_image: nethswitchboard/taiko-geth:e2e
-  taiko_client_image: nethswitchboard/taiko-client:e2e
+  taiko_deploy_image: nethswitchboard/preconf-taiko-protocol:latest
+  taiko_geth_image: nethswitchboard/preconf-taiko-geth:latest
+  taiko_client_image: nethswitchboard/preconf-taiko-client:latest
 preconf_params:
   avs_deploy_image: nethswitchboard/preconf-avs-protocol:latest
-  preconf_avs_image: nethswitchboard/avs-node:e2e
+  preconf_avs_image: nethswitchboard/preconf-avs-node:latest
   preconf_bootnode_image: nethswitchboard/bootnodep2p:e2e
 contracts_addresses:
   taiko_l1: 0xbFaC9e95F250952630Eef4ef62E602d0D37844fe
