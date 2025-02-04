@@ -15,10 +15,10 @@ def deploy(
             "FORK_URL": el_rpc_url,
             "BEACON_GENESIS_TIMESTAMP": beacon_genesis_timestamp,
             "BEACON_BLOCK_ROOT_CONTRACT": "0x000F3df6D732807Ef1319fB7B8bB8522d0Beac02",
-            "SLASHER": "0x545Bf1989eb37DE660600D9F1b7eFEBcb8199561",
-            "AVS_DIRECTORY": "0xe21c9cfea094aAbE99C96D56281a00876F97258a",
+            "SLASHER": "0x700420690932eeB22bCd01fBf537d37BeCa5577C",
+            "AVS_DIRECTORY": "0xBf549F50fdbbD7Eb73ce88985AA107eEC0955f4c",
             "TAIKO_L1": "0x57E5d642648F54973e504f10D21Ea06360151cAf",
-            "TAIKO_TOKEN": "0xC2d8B5248F7A6439E667eAAB6148eC68abCC516B",
+            "TAIKO_TOKEN": "0xD10154F563387CAa0D65E536Fda09cc8178ee07A",
         },
         wait=None,
         # store=[

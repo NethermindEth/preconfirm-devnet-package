@@ -58,7 +58,7 @@ def launch(
                 "COMPOSE_PROFILES": "l2_execution_engine",
                 "PORT_L2_EXECUTION_ENGINE_METRICS": "6060",
                 "SGX_RAIKO_HOST": "",
-                "TAIKO_TOKEN_L1_ADDRESS": "0xC2d8B5248F7A6439E667eAAB6148eC68abCC516B",
+                "TAIKO_TOKEN_L1_ADDRESS": "0xD10154F563387CAa0D65E536Fda09cc8178ee07A",
                 "PORT_GRAFANA": "3001",
                 "PORT_L2_EXECUTION_ENGINE_HTTP": "8547",
                 "TOKEN_ALLOWANCE": "",
