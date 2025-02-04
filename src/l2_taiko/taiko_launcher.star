@@ -13,6 +13,7 @@ def launch(
     enode,
     index,
     taiko_geth_image,
+    contracts_addresses,
 ):
     data_dirpath = EXECUTION_DATA_DIRPATH_ON_CLIENT_CONTAINER + "-" + str(index)
     jwtsecret_path = data_dirpath + "/geth/jwtsecret"
@@ -35,6 +36,7 @@ def launch(
         cl_context,
         geth,
         index,
+        contracts_addresses,
     )
 
     # Launch proposer
@@ -47,6 +49,7 @@ def launch(
         geth,
         prefunded_accounts,
         index,
+        contracts_addresses,
     )
 
     return struct(

@@ -13,6 +13,7 @@ def launch(
     # second_validator_bls_private_key,
     # second_validator_index,
     index,
+    contracts_addresses,
 ):
     mev_boost_url = "http://{0}:{1}".format(
         mev_boost_context.private_ip_address, mev_boost_context.port
@@ -20,13 +21,13 @@ def launch(
 
     # Common environment variables
     base_env_vars = {
-        "AVS_PRECONF_TASK_MANAGER_CONTRACT_ADDRESS": "0xf2bD68421A73821368eEefaCB420FFdFa0237c86",
-        "AVS_DIRECTORY_CONTRACT_ADDRESS": "0xBf549F50fdbbD7Eb73ce88985AA107eEC0955f4c",
-        "AVS_SERVICE_MANAGER_CONTRACT_ADDRESS": "0xEFC846aa6d4FbFd669b3620624351B66CB6AD25C",
-        "AVS_PRECONF_REGISTRY_CONTRACT_ADDRESS": "0x454A310f46C8d9403ba6F6c514aD3fDE1ad97a5E",
-        "EIGEN_LAYER_STRATEGY_MANAGER_CONTRACT_ADDRESS": "0xe21c9cfea094aAbE99C96D56281a00876F97258a",
-        "EIGEN_LAYER_SLASHER_CONTRACT_ADDRESS": "0x700420690932eeB22bCd01fBf537d37BeCa5577C",
-        "TAIKO_L1_ADDRESS": "0xbFaC9e95F250952630Eef4ef62E602d0D37844fe",
+        "AVS_PRECONF_TASK_MANAGER_CONTRACT_ADDRESS": contracts_addresses.preconf_task_manager,
+        "AVS_DIRECTORY_CONTRACT_ADDRESS": contracts_addresses.avs_directory,
+        "AVS_SERVICE_MANAGER_CONTRACT_ADDRESS": contracts_addresses.service_manager,
+        "AVS_PRECONF_REGISTRY_CONTRACT_ADDRESS": contracts_addresses.preconf_registry,
+        "EIGEN_LAYER_STRATEGY_MANAGER_CONTRACT_ADDRESS": contracts_addresses.strategy_manager,
+        "EIGEN_LAYER_SLASHER_CONTRACT_ADDRESS": contracts_addresses.slasher,
+        "TAIKO_L1_ADDRESS": contracts_addresses.taiko_l1,
         "TAIKO_CHAIN_ID": "167000",
         "L1_CHAIN_ID": chain_id,
         "VALIDATOR_BLS_PRIVATEKEY": first_validator_bls_private_key,

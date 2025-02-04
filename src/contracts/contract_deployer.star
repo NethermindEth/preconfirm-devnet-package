@@ -10,6 +10,7 @@ def deploy(
     network_id,
     taiko_protocol_image,
     avs_protocol_image,
+    contracts_addresses,
 ):
     # Get el rpc url
     el_rpc_url = el_context.rpc_http_url
@@ -23,6 +24,7 @@ def deploy(
         el_rpc_url,
         first_prefunded_account,
         taiko_protocol_image,
+        contracts_addresses,
     )
 
     # Deploy eigenlayer mvp contracts
@@ -52,6 +54,7 @@ print(new, end="")
         beacon_genesis_timestamp.output,
         first_prefunded_account,
         avs_protocol_image,
+        contracts_addresses,
     )
 
     # Transfer taiko tokens

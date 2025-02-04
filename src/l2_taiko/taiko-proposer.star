@@ -9,6 +9,7 @@ def launch(
     geth,
     prefunded_accounts,
     index,
+    contracts_addresses,
 ):
     service = plan.add_service(
         name = "preconf-taiko-proposer-{0}".format(index),
@@ -19,8 +20,8 @@ def launch(
             },
             env_vars = {
                 "SGX_RAIKO_HOST": "",
-                "TAIKO_L1_ADDRESS": "0xbFaC9e95F250952630Eef4ef62E602d0D37844fe",
-                "TAIKO_L2_ADDRESS": "0x1670000000000000000000000000000000010001",
+                "TAIKO_L1_ADDRESS": contracts_addresses.taiko_l1,
+                "TAIKO_L2_ADDRESS": contracts_addresses.taiko_l2,
                 "TX_RECEIPT_QUERY": "",
                 "PORT_L2_EXECUTION_ENGINE_P2P": "30306",
                 "TX_FEE_LIMIT_THRESHOLD": "",
@@ -32,11 +33,11 @@ def launch(
                 "PROVER_SET": "",
                 "PORT_PROMETHEUS": "9091",
                 "P2P_SYNC_URL": "https://rpc.mainnet.taiko.xyz",
-                "TAIKO_TOKEN_L1_ADDRESS": "0xD10154F563387CAa0D65E536Fda09cc8178ee07A",
+                "TAIKO_TOKEN_L1_ADDRESS": contracts_addresses.taiko_token,
                 "MIN_TAIKO_BALANCE": "",
                 "PROVE_UNASSIGNED_BLOCKS": "false",
                 "PROVER_ENDPOINTS": "http://taiko_client_prover_relayer:9876",
-                "L2_SUGGESTED_FEE_RECIPIENT": "0x8e81D13339eE01Bb2080EBf9796c5F2e5621f7E1",
+                "L2_SUGGESTED_FEE_RECIPIENT": contracts_addresses.l2_suggested_fee_recipient,
                 "ENABLE_PROVER": "false",
                 "TX_FEE_LIMIT_MULTIPLIER": "",
                 "L1_PROPOSER_PRIVATE_KEY": "0xbcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31",
@@ -89,12 +90,12 @@ def launch(
                 "taiko-client proposer --l1.ws={0} ".format(el_context.ws_url) +
                 "--l2.http={0} ".format(geth.rpc_http_url) +
                 "--l2.auth={0} ".format(geth.auth_url) +
-                "--taikoL1=0xbFaC9e95F250952630Eef4ef62E602d0D37844fe "+
-                "--taikoL2=0x1670000000000000000000000000000000010001 " +
+                "--taikoL1={0} ".format(contracts_addresses.taiko_l1) +
+                "--taikoL2={0} ".format(contracts_addresses.taiko_l2) +
                 "--jwtSecret={0} ".format(jwtsecret_path) +
-                "--taikoToken=0xD10154F563387CAa0D65E536Fda09cc8178ee07A " +
+                "--taikoToken={0} ".format(contracts_addresses.taiko_token) +
                 "--l1.proposerPrivKey={0} ".format(prefunded_accounts[0].private_key) +
-                "--l2.suggestedFeeRecipient=0x8e81D13339eE01Bb2080EBf9796c5F2e5621f7E1 " +
+                "--l2.suggestedFeeRecipient={0} ".format(contracts_addresses.l2_suggested_fee_recipient) +
                 # "--tierFee.optimistic=1 " +
                 # "--tierFee.sgx=1 " +
                 "--l1.blobAllowed " +

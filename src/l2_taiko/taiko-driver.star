@@ -8,6 +8,7 @@ def launch(
     cl_context,
     geth,
     index,
+    contracts_addresses,
 ):
     service = plan.add_service(
         name = "preconf-taiko-driver-{0}".format(index),
@@ -34,7 +35,7 @@ def launch(
                 "TX_MIN_TIP_CAP": "",
                 "TX_FEE_LIMIT_THRESHOLD": "",
                 "P2P_SYNC_URL": "https://rpc.mainnet.taiko.xyz",
-                "TAIKO_L1_ADDRESS": "0xbFaC9e95F250952630Eef4ef62E602d0D37844fe",
+                "TAIKO_L1_ADDRESS": contracts_addresses.taiko_l1,
                 "PORT_PROVER_SERVER": "9876",
                 "TX_MIN_BASEFEE": "",
                 "PORT_PROMETHEUS": "9091",
@@ -42,8 +43,8 @@ def launch(
                 "TX_SEND_TIMEOUT": "",
                 "PORT_L2_EXECUTION_ENGINE_WS": "8548",
                 "PROVER_ENDPOINTS": "http://taiko_client_prover_relayer:9876",
-                "TAIKO_L2_ADDRESS": "0x1670000000000000000000000000000000010001",
-                "L2_SUGGESTED_FEE_RECIPIENT": "0x8e81D13339eE01Bb2080EBf9796c5F2e5621f7E1",
+                "TAIKO_L2_ADDRESS": contracts_addresses.taiko_l2,
+                "L2_SUGGESTED_FEE_RECIPIENT": contracts_addresses.l2_suggested_fee_recipient,
                 "PROVER_SET": "",
                 "MIN_TAIKO_BALANCE": "",
                 "L1_PROPOSER_PRIVATE_KEY": "0xbcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31",
@@ -58,7 +59,7 @@ def launch(
                 "COMPOSE_PROFILES": "l2_execution_engine",
                 "PORT_L2_EXECUTION_ENGINE_METRICS": "6060",
                 "SGX_RAIKO_HOST": "",
-                "TAIKO_TOKEN_L1_ADDRESS": "0xD10154F563387CAa0D65E536Fda09cc8178ee07A",
+                "TAIKO_TOKEN_L1_ADDRESS": contracts_addresses.taiko_token,
                 "PORT_GRAFANA": "3001",
                 "PORT_L2_EXECUTION_ENGINE_HTTP": "8547",
                 "TOKEN_ALLOWANCE": "",
@@ -74,8 +75,8 @@ def launch(
                 "--l2.ws={0} ".format(geth.ws_url) +
                 "--l1.beacon={0} ".format(cl_context.beacon_http_url) +
                 "--l2.auth={0} ".format(geth.auth_url) +
-                "--taikoL1=0xbFaC9e95F250952630Eef4ef62E602d0D37844fe " +
-                "--taikoL2=0x1670000000000000000000000000000000010001 " +
+                "--taikoL1={0} ".format(contracts_addresses.taiko_l1) +
+                "--taikoL2={0} ".format(contracts_addresses.taiko_l2) +
                 "--jwtSecret={0} ".format(jwtsecret_path) +
                 "--verbosity=4"
             ],
