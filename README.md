@@ -200,12 +200,13 @@ kurtosis clean -a
 **Since kurtosis package doesn’t pull the latest images by default, if changes were made to images, we need to do it manually:**
 
 ```jsx
-docker pull nethswitchboard/avs-node:e2e
+docker pull nethswitchboard/preconf-avs-node:latest
 docker pull nethswitchboard/taiko-spammer:e2e
-docker pull nethswitchboard/taiko-client:e2e
+docker pull nethswitchboard/preconf-taiko-client:latest
 docker pull nethswitchboard/taiko-transfer:e2e
-docker pull nethswitchboard/taiko-protocol-dev:latest
-docker pull nethswitchboard/taiko-geth:e2e
+docker pull nethswitchboard/preconf-taiko-protocol:latest
+docker pull nethswitchboard/preconf-taiko-geth:latest
+docker pull nethswitchboard/preconf-avs-protocol:latest
 docker pull nethswitchboard/ethereum-genesis-generator:e2e
 docker pull nethswitchboard/bootnodep2p:e2e
 ```
@@ -213,14 +214,14 @@ docker pull nethswitchboard/bootnodep2p:e2e
 1. L1 Genesis Generator
     1. `docker pull nethswitchboard/ethereum-genesis-generator:e2e`
 2. L2 Taiko
-    1. `docker pull nethswitchboard/taiko-geth:e2e`
-    2. `docker pull nethswitchboard/taiko-client:e2e`
+    1. `docker pull nethswitchboard/preconf-taiko-geth:latest`
+    2. `docker pull nethswitchboard/preconf-taiko-client:latest`
 3. Taiko Contract Deployment
-    1. `docker pull nethswitchboard/taiko-protocol-dev:latest`
+    1. `docker pull nethswitchboard/preconf-taiko-protocol:latest`
 4. AVS Contract Deployment
-    1. `docker pull nethswitchboard/taiko-protocol-dev:latest`
+    1. `docker pull nethswitchboard/preconf-avs-protocol:latest`
 5. AVS Node
-    1. `docker pull nethswitchboard/avs-node:e2e`
+    1. `docker pull nethswitchboard/preconf-avs-node:latest`
 6. P2P Bootnode
     1. `docker pull nethswitchboard/bootnodep2p:e2e`
 
