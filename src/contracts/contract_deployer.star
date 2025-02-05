@@ -8,6 +8,9 @@ def deploy(
     el_context,
     prefunded_accounts,
     network_id,
+    taiko_protocol_image,
+    avs_protocol_image,
+    contracts_addresses,
 ):
     # Get el rpc url
     el_rpc_url = el_context.rpc_http_url
@@ -20,6 +23,8 @@ def deploy(
         plan,
         el_rpc_url,
         first_prefunded_account,
+        taiko_protocol_image,
+        contracts_addresses,
     )
 
     # Deploy eigenlayer mvp contracts
@@ -27,6 +32,7 @@ def deploy(
         plan,
         el_rpc_url,
         first_prefunded_account,
+        avs_protocol_image,
     )
 
     # Get beacon genesis timestamp for avs contracts
@@ -47,6 +53,8 @@ print(new, end="")
         el_rpc_url,
         beacon_genesis_timestamp.output,
         first_prefunded_account,
+        avs_protocol_image,
+        contracts_addresses,
     )
 
     # Transfer taiko tokens
@@ -63,7 +71,7 @@ print(new, end="")
                 "SENDER_PRIVATE_KEY": first_prefunded_account.private_key,
                 "RECIPIENT_ADDRESS": "0x6064f756f7F3dc8280C1CfA01cE41a37B5f16df1",
                 "TOKEN_AMOUNT": "1000000",
-                "ERC20_ADDRESS": "0x422A3492e218383753D8006C7Bfa97815B44373F",
+                "ERC20_ADDRESS": "0x4Af231e5E624038Cd40FC4fd5b86B39d13E1429e",
                 "RPC_URL": el_rpc_url,
                 "CHAIN_ID": network_id,
             },

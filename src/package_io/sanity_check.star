@@ -198,6 +198,18 @@ SUBCATEGORY_PARAMS = {
         "preconf_avs_image",
         "preconf_bootnode_image",
     ],
+    "contracts_addresses": [
+        "taiko_l1",
+        "taiko_l2",
+        "taiko_token",
+        "l2_suggested_fee_recipient",
+        "avs_directory",
+        "slasher",
+        "service_manager",
+        "strategy_manager",
+        "preconf_registry",
+        "preconf_task_manager",
+    ],
     "xatu_sentry_params": [
         "xatu_sentry_image",
         "xatu_server_addr",

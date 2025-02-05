@@ -74,6 +74,7 @@ ATTR_TO_BE_SKIPPED_AT_ROOT = (
     "mev_params",
     "taiko_params",
     "preconf_params",
+    "contracts_addresses",
     "dora_params",
     "assertoor_params",
     "goomy_blob_params",
@@ -115,7 +116,7 @@ def input_parser(plan, input_args):
     result["port_publisher"] = get_port_publisher_params("default")
     result["preconf_params"] = {}
     result["taiko_params"] = {}
-
+    result["contracts_addresses"] = {}
     if constants.NETWORK_NAME.shadowfork in result["network_params"]["network"]:
         shadow_base = result["network_params"]["network"].split("-shadowfork")[0]
         result["network_params"][
@@ -150,6 +151,10 @@ def input_parser(plan, input_args):
             for sub_attr in input_args["preconf_params"]:
                 sub_value = input_args["preconf_params"][sub_attr]
                 result["preconf_params"][sub_attr] = sub_value
+        elif attr == "contracts_addresses":
+            for sub_attr in input_args["contracts_addresses"]:
+                sub_value = input_args["contracts_addresses"][sub_attr]
+                result["contracts_addresses"][sub_attr] = sub_value
         elif attr == "tx_spammer_params":
             for sub_attr in input_args["tx_spammer_params"]:
                 sub_value = input_args["tx_spammer_params"][sub_attr]
@@ -343,6 +348,18 @@ def input_parser(plan, input_args):
             avs_deploy_image=result["preconf_params"]["avs_deploy_image"],
             preconf_avs_image=result["preconf_params"]["preconf_avs_image"],
             preconf_bootnode_image=result["preconf_params"]["preconf_bootnode_image"],
+        ),
+        contracts_addresses=struct(
+            taiko_l1=result["contracts_addresses"]["taiko_l1"],
+            taiko_l2=result["contracts_addresses"]["taiko_l2"],
+            taiko_token=result["contracts_addresses"]["taiko_token"],
+            l2_suggested_fee_recipient=result["contracts_addresses"]["l2_suggested_fee_recipient"],
+            avs_directory=result["contracts_addresses"]["avs_directory"],
+            slasher=result["contracts_addresses"]["slasher"],
+            strategy_manager=result["contracts_addresses"]["strategy_manager"],
+            preconf_registry=result["contracts_addresses"]["preconf_registry"],
+            service_manager=result["contracts_addresses"]["service_manager"],
+            preconf_task_manager=result["contracts_addresses"]["preconf_task_manager"],
         ),
         dora_params=struct(
             image=result["dora_params"]["image"],

@@ -93,6 +93,7 @@ def run(plan, args={}):
     mev_params = args_with_right_defaults.mev_params
     taiko_params = args_with_right_defaults.taiko_params
     preconf_params = args_with_right_defaults.preconf_params
+    contracts_addresses = args_with_right_defaults.contracts_addresses
     parallel_keystore_generation = args_with_right_defaults.parallel_keystore_generation
     persistent = args_with_right_defaults.persistent
     xatu_sentry_params = args_with_right_defaults.xatu_sentry_params
@@ -215,6 +216,9 @@ def run(plan, args={}):
         all_el_contexts[0],
         prefunded_accounts,
         network_id,
+        taiko_params.taiko_deploy_image,
+        preconf_params.avs_deploy_image,
+        contracts_addresses,
     )
 
     # Broadcaster forwards requests, sent to it, to all nodes in parallel
@@ -747,6 +751,8 @@ print(int(a+b), end="")
                 prefunded_accounts,
                 "",
                 0,
+                args_with_right_defaults.taiko_params.taiko_geth_image,
+                contracts_addresses,
             )
 
             # Launch taiko stack 2
@@ -757,6 +763,8 @@ print(int(a+b), end="")
                 prefunded_accounts,
                 taiko_stack_1.enode,
                 1,
+                args_with_right_defaults.taiko_params.taiko_geth_image,
+                contracts_addresses,
             )
 
             plan.print("Successfully launched 2 taiko stacks")
@@ -805,7 +813,7 @@ print(int(a+b), end="")
                         "infinity",
                     ],
                     env_vars = {
-                        "PRIVATE_KEY": "ab63b23eb7941c1251757e24b3d2350d2bc05c3c388d06f8fe6feafefb1e8c70",
+                        "PRIVATE_KEY": "bcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31",
                         "RECIPIENT_ADDRESS": "0x802dCbE1B1A97554B4F50DB5119E37E8e7336417",
                         "TX_COUNT": "10",
                         "TX_AMOUNT": "0.005",
@@ -839,6 +847,7 @@ print(int(a+b), end="")
                 # "215768a626159445ba0d8a1afab729c5724e75aa020a480580cbf86dd2ae4d47",
                 # 2,
                 1,
+                contracts_addresses,
             )
 
             # Launch Preconf AVS 2
@@ -857,6 +866,7 @@ print(int(a+b), end="")
                 # "10c3db5c5bdca44958bc765e040a5cae3439551cfb4651df442cbe499b12ee69",
                 # 3,
                 2,
+                contracts_addresses,
             )
 
             plan.print("Successfully launched 2 preconf avs")
@@ -874,6 +884,11 @@ print(int(a+b), end="")
                         "tx_transfer_status": "fromjson | .transaction_hash",
                     },
                 ),
+            )
+
+            plan.run_sh(
+                run = "sleep 120",
+                description = "Waiting for L2 to sync",
             )
 
             plan.add_service(

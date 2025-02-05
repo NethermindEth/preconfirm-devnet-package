@@ -17,11 +17,12 @@ def launch(
     data_dirpath,
     enode,
     index,
+    taiko_geth_image,
 ):
     service = plan.add_service(
         name = "preconf-taiko-geth-{0}".format(index),
         config = ServiceConfig(
-            image = "nethswitchboard/taiko-geth:e2e",
+            image = taiko_geth_image,
             files = {
                 data_dirpath: "taiko_genesis",
             },
@@ -67,6 +68,7 @@ def launch(
                 "--gpo.ignoreprice=100000000",
                 "--port=30306",
                 "--discovery.port=30306",
+                "--verbosity=4",
             ],
             min_cpu = EXECUTION_MIN_CPU,
             max_cpu = EXECUTION_MAX_CPU,
