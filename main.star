@@ -752,6 +752,7 @@ print(int(a+b), end="")
                 "",
                 0,
                 args_with_right_defaults.taiko_params.taiko_geth_image,
+                args_with_right_defaults.taiko_params.taiko_client_image,
                 contracts_addresses,
             )
 
@@ -764,6 +765,7 @@ print(int(a+b), end="")
                 taiko_stack_1.enode,
                 1,
                 args_with_right_defaults.taiko_params.taiko_geth_image,
+                args_with_right_defaults.taiko_params.taiko_client_image,
                 contracts_addresses,
             )
 
