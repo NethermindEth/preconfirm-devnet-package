@@ -888,6 +888,11 @@ print(int(a+b), end="")
                 ),
             )
 
+            plan.run_sh(
+                run = "sleep 120",
+                description = "Waiting for L2 to sync",
+            )
+
             plan.add_service(
                 name = "preconf-pytest",
                 description = "Launching preconf pytest",
