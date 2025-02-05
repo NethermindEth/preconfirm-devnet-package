@@ -13,6 +13,7 @@ def launch(
     enode,
     index,
     taiko_geth_image,
+    taiko_client_image,
     contracts_addresses,
 ):
     data_dirpath = EXECUTION_DATA_DIRPATH_ON_CLIENT_CONTAINER + "-" + str(index)
@@ -37,6 +38,7 @@ def launch(
         geth,
         index,
         contracts_addresses,
+        taiko_client_image,
     )
 
     # Launch proposer
@@ -50,6 +52,7 @@ def launch(
         prefunded_accounts,
         index,
         contracts_addresses,
+        taiko_client_image,
     )
 
     return struct(

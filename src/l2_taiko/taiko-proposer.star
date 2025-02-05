@@ -10,11 +10,12 @@ def launch(
     prefunded_accounts,
     index,
     contracts_addresses,
+    taiko_client_image,
 ):
     service = plan.add_service(
         name = "preconf-taiko-proposer-{0}".format(index),
         config = ServiceConfig(
-            image = "nethswitchboard/taiko-client:e2e",
+            image = taiko_client_image,
             files = {
                 data_dirpath: "taiko_genesis_{0}".format(index),
             },
