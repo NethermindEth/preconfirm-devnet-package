@@ -6,7 +6,7 @@ def launch(
     plan.add_service(
         name = "taiko-preconf-bootnode",
         config = ServiceConfig(
-            image = "nethswitchboard/bootnodep2p:e2e",
+            image = "nethswitchboard/preconf-p2p-bootnode:latest",
             cmd = [
                 "p2p-boot-node",
                 "p2pbootnode_ip_placeholder",
