@@ -347,7 +347,6 @@ def input_parser(plan, input_args):
         preconf_params=struct(
             avs_deploy_image=result["preconf_params"]["avs_deploy_image"],
             preconf_avs_image=result["preconf_params"]["preconf_avs_image"],
-            preconf_bootnode_image=result["preconf_params"]["preconf_bootnode_image"],
         ),
         contracts_addresses=struct(
             taiko_l1=result["contracts_addresses"]["taiko_l1"],

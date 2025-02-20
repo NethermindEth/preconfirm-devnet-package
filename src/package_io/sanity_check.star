@@ -196,7 +196,6 @@ SUBCATEGORY_PARAMS = {
     "preconf_params": [
         "avs_deploy_image",
         "preconf_avs_image",
-        "preconf_bootnode_image",
     ],
     "contracts_addresses": [
         "taiko_l1",

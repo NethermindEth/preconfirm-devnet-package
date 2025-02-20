@@ -66,7 +66,6 @@ contract_deployer = import_module("./src/contracts/contract_deployer.star")
 l2_taiko = import_module("./src/l2_taiko/taiko_launcher.star")
 taiko_blockscout = import_module("./src/l2_taiko/blockscout_launcher.star")
 preconf_avs = import_module("./src/preconf_avs/avs_launcher.star")
-p2p_bootnode = import_module("./src/preconf_avs/p2pbootnode_launcher.star")
 
 GRAFANA_USER = "admin"
 GRAFANA_PASSWORD = "admin"
@@ -736,6 +735,8 @@ print(int(a+b), end="")
                 global_node_selectors,
             )
         elif additional_service == "taiko_stack":
+            plan.print("Don't Launch taiko")
+            """
             plan.print("Launching taiko")
 
             plan.upload_files(
@@ -824,15 +825,14 @@ print(int(a+b), end="")
                     },
                 ),
             )
+            """
 
             # plan.print(spammer_result)
         elif additional_service == "preconf_avs":
+            plan.print("Don't launch preconfirmation AVS")
+            """
             plan.print("Launching preconfirmation AVS")
 
-            # Launch P2P Bootnode
-            p2pbootnode_context = p2p_bootnode.launch(
-                plan,
-            )
             # Launch Preconf AVS 1
             preconf_avs.launch(
                 plan,
@@ -840,7 +840,6 @@ print(int(a+b), end="")
                 network_id,
                 all_el_contexts[0],
                 all_cl_contexts[0],
-                p2pbootnode_context,
                 taiko_stack_1,
                 all_mevboost_contexts[0],
                 prefunded_accounts,
@@ -859,7 +858,6 @@ print(int(a+b), end="")
                 network_id,
                 all_el_contexts[0],
                 all_cl_contexts[0],
-                p2pbootnode_context,
                 taiko_stack_2,
                 all_mevboost_contexts[0],
                 prefunded_accounts,
@@ -918,6 +916,7 @@ print(int(a+b), end="")
             )
 
             plan.print(pytest_result["output"])
+            """
         else:
             fail("Invalid additional service %s" % (additional_service))
     if launch_prometheus_grafana:

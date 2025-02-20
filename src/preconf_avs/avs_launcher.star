@@ -4,7 +4,6 @@ def launch(
     chain_id,
     el_context,
     cl_context,
-    p2pbootnode_context,
     taiko_stack,
     mev_boost_context,
     prefunded_accounts,
@@ -39,7 +38,6 @@ def launch(
         "L1_BEACON_URL": cl_context.beacon_http_url,
         "RUST_LOG": "debug,reqwest=info,hyper=info,alloy_transport=info,alloy_rpc_client=info,p2p_network=info,libp2p_gossipsub=info,discv5=info,netlink_proto=info",
         "P2P_ADDRESS": "avs_ip_placeholder",
-        "P2P_BOOTNODE_ENR": str(p2pbootnode_context.bootnode_enr),
     }
 
     # For each service, we'll create env_vars by combining base_env_vars with service-specific vars
