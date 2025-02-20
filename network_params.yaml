@@ -143,7 +143,6 @@ taiko_params:
 preconf_params:
   avs_deploy_image: nethswitchboard/preconf-avs-protocol:latest
   preconf_avs_image: nethswitchboard/preconf-avs-node:latest
-  preconf_bootnode_image: nethswitchboard/bootnodep2p:e2e
 contracts_addresses:
   taiko_l1: 0xbFaC9e95F250952630Eef4ef62E602d0D37844fe
   taiko_token: 0xD10154F563387CAa0D65E536Fda09cc8178ee07A
