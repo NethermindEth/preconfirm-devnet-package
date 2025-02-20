@@ -735,6 +735,8 @@ print(int(a+b), end="")
                 global_node_selectors,
             )
         elif additional_service == "taiko_stack":
+            plan.print("Don't Launch taiko")
+            """
             plan.print("Launching taiko")
 
             plan.upload_files(
@@ -823,9 +825,12 @@ print(int(a+b), end="")
                     },
                 ),
             )
+            """
 
             # plan.print(spammer_result)
         elif additional_service == "preconf_avs":
+            plan.print("Don't launch preconfirmation AVS")
+            """
             plan.print("Launching preconfirmation AVS")
 
             # Launch Preconf AVS 1
@@ -911,6 +916,7 @@ print(int(a+b), end="")
             )
 
             plan.print(pytest_result["output"])
+            """
         else:
             fail("Invalid additional service %s" % (additional_service))
     if launch_prometheus_grafana:
