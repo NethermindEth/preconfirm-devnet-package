@@ -873,24 +873,24 @@ print(int(a+b), end="")
 
             plan.print("Successfully launched 2 preconf avs")
 
+            plan.run_sh(
+                run = "sleep 120",
+                description = "Waiting 2 mins for L2 to sync",
+            )
+
             plan.exec(
                 service_name = "taiko-tx-transfer",
-                description = "Pausing for 2 mins and transfering Taiko ETH",
+                description = "Transfering Taiko ETH",
                 recipe = ExecRecipe(
                     command = [
                         "sh",
                         "-c",
-                        "sleep 120 && python tx_spammer.py --count $TX_COUNT --amount $TX_AMOUNT --rpc $RPC_URL | grep 'Transaction sent:' | awk '{print \"{\\\"transaction_hash\\\": \\\"\" $3 \"\\\"}\"}'",
+                        "python tx_spammer.py --count $TX_COUNT --amount $TX_AMOUNT --rpc $RPC_URL | grep 'Transaction sent:' | awk '{print \"{\\\"transaction_hash\\\": \\\"\" $3 \"\\\"}\"}'",
                     ],
                     extract = {
                         "tx_transfer_status": "fromjson | .transaction_hash",
                     },
                 ),
-            )
-
-            plan.run_sh(
-                run = "sleep 120",
-                description = "Waiting for L2 to sync",
             )
 
             plan.add_service(
