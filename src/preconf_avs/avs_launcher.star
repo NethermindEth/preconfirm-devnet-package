@@ -32,7 +32,7 @@ def launch(
         "L1_CHAIN_ID": chain_id,
         "VALIDATOR_BLS_PRIVATEKEY": first_validator_bls_private_key,
         "VALIDATOR_INDEX": str(first_validator_index),
-        "TAIKO_PROPOSER_URL": taiko_stack.proposer_url,
+        "TAIKO_GETH_URL": taiko_stack.proposer_url,
         "TAIKO_DRIVER_URL": taiko_stack.driver_url,
         "MEV_BOOST_URL": mev_boost_url,
         "L1_WS_RPC_URL": el_context.ws_url,
@@ -40,6 +40,7 @@ def launch(
         "RUST_LOG": "debug,reqwest=info,hyper=info,alloy_transport=info,alloy_rpc_client=info,p2p_network=info,libp2p_gossipsub=info,discv5=info,netlink_proto=info",
         "P2P_ADDRESS": "avs_ip_placeholder",
         "P2P_BOOTNODE_ENR": str(p2pbootnode_context.bootnode_enr),
+        "JWT_SECRET_FILE_PATH":"/data/taiko-geth/geth/jwtsecret",
     }
 
     # For each service, we'll create env_vars by combining base_env_vars with service-specific vars
@@ -103,6 +104,9 @@ def launch(
     plan.add_service(
         name = "taiko-preconf-avs-{0}".format(index),
         config = ServiceConfig(
+            files = {
+                "/data/taiko-geth".format(index): "taiko_genesis_{0}".format(index),
+            },
             image = image,
             private_ip_address_placeholder = "avs_ip_placeholder",
             env_vars=create_service_env_vars({
