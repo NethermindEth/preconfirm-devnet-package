@@ -1,5 +1,5 @@
-TAIKO_SCRIPT_PATH = "./script/layer1/DeployProtocolOnL1.s.sol:DeployProtocolOnL1"
-TOKEN_SCRIPT_PATH = "./script/layer1/DeployTaikoToken.s.sol:DeployTaikoToken"
+TAIKO_SCRIPT_PATH = "./script/layer1/based/DeployProtocolOnL1.s.sol:DeployProtocolOnL1"
+TOKEN_SCRIPT_PATH = "./script/layer1/based/DeployTaikoToken.s.sol:DeployTaikoToken"
 
 def deploy(
     plan,
@@ -19,27 +19,22 @@ def deploy(
         env_vars={
             "FOUNDRY_PROFILE": "layer1",
             "PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
-            "PROPOSER": "0x0000000000000000000000000000000000000000",
-            "TAIKO_TOKEN": "0x0000000000000000000000000000000000000000",
-            "PROPOSER_ONE": "0x0000000000000000000000000000000000000000",
-            "GUARDIAN_PROVERS": "0x1000777700000000000000000000000000000001,0x1000777700000000000000000000000000000002,0x1000777700000000000000000000000000000003,0x1000777700000000000000000000000000000004,0x1000777700000000000000000000000000000005,0x1000777700000000000000000000000000000006,0x1000777700000000000000000000000000000007",
-            "TAIKO_L2_ADDRESS": contracts_addresses.taiko_l2,
-            "L2_SIGNAL_SERVICE": "0x1670000000000000000000000000000000000005",
+            "OLD_FORK_TAIKO_INBOX": "0x0000000000000000000000000000000000000000",
+            "TAIKO_ANCHOR_ADDRESS": contracts_addresses.taiko_l2,
+            "L2_SIGNAL_SERVICE": "0x1000777700000000000000000000000000000007",
             "CONTRACT_OWNER": contract_owner.address,
             "PROVER_SET_ADMIN": contract_owner.address,
             "TAIKO_TOKEN_PREMINT_RECIPIENT": contract_owner.address,
             "TAIKO_TOKEN_NAME": "Taiko Token",
             "TAIKO_TOKEN_SYMBOL": "TAIKO",
-            "SHARED_ADDRESS_MANAGER": "0x0000000000000000000000000000000000000000",
-            # "L2_GENESIS_HASH": "0x7983c69e31da54b8d244d8fef4714ee7a8ed25d873ebef204a56f082a73c9f1e",
+            "SHARED_RESOLVER": "0x0000000000000000000000000000000000000000",
             "L2_GENESIS_HASH": "0x7d621e96344cc0c1b32a6a53246ef76a46a046b009ee5d44b02ed69d4dabd4fb",
-            "PAUSE_TAIKO_L1": "false",
             "PAUSE_BRIDGE": "true",
-            "NUM_MIN_MAJORITY_GUARDIANS": "7",
-            "NUM_MIN_MINORITY_GUARDIANS": "2",
-            "TIER_ROUTER": "mainnet",
+            "DEPLOY_PRECONF_CONTRACTS": "true",
+            "INCLUSION_WINDOW": "24",
+            "INCLUSION_FEE_IN_GWEI": "100",
+            "TAIKO_TOKEN": "0x0000000000000000000000000000000000000000",
             "FORK_URL": el_rpc_url,
-            "SECURITY_COUNCIL": contract_owner.address,
             "FORGE_FLAGS": "--broadcast --ffi -vvvv --block-gas-limit 200000000",
         },
         wait=None,

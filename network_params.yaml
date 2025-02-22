@@ -137,7 +137,7 @@ mev_params:
   custom_flood_params:
     interval_between_transactions: 1
 taiko_params:
-  taiko_deploy_image: nethswitchboard/preconf-taiko-protocol:latest
+  taiko_deploy_image: nethswitchboard/preconf-taiko-protocol:whitelist
   taiko_geth_image: nethswitchboard/preconf-taiko-geth:latest
   taiko_client_image: nethswitchboard/preconf-taiko-client:latest
 preconf_params:
