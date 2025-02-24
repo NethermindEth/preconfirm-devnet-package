@@ -1,4 +1,4 @@
-TAIKO_SCRIPT_PATH = "./script/layer1/preconf/DeployProtocolOnL1.s.sol:DeployProtocolOnL1"
+TAIKO_SCRIPT_PATH = "./script/layer1/based/DeployProtocolOnL1.s.sol:DeployProtocolOnL1"
 TOKEN_SCRIPT_PATH = "./script/layer1/based/DeployTaikoToken.s.sol:DeployTaikoToken"
 
 def deploy(
