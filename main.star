@@ -735,8 +735,6 @@ print(int(a+b), end="")
                 global_node_selectors,
             )
         elif additional_service == "taiko_stack":
-            plan.print("Don't Launch taiko")
-            """
             plan.print("Launching taiko")
 
             plan.upload_files(
@@ -784,6 +782,7 @@ print(int(a+b), end="")
 
             plan.print("Successfully launched blockscout for taiko L2")
 
+            """
             # Launch taiko L2 tx transfer for first transaction
             plan.add_service(
                 name = "taiko-tx-transfer",

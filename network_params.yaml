@@ -138,15 +138,15 @@ mev_params:
     interval_between_transactions: 1
 taiko_params:
   taiko_deploy_image: nethswitchboard/preconf-taiko-protocol:whitelist
-  taiko_geth_image: nethswitchboard/preconf-taiko-geth:latest
-  taiko_client_image: nethswitchboard/preconf-taiko-client:latest
+  taiko_geth_image: nethswitchboard/preconf-taiko-geth:whitelist
+  taiko_client_image: nethswitchboard/preconf-taiko-client:whitelist
 preconf_params:
   avs_deploy_image: nethswitchboard/preconf-avs-protocol:latest
   preconf_avs_image: nethswitchboard/preconf-avs-node:latest
 contracts_addresses:
   taiko_l1: 0xbFaC9e95F250952630Eef4ef62E602d0D37844fe
   taiko_token: 0xD10154F563387CAa0D65E536Fda09cc8178ee07A
-  taiko_l2: 0x1670000000000000000000000000000000010001
+  taiko_l2: 0x0167000000000000000000000000000000010001
   l2_suggested_fee_recipient: 0x8e81D13339eE01Bb2080EBf9796c5F2e5621f7E1
   avs_directory: 0xBf549F50fdbbD7Eb73ce88985AA107eEC0955f4c
   strategy_manager: 0xe21c9cfea094aAbE99C96D56281a00876F97258a
