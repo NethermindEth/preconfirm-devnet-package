@@ -17,10 +17,11 @@ def launch(
             image = taiko_client_image,
             files = {
                 data_dirpath: "taiko_genesis_{0}".format(index),
+                "/data/taiko-geth".format(index): "taiko_genesis_{0}".format(index),
             },
             env_vars = {
                 "DISABLE_P2P_SYNC": "false",
-                "CHAIN_ID": "167000",
+                "CHAIN_ID": "167001",
                 "PORT_L2_EXECUTION_ENGINE_P2P": "30306",
                 "TXPOOL_LOCALS": "",
                 "TX_RESUBMISSION": "",
@@ -64,6 +65,10 @@ def launch(
                 "PORT_GRAFANA": "3001",
                 "PORT_L2_EXECUTION_ENGINE_HTTP": "8547",
                 "TOKEN_ALLOWANCE": "",
+                "PRECONFIRMATION_SERVER_PORT": "1235",
+                "PRECONFIRMATION_SERVER_JWT_SECRET": "/data/taiko-geth/geth/jwtsecret",
+                #"PRECONFIRMATION_SERVER_CORS_ORIGINS": "",
+                "PRECONFIRMATION_SERVER_SIGNATURE_CHECK": "false",
             },
             ports = {
                 "driver-port": PortSpec(

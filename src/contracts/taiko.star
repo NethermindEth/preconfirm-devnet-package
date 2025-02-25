@@ -21,27 +21,27 @@ def deploy(
             "PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
             "OLD_FORK_TAIKO_INBOX": "0x0000000000000000000000000000000000000000",
             "TAIKO_ANCHOR_ADDRESS": contracts_addresses.taiko_l2,
-            "L2_SIGNAL_SERVICE": "0x0167000000000000000000000000000000000005",
+            "L2_SIGNAL_SERVICE": "0x1670010000000000000000000000000000000005",
             "CONTRACT_OWNER": contract_owner.address,
             "PROVER_SET_ADMIN": contract_owner.address,
             "TAIKO_TOKEN_PREMINT_RECIPIENT": contract_owner.address,
             "TAIKO_TOKEN_NAME": "Taiko Token",
             "TAIKO_TOKEN_SYMBOL": "TAIKO",
             "SHARED_RESOLVER": "0x0000000000000000000000000000000000000000",
-            "L2_GENESIS_HASH": "0x6ba76c827e4778193e36e7cfe30136899847b3b334f71b152f0b3118d56a4201",
+            "L2_GENESIS_HASH": "0x3ce074af6542eec144f8a0d889c991d93421e06fbee1e0dc2c5995a770dd3c91",
             "PAUSE_BRIDGE": "true",
             "DEPLOY_PRECONF_CONTRACTS": "true",
             "INCLUSION_WINDOW": "24",
             "INCLUSION_FEE_IN_GWEI": "100",
             "TAIKO_TOKEN": "0x0000000000000000000000000000000000000000",
             "FORK_URL": el_rpc_url,
-            "FORGE_FLAGS": "--broadcast --ffi -vvvv --block-gas-limit 200000000",
+            "FORGE_FLAGS": "--broadcast --ffi -vvv --block-gas-limit 200000000",
         },
         wait=None,
-        description="Deploying taiko smart contract",
+        description="Deploying taiko smart contracts",
         store = [StoreSpec(src = "app/deployments/deploy_l1.json", name = "taiko_on_l1_deployment")],
     )
-
+    """
     plan.run_sh(
         name="deploy-taiko-token",
         run="forge script {0} {1} {2} $FORGE_FLAGS".format(TOKEN_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
@@ -60,3 +60,4 @@ def deploy(
         description="Deploying taiko token contract",
         store = [StoreSpec(src = "app/deployments/deploy_l1.json", name = "taiko_token_deployment")],
     )
+    """

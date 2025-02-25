@@ -27,7 +27,7 @@ def launch(
         "EIGEN_LAYER_STRATEGY_MANAGER_CONTRACT_ADDRESS": contracts_addresses.strategy_manager,
         "EIGEN_LAYER_SLASHER_CONTRACT_ADDRESS": contracts_addresses.slasher,
         "TAIKO_L1_ADDRESS": contracts_addresses.taiko_l1,
-        "TAIKO_CHAIN_ID": "167000",
+        "TAIKO_CHAIN_ID": "167001",
         "L1_CHAIN_ID": chain_id,
         "VALIDATOR_BLS_PRIVATEKEY": first_validator_bls_private_key,
         "VALIDATOR_INDEX": str(first_validator_index),

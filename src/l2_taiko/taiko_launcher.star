@@ -42,6 +42,7 @@ def launch(
     )
 
     # Launch proposer
+    """
     proposer = proposer_launcher.launch(
         plan,
         data_dirpath,
@@ -54,6 +55,7 @@ def launch(
         contracts_addresses,
         taiko_client_image,
     )
+    """
 
     return struct(
         client_name="taiko-stack",

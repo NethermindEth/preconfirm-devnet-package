@@ -53,7 +53,7 @@ def launch(
                 "TOKEN_ALLOWANCE": "",
                 "TX_GAS_LIMIT": "3000000",
                 "EPOCH_MIN_TIP": "",
-                "CHAIN_ID": "167000",
+                "CHAIN_ID": "167001",
                 "PORT_PROVER_SERVER": "9876",
                 "PORT_L2_EXECUTION_ENGINE_METRICS": "6060",
                 "PORT_GRAFANA": "3001",
@@ -80,11 +80,6 @@ def launch(
                 # "TXPOOL_LOCALS": "",
                 # "EPOCH_MIN_TIP": "",
                 # "PROVER_SET": "",
-            },
-            ports = {
-                "proposer-port": PortSpec(
-                    number=1234, transport_protocol="TCP"
-                )
             },
             entrypoint = ["/bin/sh", "-c"],
             cmd = [

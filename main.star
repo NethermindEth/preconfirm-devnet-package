@@ -754,7 +754,7 @@ print(int(a+b), end="")
                 args_with_right_defaults.taiko_params.taiko_client_image,
                 contracts_addresses,
             )
-
+            """
             # Launch taiko stack 2
             taiko_stack_2 = l2_taiko.launch(
                 plan,
@@ -767,7 +767,7 @@ print(int(a+b), end="")
                 args_with_right_defaults.taiko_params.taiko_client_image,
                 contracts_addresses,
             )
-
+            """
             plan.print("Successfully launched 2 taiko stacks")
 
             # Launch blockscout for taiko L2
