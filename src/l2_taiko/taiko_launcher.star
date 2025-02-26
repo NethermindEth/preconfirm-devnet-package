@@ -63,7 +63,7 @@ def launch(
         ws_url=geth.ws_url,
         auth_url=geth.auth_url,
         driver_url=driver.driver_url,
-        proposer_url=proposer.proposer_url,
+        proposer_url="",#proposer.proposer_url,
         enode=geth.enode,
         enr=geth.enr,
     )
