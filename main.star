@@ -208,6 +208,11 @@ def run(plan, args={}):
         all_el_contexts[0].rpc_port_num,
     )
 
+    plan.run_sh(
+        run = "sleep 60",
+        description = "Waiting for L1 to sync",
+    )
+
     # Deploy all smart contracts
     contract_deployer.deploy(
         plan,
