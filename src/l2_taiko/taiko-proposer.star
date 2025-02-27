@@ -96,7 +96,9 @@ def launch(
                 # "--tierFee.sgx=1 " +
                 "--l1.blobAllowed " +
                 "--tx.gasLimit=3000000 " +
-                "--verbosity=4"
+                "--verbosity=4 " +
+                "--taikoWrapper 0x554c1f3D1E02F8c7203077021F626e6a0Af6B53C " +#TODO move to params
+                "--forcedInclusionStore 0xF02a43985ab5011af94F6d4dAd454C5E305A3e42" #TODO move to params
             ],
         ),
     )
