@@ -213,10 +213,22 @@ def run(plan, args={}):
         description = "Waiting for L1 to sync",
     )
 
+    # Get real genesis timestamp
+    contract_genesis_timestamp = plan.run_python(
+        description="Getting real genesis timestamp for helix",
+        run="""
+import sys
+a = int(sys.argv[1])
+b = int(sys.argv[2])
+print(int(a+b), end="")
+""",
+       args=[str(final_genesis_timestamp),str(network_params.genesis_delay)],
+   ).output
+
     # Deploy all smart contracts
     contract_deployer.deploy(
         plan,
-        final_genesis_timestamp,
+        contract_genesis_timestamp,
         all_el_contexts[0],
         prefunded_accounts,
         network_id,

@@ -4,7 +4,7 @@ avs_contract_deployer = import_module("./preconf_avs.star")
 
 def deploy(
     plan,
-    final_genesis_timestamp,
+    genesis_timestamp,
     el_context,
     prefunded_accounts,
     network_id,
@@ -21,6 +21,7 @@ def deploy(
     # Deploy taiko contracts
     taiko_contract_deployer.deploy(
         plan,
+        genesis_timestamp,
         el_rpc_url,
         first_prefunded_account,
         taiko_protocol_image,

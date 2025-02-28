@@ -3,6 +3,7 @@ TOKEN_SCRIPT_PATH = "./script/layer1/based/DeployTaikoToken.s.sol:DeployTaikoTok
 
 def deploy(
     plan,
+    genesis_timestamp,
     el_rpc_url,
     contract_owner,
     taiko_protocol_image,
@@ -11,6 +12,8 @@ def deploy(
     FORK_URL_COMMAND = "--fork-url {0}".format(el_rpc_url)
 
     PRIVATE_KEY_COMMAND = "--private-key {0}".format(contract_owner.private_key)
+
+    plan.print("Contract genesis_timestamp {0}".format(genesis_timestamp))
 
     plan.run_sh(
         name="deploy-taiko-contract",
@@ -36,6 +39,7 @@ def deploy(
             "INCLUSION_WINDOW": "24",
             "INCLUSION_FEE_IN_GWEI": "100",
             "FORK_URL": el_rpc_url,
+            "GENESIS_TIMESTAMP": genesis_timestamp,
             "FORGE_FLAGS": "--broadcast --ffi -vvv --block-gas-limit 200000000",
         },
         wait=None,
