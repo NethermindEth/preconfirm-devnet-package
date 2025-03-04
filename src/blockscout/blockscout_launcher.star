@@ -6,8 +6,8 @@ IMAGE_NAME_BLOCKSCOUT_VERIF = "ghcr.io/blockscout/smart-contract-verifier:latest
 IMAGE_NAME_BLOCKSCOUT_FRONTEND = "ghcr.io/blockscout/frontend:latest"
 POSTGRES_IMAGE = "library/postgres:alpine"
 
-SERVICE_NAME_BLOCKSCOUT = "taiko-blockscout"
-SERVICE_NAME_FRONTEND = "taiko-blockscout-frontend"
+SERVICE_NAME_BLOCKSCOUT = "blockscout"
+SERVICE_NAME_FRONTEND = "blockscout-frontend"
 HTTP_PORT_NUMBER = 4000
 HTTP_PORT_NUMBER_VERIF = 8050
 HTTP_PORT_NUMBER_FRONTEND = 3000
