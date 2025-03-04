@@ -211,9 +211,7 @@ def get_config_frontend(
             "NEXT_PUBLIC_NETWORK_ID": "167001",
             "NEXT_PUBLIC_NETWORK_RPC_URL": el_client_rpc_url,
             "NEXT_PUBLIC_APP_HOST": "0.0.0.0",
-            "NEXT_PUBLIC_API_HOST": blockscout_service.ip_address
-            + ":"
-            + str(blockscout_service.ports["http"].number),
+            "NEXT_PUBLIC_API_HOST": "localhost:35003",
             "NEXT_PUBLIC_AD_BANNER_PROVIDER": "none",
             "NEXT_PUBLIC_AD_TEXT_PROVIDER": "none",
             "NEXT_PUBLIC_IS_TESTNET": "true",
