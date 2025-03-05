@@ -59,7 +59,7 @@ def deploy(
 
     plan.run_sh(
         name="approve",
-        run="cast send 0x422A3492e218383753D8006C7Bfa97815B44373F 'approve(address,uint256)' 0x7E2E7DD2Aead92e2e6d05707F21D4C36004f8A2B 1000000000000000000000000 {1} {2}".format( PRIVATE_KEY_COMMAND, RPC_URL_COMMAND),
+        run="cast send 0x422A3492e218383753D8006C7Bfa97815B44373F 'approve(address,uint256)' 0x7E2E7DD2Aead92e2e6d05707F21D4C36004f8A2B 1000000000000000000000000 {0} {1}".format( PRIVATE_KEY_COMMAND, RPC_URL_COMMAND),
         image=taiko_protocol_image,
         wait=None,
         description="Approve taiko token",
