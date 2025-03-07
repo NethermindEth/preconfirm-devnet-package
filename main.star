@@ -900,7 +900,7 @@ print(int(a+b), end="")
                 ),
             )
             """
-            """
+
             plan.run_sh(
                 run = "sleep 120",
                 description = "Waiting for L2 to sync",
@@ -910,7 +910,7 @@ print(int(a+b), end="")
                 name = "preconf-pytest",
                 description = "Launching preconf pytest",
                 config = ServiceConfig(
-                    image = "nethsurge/test-pytest",
+                    image = "nethswitchboard/test-pytest:whitelist",
                     env_vars = {
                         "L1_RPC_URL": all_el_contexts[0].rpc_http_url,
                         "L2_RPC_URL_NODE1": taiko_stack_1.rpc_http_url,
@@ -920,7 +920,7 @@ print(int(a+b), end="")
                 ),
             )
 
-            pytest_result = plan.exec(
+            plan.exec(
                 service_name = "preconf-pytest",
                 description = "Running preconf pytest",
                 recipe = ExecRecipe(
@@ -929,9 +929,6 @@ print(int(a+b), end="")
                     ],
                 ),
             )
-
-            plan.print(pytest_result["output"])
-            """
         else:
             fail("Invalid additional service %s" % (additional_service))
     if launch_prometheus_grafana:
