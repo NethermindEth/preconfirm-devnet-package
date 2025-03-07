@@ -142,12 +142,14 @@ taiko_params:
   taiko_client_image: nethswitchboard/preconf-taiko-client:whitelist
 preconf_params:
   avs_deploy_image: nethswitchboard/preconf-avs-protocol:latest
-  preconf_avs_image: nethswitchboard/preconf-avs-node:latest
+  preconf_avs_image: nethswitchboard/preconf-avs-node:whitelist
 contracts_addresses:
   taiko_l1: 0x7E2E7DD2Aead92e2e6d05707F21D4C36004f8A2B
   taiko_token: 0x422A3492e218383753D8006C7Bfa97815B44373F
   taiko_l2: 0x1670010000000000000000000000000000010001
   l2_suggested_fee_recipient: 0x8943545177806ED17B9F23F0a21ee5948eCaa776
+  preconf_whitelist: 0x00CfaC4fF61D52771eF27d07c5b6f1263C2994A1
+  preconf_router: 0x236996252dc966CF540a9e1d490f71bD0CdaD53B
   avs_directory: 0xBf549F50fdbbD7Eb73ce88985AA107eEC0955f4c
   strategy_manager: 0xe21c9cfea094aAbE99C96D56281a00876F97258a
   slasher: 0x700420690932eeB22bCd01fBf537d37BeCa5577C

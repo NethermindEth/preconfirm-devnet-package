@@ -353,6 +353,8 @@ def input_parser(plan, input_args):
             taiko_l2=result["contracts_addresses"]["taiko_l2"],
             taiko_token=result["contracts_addresses"]["taiko_token"],
             l2_suggested_fee_recipient=result["contracts_addresses"]["l2_suggested_fee_recipient"],
+            preconf_whitelist=result["contracts_addresses"]["preconf_whitelist"],
+            preconf_router=result["contracts_addresses"]["preconf_router"],
             avs_directory=result["contracts_addresses"]["avs_directory"],
             slasher=result["contracts_addresses"]["slasher"],
             strategy_manager=result["contracts_addresses"]["strategy_manager"],

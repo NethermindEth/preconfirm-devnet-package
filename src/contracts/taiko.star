@@ -47,24 +47,6 @@ def deploy(
         store = [StoreSpec(src = "app/deployments/deploy_l1.json", name = "taiko_on_l1_deployment")],
     )
 
-    RPC_URL_COMMAND = "--rpc-url {0}".format(el_rpc_url)
-
-    plan.run_sh(
-        name="add-operator",
-        run="cast send 0x00CfaC4fF61D52771eF27d07c5b6f1263C2994A1 'addOperator(address)' {0} {1} {2}".format(contract_owner.address, PRIVATE_KEY_COMMAND, RPC_URL_COMMAND),
-        image=taiko_protocol_image,
-        wait=None,
-        description="Adding operator to taiko",
-    )
-
-    plan.run_sh(
-        name="approve",
-        run="cast send 0x422A3492e218383753D8006C7Bfa97815B44373F 'approve(address,uint256)' 0x7E2E7DD2Aead92e2e6d05707F21D4C36004f8A2B 1000000000000000000000000 {0} {1}".format( PRIVATE_KEY_COMMAND, RPC_URL_COMMAND),
-        image=taiko_protocol_image,
-        wait=None,
-        description="Approve taiko token",
-    )
-
     # """
     # plan.run_sh(
     #     name="deploy-taiko-token",

@@ -202,6 +202,8 @@ SUBCATEGORY_PARAMS = {
         "taiko_l2",
         "taiko_token",
         "l2_suggested_fee_recipient",
+        "preconf_whitelist",
+        "preconf_router",
         "avs_directory",
         "slasher",
         "service_manager",

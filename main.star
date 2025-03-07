@@ -845,8 +845,6 @@ print(int(a+b), end="")
 
             # plan.print(spammer_result)
         elif additional_service == "preconf_avs":
-            plan.print("Don't launch preconfirmation AVS")
-            """
             plan.print("Launching preconfirmation AVS")
 
             # Launch Preconf AVS 1
@@ -857,16 +855,16 @@ print(int(a+b), end="")
                 all_el_contexts[0],
                 all_cl_contexts[0],
                 taiko_stack_1,
+                taiko_params.taiko_deploy_image,
                 all_mevboost_contexts[0],
                 prefunded_accounts,
                 "3219c83a76e82682c3e706902ca85777e703a06c9f0a82a5dfa6164f527c1ea6",
                 1,
-                # "215768a626159445ba0d8a1afab729c5724e75aa020a480580cbf86dd2ae4d47",
-                # 2,
                 1,
+                0,
                 contracts_addresses,
             )
-
+            """
             # Launch Preconf AVS 2
             preconf_avs.launch(
                 plan,
@@ -901,7 +899,8 @@ print(int(a+b), end="")
                     },
                 ),
             )
-
+            """
+            """
             plan.run_sh(
                 run = "sleep 120",
                 description = "Waiting for L2 to sync",
@@ -915,7 +914,7 @@ print(int(a+b), end="")
                     env_vars = {
                         "L1_RPC_URL": all_el_contexts[0].rpc_http_url,
                         "L2_RPC_URL_NODE1": taiko_stack_1.rpc_http_url,
-                        "L2_RPC_URL_NODE2": taiko_stack_2.rpc_http_url,
+                        "L2_RPC_URL_NODE2": taiko_stack_1.rpc_http_url,
                         "TEST_L2_PREFUNDED_PRIVATE_KEY": "39725efee3fb28614de3bacaffe4cc4bd8c436257e2c8bb887c4b5c4be45e76d",
                     }
                 ),
