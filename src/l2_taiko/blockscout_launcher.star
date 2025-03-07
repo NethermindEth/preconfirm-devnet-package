@@ -42,6 +42,7 @@ FRONTEND_USED_PORTS = {
         HTTP_PORT_NUMBER_FRONTEND,
         shared_utils.TCP_PROTOCOL,
         shared_utils.HTTP_APPLICATION_PROTOCOL,
+        wait=None,
     )
 }
 
