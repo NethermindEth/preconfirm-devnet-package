@@ -920,6 +920,11 @@ print(int(a+b), end="")
                 ),
             )
 
+            plan.run_sh(
+                run = "sleep 10",
+                description = "Sleep 10 sec to sync",
+            )
+
             plan.exec(
                 service_name = "preconf-pytest",
                 description = "Running preconf pytest",
