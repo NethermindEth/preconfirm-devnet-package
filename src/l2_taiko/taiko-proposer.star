@@ -53,7 +53,7 @@ def launch(
                 "TOKEN_ALLOWANCE": "",
                 "TX_GAS_LIMIT": "3000000",
                 "EPOCH_MIN_TIP": "",
-                "CHAIN_ID": "167000",
+                "CHAIN_ID": "167001",
                 "PORT_PROVER_SERVER": "9876",
                 "PORT_L2_EXECUTION_ENGINE_METRICS": "6060",
                 "PORT_GRAFANA": "3001",
@@ -81,11 +81,6 @@ def launch(
                 # "EPOCH_MIN_TIP": "",
                 # "PROVER_SET": "",
             },
-            ports = {
-                "proposer-port": PortSpec(
-                    number=1234, transport_protocol="TCP"
-                )
-            },
             entrypoint = ["/bin/sh", "-c"],
             cmd = [
                 "taiko-client proposer --l1.ws={0} ".format(el_context.ws_url) +
@@ -101,7 +96,9 @@ def launch(
                 # "--tierFee.sgx=1 " +
                 "--l1.blobAllowed " +
                 "--tx.gasLimit=3000000 " +
-                "--verbosity=4"
+                "--verbosity=4 " +
+                "--taikoWrapper 0x554c1f3D1E02F8c7203077021F626e6a0Af6B53C " +#TODO move to params
+                "--forcedInclusionStore 0xF02a43985ab5011af94F6d4dAd454C5E305A3e42" #TODO move to params
             ],
         ),
     )

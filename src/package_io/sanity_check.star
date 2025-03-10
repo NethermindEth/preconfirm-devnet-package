@@ -196,13 +196,14 @@ SUBCATEGORY_PARAMS = {
     "preconf_params": [
         "avs_deploy_image",
         "preconf_avs_image",
-        "preconf_bootnode_image",
     ],
     "contracts_addresses": [
         "taiko_l1",
         "taiko_l2",
         "taiko_token",
         "l2_suggested_fee_recipient",
+        "preconf_whitelist",
+        "preconf_router",
         "avs_directory",
         "slasher",
         "service_manager",

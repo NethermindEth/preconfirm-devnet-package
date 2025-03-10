@@ -66,7 +66,6 @@ contract_deployer = import_module("./src/contracts/contract_deployer.star")
 l2_taiko = import_module("./src/l2_taiko/taiko_launcher.star")
 taiko_blockscout = import_module("./src/l2_taiko/blockscout_launcher.star")
 preconf_avs = import_module("./src/preconf_avs/avs_launcher.star")
-p2p_bootnode = import_module("./src/preconf_avs/p2pbootnode_launcher.star")
 
 GRAFANA_USER = "admin"
 GRAFANA_PASSWORD = "admin"
@@ -209,10 +208,27 @@ def run(plan, args={}):
         all_el_contexts[0].rpc_port_num,
     )
 
+    plan.run_sh(
+        run = "sleep 60",
+        description = "Waiting for L1 to sync",
+    )
+
+    # Get real genesis timestamp
+    contract_genesis_timestamp = plan.run_python(
+        description="Getting real genesis timestamp for helix",
+        run="""
+import sys
+a = int(sys.argv[1])
+b = int(sys.argv[2])
+print(int(a+b), end="")
+""",
+       args=[str(final_genesis_timestamp),str(network_params.genesis_delay)],
+   ).output
+
     # Deploy all smart contracts
     contract_deployer.deploy(
         plan,
-        final_genesis_timestamp,
+        contract_genesis_timestamp,
         all_el_contexts[0],
         prefunded_accounts,
         network_id,
@@ -755,7 +771,7 @@ print(int(a+b), end="")
                 args_with_right_defaults.taiko_params.taiko_client_image,
                 contracts_addresses,
             )
-
+            """
             # Launch taiko stack 2
             taiko_stack_2 = l2_taiko.launch(
                 plan,
@@ -768,7 +784,7 @@ print(int(a+b), end="")
                 args_with_right_defaults.taiko_params.taiko_client_image,
                 contracts_addresses,
             )
-
+            """
             plan.print("Successfully launched 2 taiko stacks")
 
             # Launch blockscout for taiko L2
@@ -783,6 +799,7 @@ print(int(a+b), end="")
 
             plan.print("Successfully launched blockscout for taiko L2")
 
+            """
             # Launch taiko L2 tx transfer for first transaction
             plan.add_service(
                 name = "taiko-tx-transfer",
@@ -824,15 +841,12 @@ print(int(a+b), end="")
                     },
                 ),
             )
+            """
 
             # plan.print(spammer_result)
         elif additional_service == "preconf_avs":
             plan.print("Launching preconfirmation AVS")
 
-            # Launch P2P Bootnode
-            p2pbootnode_context = p2p_bootnode.launch(
-                plan,
-            )
             # Launch Preconf AVS 1
             preconf_avs.launch(
                 plan,
@@ -840,18 +854,17 @@ print(int(a+b), end="")
                 network_id,
                 all_el_contexts[0],
                 all_cl_contexts[0],
-                p2pbootnode_context,
                 taiko_stack_1,
+                taiko_params.taiko_deploy_image,
                 all_mevboost_contexts[0],
                 prefunded_accounts,
                 "3219c83a76e82682c3e706902ca85777e703a06c9f0a82a5dfa6164f527c1ea6",
                 1,
-                # "215768a626159445ba0d8a1afab729c5724e75aa020a480580cbf86dd2ae4d47",
-                # 2,
+                1,
                 0,
                 contracts_addresses,
             )
-
+            """
             # Launch Preconf AVS 2
             preconf_avs.launch(
                 plan,
@@ -859,7 +872,6 @@ print(int(a+b), end="")
                 network_id,
                 all_el_contexts[0],
                 all_cl_contexts[0],
-                p2pbootnode_context,
                 taiko_stack_2,
                 all_mevboost_contexts[0],
                 prefunded_accounts,
@@ -892,22 +904,23 @@ print(int(a+b), end="")
                     },
                 ),
             )
+            """
 
             plan.add_service(
                 name = "preconf-pytest",
                 description = "Launching preconf pytest",
                 config = ServiceConfig(
-                    image = "nethsurge/test-pytest",
+                    image = "nethswitchboard/test-pytest:whitelist",
                     env_vars = {
                         "L1_RPC_URL": all_el_contexts[0].rpc_http_url,
                         "L2_RPC_URL_NODE1": taiko_stack_1.rpc_http_url,
-                        "L2_RPC_URL_NODE2": taiko_stack_2.rpc_http_url,
+                        "L2_RPC_URL_NODE2": taiko_stack_1.rpc_http_url,
                         "TEST_L2_PREFUNDED_PRIVATE_KEY": "39725efee3fb28614de3bacaffe4cc4bd8c436257e2c8bb887c4b5c4be45e76d",
                     }
                 ),
             )
 
-            pytest_result = plan.exec(
+            plan.exec(
                 service_name = "preconf-pytest",
                 description = "Running preconf pytest",
                 recipe = ExecRecipe(
@@ -916,8 +929,6 @@ print(int(a+b), end="")
                     ],
                 ),
             )
-
-            plan.print(pytest_result["output"])
         else:
             fail("Invalid additional service %s" % (additional_service))
     if launch_prometheus_grafana:

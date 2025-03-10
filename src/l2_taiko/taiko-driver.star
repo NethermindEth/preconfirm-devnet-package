@@ -20,7 +20,7 @@ def launch(
             },
             env_vars = {
                 "DISABLE_P2P_SYNC": "false",
-                "CHAIN_ID": "167000",
+                "CHAIN_ID": "167001",
                 "PORT_L2_EXECUTION_ENGINE_P2P": "30306",
                 "TXPOOL_LOCALS": "",
                 "TX_RESUBMISSION": "",
@@ -64,6 +64,10 @@ def launch(
                 "PORT_GRAFANA": "3001",
                 "PORT_L2_EXECUTION_ENGINE_HTTP": "8547",
                 "TOKEN_ALLOWANCE": "",
+                "PRECONFIRMATION_SERVER_PORT": "1235",
+                "PRECONFIRMATION_SERVER_JWT_SECRET": jwtsecret_path,
+                #"PRECONFIRMATION_SERVER_CORS_ORIGINS": "",
+                "PRECONFIRMATION_SERVER_SIGNATURE_CHECK": "false",
             },
             ports = {
                 "driver-port": PortSpec(
