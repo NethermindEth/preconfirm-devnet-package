@@ -906,6 +906,11 @@ print(int(a+b), end="")
             )
             """
 
+            plan.run_sh(
+                run = "sleep 10",
+                description = "Sleep 10 sec to sync",
+            )
+
             plan.add_service(
                 name = "preconf-pytest",
                 description = "Launching preconf pytest",
@@ -918,11 +923,6 @@ print(int(a+b), end="")
                         "TEST_L2_PREFUNDED_PRIVATE_KEY": "39725efee3fb28614de3bacaffe4cc4bd8c436257e2c8bb887c4b5c4be45e76d",
                     }
                 ),
-            )
-
-            plan.run_sh(
-                run = "sleep 10",
-                description = "Sleep 10 sec to sync",
             )
 
             plan.exec(
