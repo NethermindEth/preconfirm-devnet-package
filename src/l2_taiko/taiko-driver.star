@@ -83,7 +83,8 @@ def launch(
                 "--taikoL1={0} ".format(contracts_addresses.taiko_l1) +
                 "--taikoL2={0} ".format(contracts_addresses.taiko_l2) +
                 "--jwtSecret={0} ".format(jwtsecret_path) +
-                "--verbosity=4"
+                "--verbosity=4 " +
+                "--p2p.disable"
             ],
         ),
     )

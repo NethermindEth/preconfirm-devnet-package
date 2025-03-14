@@ -905,7 +905,7 @@ print(int(a+b), end="")
                 ),
             )
             """
-
+            """
             plan.run_sh(
                 run = "sleep 10",
                 description = "Sleep 10 sec to sync",
@@ -934,6 +934,7 @@ print(int(a+b), end="")
                     ],
                 ),
             )
+            """
         else:
             fail("Invalid additional service %s" % (additional_service))
     if launch_prometheus_grafana:
