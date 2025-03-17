@@ -10,6 +10,7 @@ def launch(
     index,
     contracts_addresses,
     taiko_client_image,
+    bootnode_enr,
 ):
     service = plan.add_service(
         name = "preconf-taiko-driver-{0}".format(index),
@@ -71,7 +72,7 @@ def launch(
             },
             ports = {
                 "driver-port": PortSpec(
-                    number=1235, transport_protocol="TCP"
+                    number=1235, transport_protocol="TCP", wait=None
                 )
             },
             entrypoint = ["/bin/sh", "-c"],
@@ -84,7 +85,14 @@ def launch(
                 "--taikoL2={0} ".format(contracts_addresses.taiko_l2) +
                 "--jwtSecret={0} ".format(jwtsecret_path) +
                 "--verbosity=4 " +
-                "--p2p.disable"
+                "--p2p.disable=false " +
+                "--preconfirmation.whitelist=0x00CfaC4fF61D52771eF27d07c5b6f1263C2994A1 " +
+                "--preconfirmation.serverPort=6061 " +
+                "--p2p.useragent=taiko " +
+                "--p2p.listen.tcp=6060 " +
+                # "--p2p.priv.raw=a09e4269de3dbe32760a4faf5aadbcbddb7f364fc895f5759243e8d3d02c961c" +
+                "--p2p.sequencer.key=bcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31 " +
+                "--p2p.bootnodes={0} ".format(bootnode_enr)
             ],
         ),
     )

@@ -759,6 +759,63 @@ print(int(a+b), end="")
                 name="taiko_genesis",
             )
 
+            p2p_bootnode = plan.add_service(
+                name = "taiko-bootnode",
+                config = ServiceConfig(
+                    image = args_with_right_defaults.taiko_params.taiko_bootnode_image,
+                    ports = {
+                        "p2p": PortSpec(
+                            number=9001, transport_protocol="TCP", wait=None
+                        ),
+                        "udp": PortSpec(
+                            number=9000, transport_protocol="TCP", wait=None
+                        ),
+                    },
+                    cmd = [
+                        "p2p-boot-node",
+                        "172.16.0.31",
+                        "9000",
+                    ],
+                ),
+                description = "Launching taiko bootnode",
+            )
+
+            plan.print("Bootnode IP: {0}".format(p2p_bootnode.ip_address))
+
+            # plan.exec(
+            #     service_name = "taiko-bootnode",
+            #     description = "Running taiko bootnode",
+            #     recipe = ExecRecipe(
+            #         command = [
+            #             "p2p-boot-node",
+            #             p2p_bootnode.ip_address,
+            #         ],
+            #     ),
+            # )
+
+            bootnode_enr_recipe = PostHttpRequestRecipe(
+                endpoint="",
+                body='{"method":"p2p_getENR","params":[],"id":1,"jsonrpc":"2.0"}',
+                content_type="application/json",
+                port_id="p2p",
+                extract={
+                    "enr": ".result",
+                },
+            )
+
+            response = plan.wait(
+                recipe=bootnode_enr_recipe,
+                field="extract.enr",
+                assertion="!=",
+                target_value="",
+                timeout="15m",
+                service_name="taiko-bootnode",
+            )
+
+            bootnode_enr = response["extract.enr"]
+
+            plan.print("Bootnode ENR: {0}".format(bootnode_enr))
+
             # Launch taiko stack 1
             taiko_stack_1 = l2_taiko.launch(
                 plan,
@@ -770,6 +827,7 @@ print(int(a+b), end="")
                 args_with_right_defaults.taiko_params.taiko_geth_image,
                 args_with_right_defaults.taiko_params.taiko_client_image,
                 contracts_addresses,
+                bootnode_enr,
             )
             """
             # Launch taiko stack 2
@@ -783,6 +841,7 @@ print(int(a+b), end="")
                 args_with_right_defaults.taiko_params.taiko_geth_image,
                 args_with_right_defaults.taiko_params.taiko_client_image,
                 contracts_addresses,
+                bootnode_enr,
             )
             """
             plan.print("Successfully launched 2 taiko stacks")
