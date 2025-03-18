@@ -759,8 +759,8 @@ print(int(a+b), end="")
                 name="taiko_genesis",
             )
 
-            p2p_bootnode = plan.add_service(
-                name = "taiko-bootnode",
+            p2p_bootnode_test = plan.add_service(
+                name = "taiko-bootnode-test",
                 config = ServiceConfig(
                     image = args_with_right_defaults.taiko_params.taiko_bootnode_image,
                     ports = {
@@ -772,26 +772,28 @@ print(int(a+b), end="")
                         ),
                     },
                     cmd = [
-                        "p2p-boot-node",
-                        "172.16.0.31",
-                        "9000",
+                        "sleep",
+                        "infinity",
                     ],
                 ),
                 description = "Launching taiko bootnode",
             )
 
-            plan.print("Bootnode IP: {0}".format(p2p_bootnode.ip_address))
+            plan.print("Bootnode IP: {0}".format(p2p_bootnode_test.ip_address))
 
-            # plan.exec(
-            #     service_name = "taiko-bootnode",
-            #     description = "Running taiko bootnode",
-            #     recipe = ExecRecipe(
-            #         command = [
-            #             "p2p-boot-node",
-            #             p2p_bootnode.ip_address,
-            #         ],
-            #     ),
-            # )
+            plan.exec(
+                service_name = "taiko-bootnode-test",
+                description = "Running taiko bootnode",
+                recipe = ExecRecipe(
+                    command = [
+                        "sh",
+                        "-c",
+                        "p2p-boot-node {0} 9000 > /dev/null 2>&1 &".format(
+                            p2p_bootnode_test.ip_address
+                        ),
+                    ],
+                ),
+            )
 
             bootnode_enr_recipe = PostHttpRequestRecipe(
                 endpoint="",
@@ -809,7 +811,7 @@ print(int(a+b), end="")
                 assertion="!=",
                 target_value="",
                 timeout="15m",
-                service_name="taiko-bootnode",
+                service_name="taiko-bootnode-test",
             )
 
             bootnode_enr = response["extract.enr"]
@@ -829,7 +831,7 @@ print(int(a+b), end="")
                 contracts_addresses,
                 bootnode_enr,
             )
-            """
+
             # Launch taiko stack 2
             taiko_stack_2 = l2_taiko.launch(
                 plan,
@@ -843,7 +845,7 @@ print(int(a+b), end="")
                 contracts_addresses,
                 bootnode_enr,
             )
-            """
+
             plan.print("Successfully launched 2 taiko stacks")
 
             # Launch blockscout for taiko L2
@@ -919,7 +921,7 @@ print(int(a+b), end="")
                 prefunded_accounts,
                 "3219c83a76e82682c3e706902ca85777e703a06c9f0a82a5dfa6164f527c1ea6",
                 1,
-                1,
+                0,
                 0,
                 contracts_addresses,
             )
