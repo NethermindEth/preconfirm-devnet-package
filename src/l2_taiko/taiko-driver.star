@@ -86,7 +86,7 @@ def launch(
                 "--jwtSecret={0} ".format(jwtsecret_path) +
                 "--verbosity=4 " +
                 "--p2p.disable=false " +
-                "--preconfirmation.whitelist=0x00CfaC4fF61D52771eF27d07c5b6f1263C2994A1 " +
+                "--preconfirmation.whitelist={0} ".format(contracts_addresses.preconf_whitelist) +
                 "--preconfirmation.serverPort=6061 " +
                 "--p2p.useragent=taiko " +
                 "--p2p.listen.tcp=6060 " +
