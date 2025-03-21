@@ -53,13 +53,8 @@ def launch(
 
     # Common environment variables
     base_env_vars = {
-        "AVS_PRECONF_TASK_MANAGER_CONTRACT_ADDRESS": contracts_addresses.preconf_task_manager,
-        "AVS_DIRECTORY_CONTRACT_ADDRESS": contracts_addresses.avs_directory,
-        "AVS_SERVICE_MANAGER_CONTRACT_ADDRESS": contracts_addresses.service_manager,
-        "AVS_PRECONF_REGISTRY_CONTRACT_ADDRESS": contracts_addresses.preconf_registry,
-        "EIGEN_LAYER_STRATEGY_MANAGER_CONTRACT_ADDRESS": contracts_addresses.strategy_manager,
-        "EIGEN_LAYER_SLASHER_CONTRACT_ADDRESS": contracts_addresses.slasher,
-        "TAIKO_L1_ADDRESS": contracts_addresses.taiko_l1,
+        "TAIKO_INBOX_ADDRESS": contracts_addresses.taiko_l1,
+        "TAIKO_ANCHOR_ADDRESS": contracts_addresses.taiko_l2,
         "PRECONF_WHITELIST_ADDRESS": contracts_addresses.preconf_whitelist,
         "PRECONF_ROUTER_ADDRESS": contracts_addresses.preconf_router,
         "TAIKO_CHAIN_ID": "167001",
@@ -75,7 +70,7 @@ def launch(
         "TAIKO_GETH_WS_RPC_URL": taiko_stack.ws_url,
         "TAIKO_GETH_AUTH_RPC_URL": taiko_stack.auth_url,
         "TAIKO_DRIVER_URL": taiko_stack.driver_url,
-         "JWT_SECRET_FILE_PATH":"/data/taiko-geth/geth/jwtsecret",
+        "JWT_SECRET_FILE_PATH":"/data/taiko-geth/geth/jwtsecret",
     }
 
     # For each service, we'll create env_vars by combining base_env_vars with service-specific vars

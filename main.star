@@ -772,28 +772,15 @@ print(int(a+b), end="")
                         ),
                     },
                     cmd = [
-                        "sleep",
-                        "infinity",
+                        "p2p-boot-node",
+                        "p2pbootnode_ip_placeholder",
+                        "9000",
                     ],
+                    private_ip_address_placeholder = "p2pbootnode_ip_placeholder",
                 ),
-                description = "Launching taiko bootnode",
             )
 
             plan.print("Bootnode IP: {0}".format(p2p_bootnode_test.ip_address))
-
-            plan.exec(
-                service_name = "taiko-bootnode-test",
-                description = "Running taiko bootnode",
-                recipe = ExecRecipe(
-                    command = [
-                        "sh",
-                        "-c",
-                        "p2p-boot-node {0} 9000 > /dev/null 2>&1 &".format(
-                            p2p_bootnode_test.ip_address
-                        ),
-                    ],
-                ),
-            )
 
             bootnode_enr_recipe = PostHttpRequestRecipe(
                 endpoint="",
