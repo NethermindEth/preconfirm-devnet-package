@@ -1,6 +1,7 @@
-taiko_contract_deployer = import_module("./taiko.star")
-eigenlayer_contract_deployer = import_module("./eigenlayer_mvp.star")
-avs_contract_deployer = import_module("./preconf_avs.star")
+taiko_on_l1_deployer = import_module("./taiko_on_l1.star")
+taiko_token_deployer = import_module("./taiko_token.star")
+eigenlayer_mvp_deployer = import_module("./eigenlayer_mvp.star")
+avs_deployer = import_module("./deploy_avs.star")
 
 def deploy(
     plan,
@@ -18,8 +19,17 @@ def deploy(
     # Get first prefunded account
     first_prefunded_account = prefunded_accounts[0]
 
-    # Deploy taiko contracts
-    taiko_contract_deployer.deploy(
+    # Deploy taiko on l1 contracts
+    taiko_on_l1_result = taiko_on_l1_deployer.deploy(
+        plan,
+        el_rpc_url,
+        first_prefunded_account,
+        taiko_protocol_image,
+        contracts_addresses,
+    )
+
+    # Deploy taiko token contracts
+    taiko_token_result = taiko_token_deployer.deploy(
         plan,
         el_rpc_url,
         first_prefunded_account,
@@ -28,30 +38,18 @@ def deploy(
     )
 
     # Deploy eigenlayer mvp contracts
-    eigenlayer_contract_deployer.deploy(
+    eigenlayer_mvp_result = eigenlayer_mvp_deployer.deploy(
         plan,
         el_rpc_url,
         first_prefunded_account,
         avs_protocol_image,
     )
 
-    # Get beacon genesis timestamp for avs contracts
-    beacon_genesis_timestamp = plan.run_python(
-        description="Getting final beacon genesis timestamp",
-        run="""
-import sys
-new = int(sys.argv[1]) + 20
-print(new, end="")
-            """,
-        args=[str(final_genesis_timestamp)],
-        store=[StoreSpec(src="/tmp", name="beacon-genesis-timestamp")],
-    )
-
     # Deploy avs contracts
-    avs_contract_deployer.deploy(
+    avs_result = avs_deployer.deploy(
         plan,
         el_rpc_url,
-        beacon_genesis_timestamp.output,
+        final_genesis_timestamp,
         first_prefunded_account,
         avs_protocol_image,
         contracts_addresses,
@@ -76,4 +74,11 @@ print(new, end="")
                 "CHAIN_ID": network_id,
             },
         ),
+    )
+
+    return struct(
+        taiko_on_l1_result = taiko_on_l1_result,
+        taiko_token_result = taiko_token_result,
+        eigenlayer_mvp_result = eigenlayer_mvp_result,
+        avs_result = avs_result,
     )
