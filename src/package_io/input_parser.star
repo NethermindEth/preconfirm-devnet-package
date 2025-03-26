@@ -339,7 +339,11 @@ def input_parser(plan, input_args):
         )
         if result["mev_params"]
         else None,
+        blockscout_params=struct(
+            public_api_host=result["blockscout_params"]["public_api_host"],
+        ),
         taiko_params=struct(
+            taiko_chain_id=result["taiko_params"]["taiko_chain_id"],
             taiko_deploy_image=result["taiko_params"]["taiko_deploy_image"],
             taiko_geth_image=result["taiko_params"]["taiko_geth_image"],
             taiko_client_image=result["taiko_params"]["taiko_client_image"],
@@ -352,6 +356,7 @@ def input_parser(plan, input_args):
         contracts_addresses=struct(
             taiko_l1=result["contracts_addresses"]["taiko_l1"],
             taiko_l2=result["contracts_addresses"]["taiko_l2"],
+            taiko_l2_signal_service=result["contracts_addresses"]["taiko_l2_signal_service"],
             taiko_token=result["contracts_addresses"]["taiko_token"],
             l2_suggested_fee_recipient=result["contracts_addresses"]["l2_suggested_fee_recipient"],
             preconf_whitelist=result["contracts_addresses"]["preconf_whitelist"],

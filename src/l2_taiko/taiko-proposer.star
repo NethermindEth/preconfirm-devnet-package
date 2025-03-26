@@ -11,6 +11,7 @@ def launch(
     index,
     contracts_addresses,
     taiko_client_image,
+    taiko_chain_id,
 ):
     service = plan.add_service(
         name = "preconf-taiko-proposer-{0}".format(index),
@@ -53,7 +54,7 @@ def launch(
                 "TOKEN_ALLOWANCE": "",
                 "TX_GAS_LIMIT": "3000000",
                 "EPOCH_MIN_TIP": "",
-                "CHAIN_ID": "167001",
+                "CHAIN_ID": taiko_chain_id,
                 "PORT_PROVER_SERVER": "9876",
                 "PORT_L2_EXECUTION_ENGINE_METRICS": "6060",
                 "PORT_GRAFANA": "3001",
