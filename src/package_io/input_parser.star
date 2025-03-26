@@ -340,6 +340,7 @@ def input_parser(plan, input_args):
         if result["mev_params"]
         else None,
         taiko_params=struct(
+            taiko_chain_id=result["taiko_params"]["taiko_chain_id"],
             taiko_deploy_image=result["taiko_params"]["taiko_deploy_image"],
             taiko_geth_image=result["taiko_params"]["taiko_geth_image"],
             taiko_client_image=result["taiko_params"]["taiko_client_image"],

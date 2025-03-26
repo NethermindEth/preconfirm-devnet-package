@@ -818,6 +818,7 @@ print(int(a+b), end="")
                 args_with_right_defaults.taiko_params.taiko_client_image,
                 contracts_addresses,
                 bootnode_enr,
+                args_with_right_defaults.taiko_params.taiko_chain_id,
             )
 
             # Launch taiko stack 2
@@ -832,6 +833,7 @@ print(int(a+b), end="")
                 args_with_right_defaults.taiko_params.taiko_client_image,
                 contracts_addresses,
                 bootnode_enr,
+                args_with_right_defaults.taiko_params.taiko_chain_id,
             )
 
             plan.print("Successfully launched 2 taiko stacks")
@@ -844,6 +846,7 @@ print(int(a+b), end="")
                 global_node_selectors,
                 args_with_right_defaults.port_publisher,
                 index,
+                args_with_right_defaults.taiko_params.taiko_chain_id,
             )
 
             plan.print("Successfully launched blockscout for taiko L2")
@@ -901,6 +904,7 @@ print(int(a+b), end="")
                 plan,
                 preconf_params.preconf_avs_image,
                 network_id,
+                taiko_params.taiko_chain_id,
                 all_el_contexts[0],
                 all_cl_contexts[0],
                 taiko_stack_1,
@@ -918,6 +922,7 @@ print(int(a+b), end="")
                 plan,
                 preconf_params.preconf_avs_image,
                 network_id,
+                taiko_params.taiko_chain_id,
                 all_el_contexts[0],
                 all_cl_contexts[0],
                 taiko_stack_2,

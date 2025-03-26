@@ -189,6 +189,7 @@ SUBCATEGORY_PARAMS = {
         "helix_relay_config_extension",
     ],
     "taiko_params": [
+        "taiko_chain_id",
         "taiko_deploy_image",
         "taiko_geth_image",
         "taiko_client_image",

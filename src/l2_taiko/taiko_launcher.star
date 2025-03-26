@@ -16,6 +16,7 @@ def launch(
     taiko_client_image,
     contracts_addresses,
     bootnode_enr,
+    taiko_chain_id,
 ):
     data_dirpath = EXECUTION_DATA_DIRPATH_ON_CLIENT_CONTAINER + "-" + str(index)
     jwtsecret_path = data_dirpath + "/geth/jwtsecret"
@@ -27,6 +28,7 @@ def launch(
         enode,
         index,
         taiko_geth_image,
+        taiko_chain_id,
     )
 
     # Launch driver
@@ -40,6 +42,7 @@ def launch(
         index,
         contracts_addresses,
         taiko_client_image,
+        taiko_chain_id,
         bootnode_enr,
     )
 
@@ -56,6 +59,7 @@ def launch(
         index,
         contracts_addresses,
         taiko_client_image,
+        taiko_chain_id,
     )
     """
 

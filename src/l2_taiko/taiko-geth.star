@@ -18,6 +18,7 @@ def launch(
     enode,
     index,
     taiko_geth_image,
+    taiko_chain_id,
 ):
     service = plan.add_service(
         name = "preconf-taiko-geth-{0}".format(index),
@@ -48,7 +49,7 @@ def launch(
             },
             cmd = [
                 "--taiko",
-                "--networkid=167001",
+                "--networkid={0}".format(taiko_chain_id,),
                 "--gcmode=archive",
                 "--datadir={0}".format(data_dirpath),
                 "--bootnodes={0}".format(enode),
