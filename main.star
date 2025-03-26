@@ -593,6 +593,7 @@ print(int(a+b), end="")
                 global_node_selectors,
                 args_with_right_defaults.port_publisher,
                 index,
+                args_with_right_defaults.blockscout_params.public_api_host,
             )
             plan.print("Successfully launched blockscout")
         elif additional_service == "dora":
@@ -847,6 +848,7 @@ print(int(a+b), end="")
                 args_with_right_defaults.port_publisher,
                 index,
                 args_with_right_defaults.taiko_params.taiko_chain_id,
+                args_with_right_defaults.blockscout_params.public_api_host,
             )
 
             plan.print("Successfully launched blockscout for taiko L2")

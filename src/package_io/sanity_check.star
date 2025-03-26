@@ -188,6 +188,9 @@ SUBCATEGORY_PARAMS = {
         "helix_relay_image",
         "helix_relay_config_extension",
     ],
+    "blockscout_params" : [
+        "public_api_host",
+    ],
     "taiko_params": [
         "taiko_chain_id",
         "taiko_deploy_image",

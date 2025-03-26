@@ -339,6 +339,9 @@ def input_parser(plan, input_args):
         )
         if result["mev_params"]
         else None,
+        blockscout_params=struct(
+            public_api_host=result["blockscout_params"]["public_api_host"],
+        ),
         taiko_params=struct(
             taiko_chain_id=result["taiko_params"]["taiko_chain_id"],
             taiko_deploy_image=result["taiko_params"]["taiko_deploy_image"],

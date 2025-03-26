@@ -55,6 +55,7 @@ def launch_blockscout(
     port_publisher,
     additional_service_index,
     taiko_chain_id,
+    public_api_host,
 ):
     postgres_output = postgres.run(
         plan,
@@ -103,6 +104,7 @@ def launch_blockscout(
         global_node_selectors,
         blockscout_service,
         taiko_chain_id,
+        public_api_host,
     )
     plan.add_service(SERVICE_NAME_FRONTEND, config_frontend)
     return blockscout_url
@@ -204,6 +206,7 @@ def get_config_frontend(
     node_selectors,
     blockscout_service,
     taiko_chain_id,
+    public_api_host,
 ):
     return ServiceConfig(
         image=IMAGE_NAME_BLOCKSCOUT_FRONTEND,
@@ -215,7 +218,7 @@ def get_config_frontend(
             "NEXT_PUBLIC_NETWORK_ID": taiko_chain_id,
             "NEXT_PUBLIC_NETWORK_RPC_URL": el_client_rpc_url,
             "NEXT_PUBLIC_APP_HOST": "0.0.0.0",
-            "NEXT_PUBLIC_API_HOST": "178.79.141.170:35003",
+            "NEXT_PUBLIC_API_HOST": "{0}:35003".format(public_api_host),
             "NEXT_PUBLIC_AD_BANNER_PROVIDER": "none",
             "NEXT_PUBLIC_AD_TEXT_PROVIDER": "none",
             "NEXT_PUBLIC_IS_TESTNET": "true",
