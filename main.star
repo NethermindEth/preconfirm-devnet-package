@@ -759,6 +759,53 @@ print(int(a+b), end="")
                 name="taiko_genesis",
             )
 
+            #Launch boot-node
+            p2p_bootnode_test = plan.add_service(
+                name = "taiko-bootnode-test",
+                config = ServiceConfig(
+                    image = args_with_right_defaults.taiko_params.taiko_bootnode_image,
+                    ports = {
+                        "p2p": PortSpec(
+                            number=9001, transport_protocol="TCP", wait=None
+                        ),
+                        "udp": PortSpec(
+                            number=9000, transport_protocol="TCP", wait=None
+                        ),
+                    },
+                    cmd = [
+                        "p2p-boot-node",
+                        "p2pbootnode_ip_placeholder",
+                        "9000",
+                    ],
+                    private_ip_address_placeholder = "p2pbootnode_ip_placeholder",
+                ),
+            )
+
+            plan.print("Bootnode IP: {0}".format(p2p_bootnode_test.ip_address))
+
+            bootnode_enr_recipe = PostHttpRequestRecipe(
+                endpoint="",
+                body='{"method":"p2p_getENR","params":[],"id":1,"jsonrpc":"2.0"}',
+                content_type="application/json",
+                port_id="p2p",
+                extract={
+                    "enr": ".result",
+                },
+            )
+
+            response = plan.wait(
+                recipe=bootnode_enr_recipe,
+                field="extract.enr",
+                assertion="!=",
+                target_value="",
+                timeout="15m",
+                service_name="taiko-bootnode-test",
+            )
+
+            bootnode_enr = response["extract.enr"]
+
+            plan.print("Bootnode ENR: {0}".format(bootnode_enr))
+
             # Launch taiko stack 1
             taiko_stack_1 = l2_taiko.launch(
                 plan,
@@ -770,8 +817,9 @@ print(int(a+b), end="")
                 args_with_right_defaults.taiko_params.taiko_geth_image,
                 args_with_right_defaults.taiko_params.taiko_client_image,
                 contracts_addresses,
+                bootnode_enr,
             )
-            """
+
             # Launch taiko stack 2
             taiko_stack_2 = l2_taiko.launch(
                 plan,
@@ -783,8 +831,9 @@ print(int(a+b), end="")
                 args_with_right_defaults.taiko_params.taiko_geth_image,
                 args_with_right_defaults.taiko_params.taiko_client_image,
                 contracts_addresses,
+                bootnode_enr,
             )
-            """
+
             plan.print("Successfully launched 2 taiko stacks")
 
             # Launch blockscout for taiko L2
@@ -864,7 +913,6 @@ print(int(a+b), end="")
                 0,
                 contracts_addresses,
             )
-            """
             # Launch Preconf AVS 2
             preconf_avs.launch(
                 plan,
@@ -873,18 +921,18 @@ print(int(a+b), end="")
                 all_el_contexts[0],
                 all_cl_contexts[0],
                 taiko_stack_2,
+                taiko_params.taiko_deploy_image,
                 all_mevboost_contexts[0],
                 prefunded_accounts,
                 "0dce41fa73ae9f6bdfd51df4d422d75eee174553dba5fd450c4437e4ed3fc903",
-                0,
-                # "10c3db5c5bdca44958bc765e040a5cae3439551cfb4651df442cbe499b12ee69",
-                # 3,
+                1,
+                2,
                 1,
                 contracts_addresses,
             )
 
             plan.print("Successfully launched 2 preconf avs")
-
+            """
             plan.run_sh(
                 run = "sleep 120",
                 description = "Waiting 2 mins for L2 to sync",
@@ -905,7 +953,7 @@ print(int(a+b), end="")
                 ),
             )
             """
-            """
+
             plan.run_sh(
                 run = "sleep 10",
                 description = "Sleep 10 sec to sync",
@@ -919,7 +967,7 @@ print(int(a+b), end="")
                     env_vars = {
                         "L1_RPC_URL": all_el_contexts[0].rpc_http_url,
                         "L2_RPC_URL_NODE1": taiko_stack_1.rpc_http_url,
-                        "L2_RPC_URL_NODE2": taiko_stack_1.rpc_http_url,
+                        "L2_RPC_URL_NODE2": taiko_stack_2.rpc_http_url,
                         "TEST_L2_PREFUNDED_PRIVATE_KEY": "39725efee3fb28614de3bacaffe4cc4bd8c436257e2c8bb887c4b5c4be45e76d",
                     }
                 ),
@@ -934,7 +982,7 @@ print(int(a+b), end="")
                     ],
                 ),
             )
-            """
+
         else:
             fail("Invalid additional service %s" % (additional_service))
     if launch_prometheus_grafana:

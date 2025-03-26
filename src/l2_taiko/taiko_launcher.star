@@ -15,6 +15,7 @@ def launch(
     taiko_geth_image,
     taiko_client_image,
     contracts_addresses,
+    bootnode_enr,
 ):
     data_dirpath = EXECUTION_DATA_DIRPATH_ON_CLIENT_CONTAINER + "-" + str(index)
     jwtsecret_path = data_dirpath + "/geth/jwtsecret"
@@ -39,6 +40,7 @@ def launch(
         index,
         contracts_addresses,
         taiko_client_image,
+        bootnode_enr,
     )
 
     # Launch proposer

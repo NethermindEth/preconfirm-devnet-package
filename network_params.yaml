@@ -140,6 +140,7 @@ taiko_params:
   taiko_deploy_image: nethswitchboard/preconf-taiko-protocol:whitelist
   taiko_geth_image: nethswitchboard/preconf-taiko-geth:whitelist
   taiko_client_image: nethswitchboard/preconf-taiko-client:whitelist
+  taiko_bootnode_image: nethswitchboard/bootnode-p2p:whitelist
 preconf_params:
   avs_deploy_image: nethswitchboard/preconf-avs-protocol:latest
   preconf_avs_image: nethswitchboard/preconf-avs-node:whitelist
