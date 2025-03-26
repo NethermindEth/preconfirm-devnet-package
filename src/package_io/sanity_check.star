@@ -202,6 +202,7 @@ SUBCATEGORY_PARAMS = {
     "contracts_addresses": [
         "taiko_l1",
         "taiko_l2",
+        "taiko_l2_signal_service",
         "taiko_token",
         "l2_suggested_fee_recipient",
         "preconf_whitelist",

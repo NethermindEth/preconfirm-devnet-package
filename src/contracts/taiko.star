@@ -25,7 +25,7 @@ def deploy(
             "OLD_FORK_TAIKO_INBOX": "0x0000000000000000000000000000000000000000",
             "TAIKO_TOKEN": "0x0000000000000000000000000000000000000000",
             "TAIKO_ANCHOR_ADDRESS": contracts_addresses.taiko_l2,
-            "L2_SIGNAL_SERVICE": "0x1670010000000000000000000000000000000005",
+            "L2_SIGNAL_SERVICE": contracts_addresses.taiko_l2_signal_service,
             "CONTRACT_OWNER": contract_owner.address,
             "PROVER_SET_ADMIN": contract_owner.address,
             "TAIKO_TOKEN_PREMINT_RECIPIENT": contract_owner.address,

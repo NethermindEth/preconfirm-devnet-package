@@ -353,6 +353,7 @@ def input_parser(plan, input_args):
         contracts_addresses=struct(
             taiko_l1=result["contracts_addresses"]["taiko_l1"],
             taiko_l2=result["contracts_addresses"]["taiko_l2"],
+            taiko_l2_signal_service=result["contracts_addresses"]["taiko_l2_signal_service"],
             taiko_token=result["contracts_addresses"]["taiko_token"],
             l2_suggested_fee_recipient=result["contracts_addresses"]["l2_suggested_fee_recipient"],
             preconf_whitelist=result["contracts_addresses"]["preconf_whitelist"],
