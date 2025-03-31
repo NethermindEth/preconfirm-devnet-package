@@ -70,6 +70,7 @@ def launch(
         "TAIKO_GETH_WS_RPC_URL": taiko_stack.ws_url,
         "TAIKO_GETH_AUTH_RPC_URL": taiko_stack.auth_url,
         "TAIKO_DRIVER_URL": taiko_stack.driver_url,
+        "MAX_BLOCKS_PER_BATCH_REDUCTION_VALUE": "764", #maxBlocksPerBatch: 768,
         "JWT_SECRET_FILE_PATH":"/data/taiko-geth/geth/jwtsecret",
     }
 
