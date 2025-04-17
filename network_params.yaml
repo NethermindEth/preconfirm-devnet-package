@@ -136,6 +136,8 @@ mev_params:
   mev_flood_seconds_per_bundle: 15
   custom_flood_params:
     interval_between_transactions: 1
+blockscout_params:
+  public_api_host: "178.79.141.170"
 taiko_params:
   taiko_deploy_image: nethswitchboard/preconf-taiko-protocol:whitelist
   taiko_geth_image: nethswitchboard/preconf-taiko-geth:whitelist

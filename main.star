@@ -593,6 +593,7 @@ print(int(a+b), end="")
                 global_node_selectors,
                 args_with_right_defaults.port_publisher,
                 index,
+                args_with_right_defaults.blockscout_params.public_api_host,
             )
             plan.print("Successfully launched blockscout")
         elif additional_service == "dora":
@@ -844,6 +845,7 @@ print(int(a+b), end="")
                 global_node_selectors,
                 args_with_right_defaults.port_publisher,
                 index,
+                args_with_right_defaults.blockscout_params.public_api_host,
             )
 
             plan.print("Successfully launched blockscout for taiko L2")
@@ -955,8 +957,8 @@ print(int(a+b), end="")
             """
 
             plan.run_sh(
-                run = "sleep 10",
-                description = "Sleep 10 sec to sync",
+                run = "sleep 30",
+                description = "Sleep 30 sec to sync",
             )
 
             plan.add_service(
