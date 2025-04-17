@@ -51,6 +51,14 @@ def launch(
         description="Approve taiko token",
     )
 
+    plan.run_sh(
+        name="bond-Taiko-token",
+        run="cast send {0} 'depositBond(uint256)' 1000000000000000000000000 {1} {2}".format(contracts_addresses.taiko_l1, PRIVATE_KEY_OPERATOR_COMMAND, RPC_URL_COMMAND),
+        image=taiko_protocol_image,
+        wait=None,
+        description="Approve taiko token",
+    )
+
     # Common environment variables
     base_env_vars = {
         "TAIKO_INBOX_ADDRESS": contracts_addresses.taiko_l1,
