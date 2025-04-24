@@ -899,7 +899,7 @@ print(int(a+b), end="")
             plan.print("Launching preconfirmation AVS")
 
             # Launch Preconf AVS 1
-            preconf_avs.launch(
+            preconf_avs_job_0 = preconf_avs.launch(
                 plan,
                 preconf_params.preconf_avs_image,
                 network_id,
@@ -915,8 +915,13 @@ print(int(a+b), end="")
                 0,
                 contracts_addresses,
             )
+
+            launch_prometheus_grafana = True
+            prometheus_additional_metrics_jobs.append(
+                preconf_avs_job_0
+            )
             # Launch Preconf AVS 2
-            preconf_avs.launch(
+            preconf_avs_job_1 = preconf_avs.launch(
                 plan,
                 preconf_params.preconf_avs_image,
                 network_id,
@@ -931,6 +936,12 @@ print(int(a+b), end="")
                 2,
                 1,
                 contracts_addresses,
+            )
+
+            launch_prometheus_grafana = True
+            plan.print(preconf_avs_job_1)
+            prometheus_additional_metrics_jobs.append(
+                preconf_avs_job_1
             )
 
             plan.print("Successfully launched 2 preconf avs")
@@ -955,7 +966,7 @@ print(int(a+b), end="")
                 ),
             )
             """
-
+            """
             plan.run_sh(
                 run = "sleep 30",
                 description = "Sleep 30 sec to sync",
@@ -984,7 +995,7 @@ print(int(a+b), end="")
                     ],
                 ),
             )
-
+            """
         else:
             fail("Invalid additional service %s" % (additional_service))
     if launch_prometheus_grafana:

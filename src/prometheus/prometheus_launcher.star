@@ -65,6 +65,7 @@ def get_metrics_jobs(
 ):
     metrics_jobs = []
     # Adding execution clients metrics jobs
+    """
     for context in el_contexts:
         if len(context.el_metrics_info) >= 1 and context.el_metrics_info[0] != None:
             execution_metrics_info = context.el_metrics_info[0]
@@ -184,7 +185,7 @@ def get_metrics_jobs(
                     },
                 )
             )
-
+    """
     # Adding additional metrics jobs
     for job in additional_metrics_jobs:
         if job == None:

@@ -1,3 +1,9 @@
+prometheus = import_module("../prometheus/prometheus_launcher.star")
+
+SERVICE_NAME = "node-avs-metrics"
+METRICS_PORT_NUMBER = 9898
+METRICS_PATH = "/metrics"
+
 def launch(
     plan,
     image,
@@ -51,6 +57,14 @@ def launch(
         description="Approve taiko token",
     )
 
+    plan.run_sh(
+        name="bond-Taiko-token",
+        run="cast send {0} 'depositBond(uint256)' 1000000000000000000000000 {1} {2}".format(contracts_addresses.taiko_l1, PRIVATE_KEY_OPERATOR_COMMAND, RPC_URL_COMMAND),
+        image=taiko_protocol_image,
+        wait=None,
+        description="Approve taiko token",
+    )
+
     # Common environment variables
     base_env_vars = {
         "TAIKO_INBOX_ADDRESS": contracts_addresses.taiko_l1,
@@ -80,7 +94,7 @@ def launch(
         env_vars.update(additional_vars)
         return env_vars
 
-    plan.add_service(
+    avs_node = plan.add_service(
         name = "taiko-preconf-avs-{0}".format(taiko_stack_index),
         config = ServiceConfig(
             files = {
@@ -91,7 +105,23 @@ def launch(
             env_vars=create_service_env_vars({
                 "AVS_NODE_ECDSA_PRIVATE_KEY": PRIVATE_KEY_OPERATOR,
             }),
+            ports = {
+                "metrics-port": PortSpec(
+                    number=9898, transport_protocol="TCP", wait=None
+                ),
+            },
         ),
         description = "Start AVS",
+    )
+
+    return prometheus.new_metrics_job(
+        job_name="{0}-{1}".format(SERVICE_NAME,taiko_stack_index),
+        endpoint="{0}:{1}".format(
+            avs_node.ip_address, METRICS_PORT_NUMBER
+        ),
+        metrics_path=METRICS_PATH,
+        labels={
+            "service": "{0}-{1}".format(SERVICE_NAME,taiko_stack_index),
+        },
     )
 
