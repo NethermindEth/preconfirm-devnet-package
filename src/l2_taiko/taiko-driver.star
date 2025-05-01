@@ -11,6 +11,7 @@ def launch(
     contracts_addresses,
     taiko_client_image,
     bootnode_enr,
+    sequencer_key
 ):
     service = plan.add_service(
         name = "preconf-taiko-driver-{0}".format(index),
@@ -49,7 +50,7 @@ def launch(
                 "L2_SUGGESTED_FEE_RECIPIENT": contracts_addresses.l2_suggested_fee_recipient,
                 "PROVER_SET": "",
                 "MIN_TAIKO_BALANCE": "",
-                "L1_PROPOSER_PRIVATE_KEY": "0xbcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31",
+                # "L1_PROPOSER_PRIVATE_KEY": "0xbcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31",
                 "TX_NOT_IN_MEMPOOL": "",
                 "PROVER_CAPACITY": "1",
                 "PROVE_UNASSIGNED_BLOCKS": "false",
@@ -101,7 +102,8 @@ def launch(
                 "--p2p.advertise.ip={0} ".format("driver_ip_placeholder") +
                 # "--p2p.priv.raw=a09e4269de3dbe32760a4faf5aadbcbddb7f364fc895f5759243e8d3d02c961c" +
                 "--p2p.sequencer.key=bcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31 " +
-                "--p2p.bootnodes={0} ".format(bootnode_enr)
+                "--p2p.bootnodes={0} ".format(bootnode_enr) +
+                "--p2p.sequencer.key={0} ".format(sequencer_key)
             ],
             private_ip_address_placeholder = "driver_ip_placeholder",
         ),

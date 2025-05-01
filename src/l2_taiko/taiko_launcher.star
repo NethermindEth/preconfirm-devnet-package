@@ -41,6 +41,7 @@ def launch(
         contracts_addresses,
         taiko_client_image,
         bootnode_enr,
+        "0x{0}".format(prefunded_accounts[index].private_key),
     )
 
     # Launch proposer
