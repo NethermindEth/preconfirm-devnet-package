@@ -815,6 +815,7 @@ print(int(a+b), end="")
                 prefunded_accounts,
                 "",
                 0,
+                1, # key index same as for avs node
                 args_with_right_defaults.taiko_params.taiko_geth_image,
                 args_with_right_defaults.taiko_params.taiko_client_image,
                 contracts_addresses,
@@ -829,6 +830,7 @@ print(int(a+b), end="")
                 prefunded_accounts,
                 taiko_stack_1.enode,
                 1,
+                2, # key index same as for avs node
                 args_with_right_defaults.taiko_params.taiko_geth_image,
                 args_with_right_defaults.taiko_params.taiko_client_image,
                 contracts_addresses,
