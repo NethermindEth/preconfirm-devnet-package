@@ -947,6 +947,28 @@ print(int(a+b), end="")
             )
 
             plan.print("Successfully launched 2 preconf avs")
+
+            recipe_result = plan.wait(
+                service_name = "preconf-avs-job-0",
+                recipe = ExecRecipe(
+                    command = [
+                        "cast call",
+                        "0x3D7F46607b02EAd1Cd1d09A86B76885730d3De0F",
+                        "getOperatorForCurrentEpoch()(address)",
+                        "--rpc-url",
+                        all_el_contexts[0].rpc_http_url,
+                    ],
+                    extract = {
+                        "epoch" : ".placeholder.epoch",
+                    },
+                ),
+                field = "epoch",
+                assertion = "!=",
+                target_value = "0",
+                interval = "1m",
+                timeout = "10m",
+                description = "Waiting for current epoch to become non-zero",
+            )
             """
             plan.run_sh(
                 run = "sleep 120",
