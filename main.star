@@ -916,6 +916,7 @@ print(int(a+b), end="")
                 1,
                 0,
                 contracts_addresses,
+                "false",
             )
 
             launch_prometheus_grafana = True
@@ -938,6 +939,7 @@ print(int(a+b), end="")
                 2,
                 1,
                 contracts_addresses,
+                "false",
             )
 
             launch_prometheus_grafana = True

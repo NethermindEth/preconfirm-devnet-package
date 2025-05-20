@@ -21,6 +21,7 @@ def launch(
     index,
     taiko_stack_index,
     contracts_addresses,
+    simulate_not_submitting_at_the_end_of_epoch,
 ):
     mev_boost_url = "http://{0}:{1}".format(
         mev_boost_context.private_ip_address, mev_boost_context.port
@@ -86,6 +87,7 @@ def launch(
         "TAIKO_DRIVER_URL": taiko_stack.driver_url,
         "MAX_BLOCKS_PER_BATCH_REDUCTION_VALUE": "764", #maxBlocksPerBatch: 768,
         "JWT_SECRET_FILE_PATH":"/data/taiko-geth/geth/jwtsecret",
+        "SIMULATE_NOT_SUBMITTING_AT_THE_END_OF_EPOCH": simulate_not_submitting_at_the_end_of_epoch,
     }
 
     # For each service, we'll create env_vars by combining base_env_vars with service-specific vars
