@@ -948,27 +948,42 @@ print(int(a+b), end="")
 
             plan.print("Successfully launched 2 preconf avs")
 
+            plan.add_service(
+                name = "cast-call-image",
+                description = "Starting cast call",
+                config = ServiceConfig(
+                    image = taiko_params.taiko_deploy_image,
+                    cmd = [
+                        "sleep",
+                        "infinity",
+                    ],
+                ),
+            )
+
             recipe_result = plan.wait(
-                service_name = "preconf-avs-job-0",
+                service_name = "cast-call-image",
                 recipe = ExecRecipe(
                     command = [
-                        "cast call",
-                        "0x3D7F46607b02EAd1Cd1d09A86B76885730d3De0F",
+                        "cast",
+                        "call",
+                        "0xD9BFe39BA99503baA8cBA3DF08e3C9421889Fd44",
                         "getOperatorForCurrentEpoch()(address)",
                         "--rpc-url",
                         all_el_contexts[0].rpc_http_url,
                     ],
                     extract = {
-                        "epoch" : ".placeholder.epoch",
+                        "epoch" : ".",
                     },
                 ),
-                field = "epoch",
+                field = "extract.epoch",
                 assertion = "!=",
-                target_value = "0",
-                interval = "1m",
-                timeout = "10m",
+                target_value = "0x0000000000000000000000000000000000000000\n",
+                interval = "30s",
+                timeout = "15m",
                 description = "Waiting for current epoch to become non-zero",
             )
+
+            plan.print("Current epoch: {0}".format(recipe_result["extract.epoch"]))
             """
             plan.run_sh(
                 run = "sleep 120",
