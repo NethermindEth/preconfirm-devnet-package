@@ -585,16 +585,16 @@ print(int(a+b), end="")
             )
             plan.print("Successfully launched beacon metrics gazer")
         elif additional_service == "blockscout":
-            plan.print("Launching blockscout")
-            blockscout_sc_verif_url = blockscout.launch_blockscout(
-                plan,
-                all_el_contexts,
-                persistent,
-                global_node_selectors,
-                args_with_right_defaults.port_publisher,
-                index,
-                args_with_right_defaults.blockscout_params.public_api_host,
-            )
+            # plan.print("Launching blockscout")
+            # blockscout_sc_verif_url = blockscout.launch_blockscout(
+            #     plan,
+            #     all_el_contexts,
+            #     persistent,
+            #     global_node_selectors,
+            #     args_with_right_defaults.port_publisher,
+            #     index,
+            #     args_with_right_defaults.blockscout_params.public_api_host,
+            # )
             plan.print("Successfully launched blockscout")
         elif additional_service == "dora":
             plan.print("Launching dora")
@@ -840,17 +840,17 @@ print(int(a+b), end="")
             plan.print("Successfully launched 2 taiko stacks")
 
             # Launch blockscout for taiko L2
-            taiko_blockscout.launch_blockscout(
-                plan,
-                taiko_stack_1,
-                persistent,
-                global_node_selectors,
-                args_with_right_defaults.port_publisher,
-                index,
-                args_with_right_defaults.blockscout_params.public_api_host,
-            )
+            # taiko_blockscout.launch_blockscout(
+            #     plan,
+            #     taiko_stack_1,
+            #     persistent,
+            #     global_node_selectors,
+            #     args_with_right_defaults.port_publisher,
+            #     index,
+            #     args_with_right_defaults.blockscout_params.public_api_host,
+            # )
 
-            plan.print("Successfully launched blockscout for taiko L2")
+            # plan.print("Successfully launched blockscout for taiko L2")
 
             """
             # Launch taiko L2 tx transfer for first transaction
@@ -1092,7 +1092,7 @@ print(int(a+b), end="")
         grafana_info=grafana_info,
         blockscout_sc_verif_url=None
         if ("blockscout" in args_with_right_defaults.additional_services) == False
-        else blockscout_sc_verif_url,
+        else None,
         all_participants=all_participants,
         pre_funded_accounts=prefunded_accounts,
         network_params=network_params,
