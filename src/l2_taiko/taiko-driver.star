@@ -88,8 +88,8 @@ def launch(
                 "--l2.ws={0} ".format(geth.ws_url) +
                 "--l1.beacon={0} ".format(cl_context.beacon_http_url) +
                 "--l2.auth={0} ".format(geth.auth_url) +
-                "--taikoL1={0} ".format(contracts_addresses.taiko_l1) +
-                "--taikoL2={0} ".format(contracts_addresses.taiko_l2) +
+                "--taikoInbox={0} ".format(contracts_addresses.taiko_l1) +
+                "--taikoAnchor={0} ".format(contracts_addresses.taiko_l2) +
                 "--jwtSecret={0} ".format(jwtsecret_path) +
                 "--verbosity=4 " +
                 #"--p2p.disable " +
