@@ -579,7 +579,7 @@ print(int(a+b), end="")
                     index,
                 )
             )
-            launch_prometheus_grafana = True
+            launch_prometheus_grafana = False
             prometheus_additional_metrics_jobs.append(
                 beacon_metrics_gazer_prometheus_metrics_job
             )
@@ -726,7 +726,7 @@ print(int(a+b), end="")
             plan.print("Successfully launched full-beaconchain-explorer")
         elif additional_service == "prometheus_grafana":
             # Allow prometheus to be launched last so is able to collect metrics from other services
-            launch_prometheus_grafana = True
+            launch_prometheus_grafana = False
         elif additional_service == "assertoor":
             plan.print("Launching assertoor")
             assertoor_config_template = read_file(
@@ -919,7 +919,7 @@ print(int(a+b), end="")
                 "false",
             )
 
-            launch_prometheus_grafana = True
+            launch_prometheus_grafana = False
             prometheus_additional_metrics_jobs.append(
                 preconf_avs_job_0
             )
@@ -942,7 +942,7 @@ print(int(a+b), end="")
                 "false",
             )
 
-            launch_prometheus_grafana = True
+            launch_prometheus_grafana = False
             plan.print(preconf_avs_job_1)
             prometheus_additional_metrics_jobs.append(
                 preconf_avs_job_1
