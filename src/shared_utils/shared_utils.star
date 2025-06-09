@@ -292,7 +292,7 @@ def get_port_specs(port_assignments):
             constants.WS_PORT_ID,
             constants.PROFILING_PORT_ID,
         ]:
-            ports.update({port_id: new_port_spec(port, TCP_PROTOCOL)})
+            ports.update({port_id: new_port_spec(port, TCP_PROTOCOL, wait="5m")})
         elif port_id == constants.UDP_DISCOVERY_PORT_ID:
             ports.update({port_id: new_port_spec(port, UDP_PROTOCOL)})
         elif port_id in [
