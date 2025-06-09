@@ -160,6 +160,7 @@ contracts_addresses:
   service_manager: 0xEFC846aa6d4FbFd669b3620624351B66CB6AD25C
   preconf_registry: 0x454A310f46C8d9403ba6F6c514aD3fDE1ad97a5E
   preconf_task_manager: 0xf2bD68421A73821368eEefaCB420FFdFa0237c86
+  bridge: 0x63e6DDE6763C3466C7b45Be880f7eE5dC2ca3E25
 xatu_sentry_enabled: false
 xatu_sentry_params:
   xatu_sentry_image: ethpandaops/xatu-sentry

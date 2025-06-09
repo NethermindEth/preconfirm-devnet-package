@@ -215,6 +215,7 @@ SUBCATEGORY_PARAMS = {
         "strategy_manager",
         "preconf_registry",
         "preconf_task_manager",
+        "bridge",
     ],
     "xatu_sentry_params": [
         "xatu_sentry_image",

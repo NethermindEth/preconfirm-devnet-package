@@ -366,6 +366,7 @@ def input_parser(plan, input_args):
             preconf_registry=result["contracts_addresses"]["preconf_registry"],
             service_manager=result["contracts_addresses"]["service_manager"],
             preconf_task_manager=result["contracts_addresses"]["preconf_task_manager"],
+            bridge=result["contracts_addresses"]["bridge"],
         ),
         dora_params=struct(
             image=result["dora_params"]["image"],
