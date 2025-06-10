@@ -64,6 +64,7 @@ get_prefunded_accounts = import_module(
 # Preconf AVS
 contract_deployer = import_module("./src/contracts/contract_deployer.star")
 l2_taiko = import_module("./src/l2_taiko/taiko_launcher.star")
+relayer_launcher = import_module("./src/l2_taiko/taiko-relayer.star")
 taiko_blockscout = import_module("./src/l2_taiko/blockscout_launcher.star")
 preconf_avs = import_module("./src/preconf_avs/avs_launcher.star")
 
@@ -838,6 +839,14 @@ print(int(a+b), end="")
             )
 
             plan.print("Successfully launched 2 taiko stacks")
+
+            relayer = relayer_launcher.launch(
+                plan,
+                all_el_contexts[0],
+                taiko_stack_1.rpc_http_url,
+                contracts_addresses,
+                prefunded_accounts,
+            )
 
             # Launch blockscout for taiko L2
             taiko_blockscout.launch_blockscout(
