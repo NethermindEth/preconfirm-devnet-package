@@ -760,6 +760,11 @@ print(int(a+b), end="")
                 name="taiko_genesis",
             )
 
+            plan.run_sh(
+                run = "sleep 60",
+                description = "Waiting for L1 to sync",
+            )
+
             # Get real genesis timestamp
             contract_genesis_timestamp = plan.run_python(
                 description="Getting real genesis timestamp for helix",

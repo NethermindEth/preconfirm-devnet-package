@@ -27,7 +27,7 @@ def launch(
     #     mev_boost_context.private_ip_address, mev_boost_context.port
     # )
 
-    contract_owner = prefunded_accounts[0]
+    contract_owner = prefunded_accounts[10]
     RPC_URL_COMMAND = "--rpc-url {0}".format(el_context.rpc_http_url)
     PRIVATE_KEY_OWNER_COMMAND = "--private-key {0}".format(contract_owner.private_key)
     ADDRESS_OPERATOR = prefunded_accounts[index].address
