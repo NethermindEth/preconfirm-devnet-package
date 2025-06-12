@@ -861,6 +861,23 @@ print(int(a+b), end="")
 
             plan.print("Successfully launched blockscout for taiko L2")
 
+            plan.run_sh(
+                name="set-bridge-address",
+                run="forge script ./script/shared/SetAddress.s.sol --fork-url {0} --broadcast --resume -vvv".format(taiko_stack_1.rpc_http_url),
+                image=taiko_params.taiko_deploy_image,
+                env_vars={
+                    "FOUNDRY_PROFILE": "layer1",
+                    "DOMAIN": network_id,
+                    "ADDRESS": contracts_addresses.l1_bridge,
+                    "NAME": "0x6272696467650000000000000000000000000000000000000000000000000000",
+                    "PROXY_ADDRESS": "0x1670010000000000000000000000000000000006",
+                    "L2_SIGNAL_SERVICE": "0x1670010000000000000000000000000000000005",
+                    "PRIVATE_KEY": "0x{0}".format(prefunded_accounts[0].private_key),
+                },
+                wait=None,
+                description="Setting bridge address",
+            )
+
             """
             # Launch taiko L2 tx transfer for first transaction
             plan.add_service(
