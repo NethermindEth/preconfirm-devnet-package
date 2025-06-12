@@ -12,7 +12,7 @@ def launch(
     cl_context,
     taiko_stack,
     taiko_protocol_image,
-    mev_boost_context,
+    # mev_boost_context,
     prefunded_accounts,
     first_validator_bls_private_key,
     first_validator_index,
@@ -23,11 +23,11 @@ def launch(
     contracts_addresses,
     simulate_not_submitting_at_the_end_of_epoch,
 ):
-    mev_boost_url = "http://{0}:{1}".format(
-        mev_boost_context.private_ip_address, mev_boost_context.port
-    )
+    # mev_boost_url = "http://{0}:{1}".format(
+    #     mev_boost_context.private_ip_address, mev_boost_context.port
+    # )
 
-    contract_owner = prefunded_accounts[0]
+    contract_owner = prefunded_accounts[10]
     RPC_URL_COMMAND = "--rpc-url {0}".format(el_context.rpc_http_url)
     PRIVATE_KEY_OWNER_COMMAND = "--private-key {0}".format(contract_owner.private_key)
     ADDRESS_OPERATOR = prefunded_accounts[index].address
@@ -77,7 +77,7 @@ def launch(
         "L1_CHAIN_ID": l1_chain_id,
         "VALIDATOR_BLS_PRIVATEKEY": first_validator_bls_private_key,
         "VALIDATOR_INDEX": str(first_validator_index),
-        "MEV_BOOST_URL": mev_boost_url,
+        # "MEV_BOOST_URL": mev_boost_url,
         "L1_WS_RPC_URL": el_context.ws_url,
         "L1_BEACON_URL": cl_context.beacon_http_url,
         "RUST_LOG": "debug,reqwest=info,hyper=info,alloy_transport=info,alloy_rpc_client=info,p2p_network=info,libp2p_gossipsub=info,discv5=info,netlink_proto=info",
