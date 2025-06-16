@@ -155,6 +155,7 @@ contracts_addresses:
   l2_suggested_fee_recipient: 0x8943545177806ED17B9F23F0a21ee5948eCaa776
   preconf_router: 0x61064B18219b8aE1d5dCb962cECBfA736B46d83a
   taiko_wrapper: 0x47cD215F786D723Bbe0118b19c23f897cd3c7544
+  l2_bridge: 0x1670010000000000000000000000000000000001
   preconf_whitelist: 0x63d7b5Dd5474BB7cF3c0Cef1Ca7b3a6BbDAC6109
   avs_directory: 0xBf549F50fdbbD7Eb73ce88985AA107eEC0955f4c
   strategy_manager: 0xe21c9cfea094aAbE99C96D56281a00876F97258a
