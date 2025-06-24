@@ -213,29 +213,29 @@ def run(plan, args={}):
         description = "Waiting for L1 to sync",
     )
 
-    # Get real genesis timestamp
-    contract_genesis_timestamp = plan.run_python(
-        description="Getting real genesis timestamp for helix",
-        run="""
-import sys
-a = int(sys.argv[1])
-b = int(sys.argv[2])
-print(int(a+b), end="")
-""",
-       args=[str(final_genesis_timestamp),str(network_params.genesis_delay)],
-   ).output
+#     # Get real genesis timestamp
+#     contract_genesis_timestamp = plan.run_python(
+#         description="Getting real genesis timestamp for helix",
+#         run="""
+# import sys
+# a = int(sys.argv[1])
+# b = int(sys.argv[2])
+# print(int(a+b), end="")
+# """,
+#        args=[str(final_genesis_timestamp),str(network_params.genesis_delay)],
+#    ).output
 
-    # Deploy all smart contracts
-    contract_deployer.deploy(
-        plan,
-        contract_genesis_timestamp,
-        all_el_contexts[0],
-        prefunded_accounts,
-        network_id,
-        taiko_params.taiko_deploy_image,
-        preconf_params.avs_deploy_image,
-        contracts_addresses,
-    )
+#     # Deploy all smart contracts
+#     contract_deployer.deploy(
+#         plan,
+#         contract_genesis_timestamp,
+#         all_el_contexts[0],
+#         prefunded_accounts,
+#         network_id,
+#         taiko_params.taiko_deploy_image,
+#         preconf_params.avs_deploy_image,
+#         contracts_addresses,
+#     )
 
     # Broadcaster forwards requests, sent to it, to all nodes in parallel
     if "broadcaster" in args_with_right_defaults.additional_services:
@@ -760,6 +760,35 @@ print(int(a+b), end="")
                 name="taiko_genesis",
             )
 
+            plan.run_sh(
+                run = "sleep 60",
+                description = "Waiting for L1 to sync",
+            )
+
+            # Get real genesis timestamp
+            contract_genesis_timestamp = plan.run_python(
+                description="Getting real genesis timestamp for helix",
+                run="""
+import sys
+a = int(sys.argv[1])
+b = int(sys.argv[2])
+print(int(a+b), end="")
+""",
+                args=[str(final_genesis_timestamp),str(network_params.genesis_delay)],
+            ).output
+
+            # Deploy all smart contracts
+            contract_deployer.deploy(
+                plan,
+                contract_genesis_timestamp,
+                all_el_contexts[0],
+                prefunded_accounts,
+                network_id,
+                taiko_params.taiko_deploy_image,
+                preconf_params.avs_deploy_image,
+                contracts_addresses,
+            )
+
             #Launch boot-node
             p2p_bootnode_test = plan.add_service(
                 name = "taiko-bootnode-test",
@@ -909,7 +938,7 @@ print(int(a+b), end="")
                 all_cl_contexts[0],
                 taiko_stack_1,
                 taiko_params.taiko_deploy_image,
-                all_mevboost_contexts[0],
+                # all_mevboost_contexts[0],
                 prefunded_accounts,
                 "3219c83a76e82682c3e706902ca85777e703a06c9f0a82a5dfa6164f527c1ea6",
                 1,
@@ -932,7 +961,7 @@ print(int(a+b), end="")
                 all_cl_contexts[0],
                 taiko_stack_2,
                 taiko_params.taiko_deploy_image,
-                all_mevboost_contexts[0],
+                # all_mevboost_contexts[0],
                 prefunded_accounts,
                 "0dce41fa73ae9f6bdfd51df4d422d75eee174553dba5fd450c4437e4ed3fc903",
                 1,

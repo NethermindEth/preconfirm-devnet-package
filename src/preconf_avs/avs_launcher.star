@@ -12,7 +12,7 @@ def launch(
     cl_context,
     taiko_stack,
     taiko_protocol_image,
-    mev_boost_context,
+    # mev_boost_context,
     prefunded_accounts,
     first_validator_bls_private_key,
     first_validator_index,
@@ -23,11 +23,11 @@ def launch(
     contracts_addresses,
     simulate_not_submitting_at_the_end_of_epoch,
 ):
-    mev_boost_url = "http://{0}:{1}".format(
-        mev_boost_context.private_ip_address, mev_boost_context.port
-    )
+    # mev_boost_url = "http://{0}:{1}".format(
+    #     mev_boost_context.private_ip_address, mev_boost_context.port
+    # )
 
-    contract_owner = prefunded_accounts[0]
+    contract_owner = prefunded_accounts[10]
     RPC_URL_COMMAND = "--rpc-url {0}".format(el_context.rpc_http_url)
     PRIVATE_KEY_OWNER_COMMAND = "--private-key {0}".format(contract_owner.private_key)
     ADDRESS_OPERATOR = prefunded_accounts[index].address
@@ -63,7 +63,7 @@ def launch(
         run="cast send {0} 'depositBond(uint256)' 1000000000000000000000000 {1} {2}".format(contracts_addresses.taiko_l1, PRIVATE_KEY_OPERATOR_COMMAND, RPC_URL_COMMAND),
         image=taiko_protocol_image,
         wait=None,
-        description="Approve taiko token",
+        description="Deposit bond",
     )
 
     # Common environment variables
@@ -73,6 +73,7 @@ def launch(
         "PRECONF_WHITELIST_ADDRESS": contracts_addresses.preconf_whitelist,
         "PRECONF_ROUTER_ADDRESS": contracts_addresses.preconf_router,
         "TAIKO_WRAPPER_ADDRESS": contracts_addresses.taiko_wrapper,
+        "TAIKO_BRIDGE_L2_ADDRESS": contracts_addresses.l2_bridge,
         "TAIKO_CHAIN_ID": "167001",
         "L1_CHAIN_ID": l1_chain_id,
         "L1_WS_RPC_URL": el_context.ws_url,
