@@ -23,6 +23,7 @@ launch_shadowfork = import_module("./network_launcher/shadowfork.star")
 el_client_launcher = import_module("./el/el_launcher.star")
 cl_client_launcher = import_module("./cl/cl_launcher.star")
 vc = import_module("./vc/vc_launcher.star")
+remote_signer = import_module("./remote_signer/remote_signer_launcher.star")
 
 beacon_snooper = import_module("./snooper/snooper_beacon_launcher.star")
 
@@ -186,6 +187,7 @@ def launch_participant_network(
     all_ethereum_metrics_exporter_contexts = []
     all_xatu_sentry_contexts = []
     all_vc_contexts = []
+    all_remote_signer_contexts = []
     all_snooper_beacon_contexts = []
     # Some CL clients cannot run validator clients in the same process and need
     # a separate validator client
@@ -335,6 +337,28 @@ def launch_participant_network(
                     "-" + vc_index_str if participant.vc_count != 1 else "",
                 )
             )
+
+            remote_signer_context = remote_signer.launch(
+                plan=plan,
+                launcher=remote_signer.new_remote_signer_launcher(
+                    el_cl_genesis_data=el_cl_data
+                ),
+                service_name="signer-{0}".format(full_name),
+                remote_signer_type="web3signer",
+                image="consensys/web3signer:latest",
+                full_name="{0}-remote_signer".format(full_name),
+                vc_type=vc_type,
+                node_keystore_files=vc_keystores,
+                participant=participant,
+                global_tolerations=global_tolerations,
+                node_selectors=node_selectors,
+                port_publisher=port_publisher,
+                remote_signer_index=current_vc_index+10,
+            )
+
+            all_remote_signer_contexts.append(remote_signer_context)
+            if remote_signer_context and remote_signer_context.metrics_info:
+                remote_signer_context.metrics_info["config"] = participant.prometheus_config
 
             vc_context = vc.launch(
                 plan=plan,
