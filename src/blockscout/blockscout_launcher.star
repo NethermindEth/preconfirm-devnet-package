@@ -217,7 +217,7 @@ def get_config_frontend(
             "NEXT_PUBLIC_NETWORK_ID": "3151908",
             "NEXT_PUBLIC_NETWORK_RPC_URL": el_client_rpc_url,
             "NEXT_PUBLIC_APP_HOST": "0.0.0.0",
-            "NEXT_PUBLIC_API_HOST": "{0}:35001".format(public_api_host),
+            "NEXT_PUBLIC_API_HOST": "{0}:35003".format(public_api_host),
             "NEXT_PUBLIC_AD_BANNER_PROVIDER": "none",
             "NEXT_PUBLIC_AD_TEXT_PROVIDER": "none",
             "NEXT_PUBLIC_IS_TESTNET": "true",

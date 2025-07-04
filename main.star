@@ -997,7 +997,7 @@ print(int(a+b), end="")
                     command = [
                         "cast",
                         "call",
-                        "0xD9BFe39BA99503baA8cBA3DF08e3C9421889Fd44",
+                        contracts_addresses.preconf_whitelist,
                         "getOperatorForCurrentEpoch()(address)",
                         "--rpc-url",
                         all_el_contexts[0].rpc_http_url,
