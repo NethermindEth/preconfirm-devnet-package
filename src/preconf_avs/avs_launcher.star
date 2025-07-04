@@ -84,6 +84,8 @@ def launch(
         "MAX_BLOCKS_PER_BATCH": "4",
         "JWT_SECRET_FILE_PATH":"/data/taiko-geth/geth/jwtsecret",
         "SIMULATE_NOT_SUBMITTING_AT_THE_END_OF_EPOCH": simulate_not_submitting_at_the_end_of_epoch,
+        "WEB3SIGNER_URL" : "http://192.168.1.25:9000",
+        "PRECONF_ADDRESS" : ADDRESS_OPERATOR
     }
 
     # For each service, we'll create env_vars by combining base_env_vars with service-specific vars
@@ -100,9 +102,7 @@ def launch(
             },
             image = image,
             private_ip_address_placeholder = "avs_ip_placeholder",
-            env_vars=create_service_env_vars({
-                "AVS_NODE_ECDSA_PRIVATE_KEY": PRIVATE_KEY_OPERATOR,
-            }),
+            env_vars=create_service_env_vars({}),
             ports = {
                 "metrics-port": PortSpec(
                     number=9898, transport_protocol="TCP", wait=None
