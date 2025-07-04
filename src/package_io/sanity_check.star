@@ -216,6 +216,7 @@ SUBCATEGORY_PARAMS = {
         "strategy_manager",
         "preconf_registry",
         "preconf_task_manager",
+        "forced_inclusion_store",
     ],
     "xatu_sentry_params": [
         "xatu_sentry_image",
