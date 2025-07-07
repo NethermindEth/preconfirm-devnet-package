@@ -209,6 +209,8 @@ SUBCATEGORY_PARAMS = {
         "preconf_whitelist",
         "preconf_router",
         "taiko_wrapper",
+        "l2_bridge",
+        "forced_inclusion_store",
         "avs_directory",
         "slasher",
         "service_manager",

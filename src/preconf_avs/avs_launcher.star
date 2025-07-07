@@ -73,6 +73,8 @@ def launch(
         "PRECONF_WHITELIST_ADDRESS": contracts_addresses.preconf_whitelist,
         "PRECONF_ROUTER_ADDRESS": contracts_addresses.preconf_router,
         "TAIKO_WRAPPER_ADDRESS": contracts_addresses.taiko_wrapper,
+        "TAIKO_BRIDGE_L2_ADDRESS": contracts_addresses.l2_bridge,
+        "FORCED_INCLUSION_STORE_ADDRESS": contracts_addresses.forced_inclusion_store,
         "TAIKO_CHAIN_ID": "167001",
         "L1_CHAIN_ID": l1_chain_id,
         "VALIDATOR_BLS_PRIVATEKEY": first_validator_bls_private_key,

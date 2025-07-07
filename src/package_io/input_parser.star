@@ -360,6 +360,8 @@ def input_parser(plan, input_args):
             preconf_whitelist=result["contracts_addresses"]["preconf_whitelist"],
             preconf_router=result["contracts_addresses"]["preconf_router"],
             taiko_wrapper=result["contracts_addresses"]["taiko_wrapper"],
+            l2_bridge=result["contracts_addresses"]["l2_bridge"],
+            forced_inclusion_store=result["contracts_addresses"]["forced_inclusion_store"],
             avs_directory=result["contracts_addresses"]["avs_directory"],
             slasher=result["contracts_addresses"]["slasher"],
             strategy_manager=result["contracts_addresses"]["strategy_manager"],
