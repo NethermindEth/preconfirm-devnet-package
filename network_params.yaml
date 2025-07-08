@@ -1,8 +1,8 @@
 participants:
 # EL
-  - el_type: geth
-    el_image: ethereum/client-go:latest
-    el_log_level: ""
+  - el_type: nethermind
+    el_image: nethermindeth/nethermind:ccc88f011
+    el_log_level: "debug"
     el_extra_env_vars: {}
     el_extra_labels: {}
     el_extra_params: []
@@ -43,7 +43,7 @@ participants:
 # participant specific
     node_selectors: {}
     tolerations: []
-    count: 2
+    count: 1
     snooper_enabled: false
     ethereum_metrics_exporter_enabled: false
     xatu_sentry_enabled: false
@@ -87,7 +87,6 @@ network_params:
   devnet_repo: ethpandaops
   prefunded_accounts: {}
 additional_services:
-  - tx_spammer
   - blockscout
   - taiko_stack
   - preconf_avs
@@ -114,8 +113,7 @@ parallel_keystore_generation: false
 disable_peer_scoring: false
 grafana_additional_dashboards: []
 persistent: false
-mev_type: null
-# mev_type: commit-boost
+mev_type: commit-boost
 mev_params:
   mev_relay_image: ghcr.io/chainbound/bolt-relay:v0.2.1-alpha
   mev_builder_image: ghcr.io/chainbound/bolt-builder:v0.3.0-alpha.rc3
@@ -149,20 +147,20 @@ preconf_params:
   avs_deploy_image: nethswitchboard/preconf-avs-protocol:latest
   preconf_avs_image: nethswitchboard/preconf-avs-node:whitelist
 contracts_addresses:
-  taiko_l1: 0xBb4d683Ae82b814ca7d580AF5922306bF63E7A88
-  taiko_token: 0x83706736D4821aE382E795D57092e0320182eCd4
+  taiko_l1: 0x7E2E7DD2Aead92e2e6d05707F21D4C36004f8A2B
+  taiko_token: 0x422A3492e218383753D8006C7Bfa97815B44373F
   taiko_l2: 0x1670010000000000000000000000000000010001
   l2_suggested_fee_recipient: 0x8943545177806ED17B9F23F0a21ee5948eCaa776
-  preconf_router: 0x61064B18219b8aE1d5dCb962cECBfA736B46d83a
-  taiko_wrapper: 0x47cD215F786D723Bbe0118b19c23f897cd3c7544
-  l2_bridge: 0x1670010000000000000000000000000000000001
-  preconf_whitelist: 0x63d7b5Dd5474BB7cF3c0Cef1Ca7b3a6BbDAC6109
+  preconf_router: 0x1788a5D023bac58bAF55a92153192a6568E42BAD
+  taiko_wrapper: 0x57718C9cE2CcC1D7a4a136ebECA892c8Dd9F67c7
+  preconf_whitelist: 0x3D7F46607b02EAd1Cd1d09A86B76885730d3De0F
   avs_directory: 0xBf549F50fdbbD7Eb73ce88985AA107eEC0955f4c
   strategy_manager: 0xe21c9cfea094aAbE99C96D56281a00876F97258a
   slasher: 0x700420690932eeB22bCd01fBf537d37BeCa5577C
   service_manager: 0xEFC846aa6d4FbFd669b3620624351B66CB6AD25C
   preconf_registry: 0x454A310f46C8d9403ba6F6c514aD3fDE1ad97a5E
   preconf_task_manager: 0xf2bD68421A73821368eEefaCB420FFdFa0237c86
+  l2_bridge: 0x1670010000000000000000000000000000000001
   bridge: 0x63e6DDE6763C3466C7b45Be880f7eE5dC2ca3E25
 xatu_sentry_enabled: false
 xatu_sentry_params:

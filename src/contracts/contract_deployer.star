@@ -16,7 +16,7 @@ def deploy(
     el_rpc_url = el_context.rpc_http_url
 
     # Get first prefunded account
-    first_prefunded_account = prefunded_accounts[10]
+    first_prefunded_account = prefunded_accounts[0]
 
     # Deploy taiko contracts
     taiko_contract_deployer.deploy(
