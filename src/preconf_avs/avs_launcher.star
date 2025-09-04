@@ -74,18 +74,18 @@ def launch(
         "PRECONF_ROUTER_ADDRESS": contracts_addresses.preconf_router,
         "TAIKO_WRAPPER_ADDRESS": contracts_addresses.taiko_wrapper,
         "TAIKO_BRIDGE_L2_ADDRESS": contracts_addresses.l2_bridge,
-        "TAIKO_CHAIN_ID": "167001",
-        "L1_CHAIN_ID": l1_chain_id,
-        "L1_WS_RPC_URL": el_context.ws_url,
+        "L1_RPC_URLS": el_context.ws_url,
         "L1_BEACON_URL": cl_context.beacon_http_url,
-        "TAIKO_GETH_WS_RPC_URL": taiko_stack.ws_url,
+        "TAIKO_GETH_RPC_URL": taiko_stack.ws_url,
         "TAIKO_GETH_AUTH_RPC_URL": taiko_stack.auth_url,
         "TAIKO_DRIVER_URL": taiko_stack.driver_url,
-        "MAX_BLOCKS_PER_BATCH": "4",
+        # "MAX_BLOCKS_PER_BATCH": "4",
         "JWT_SECRET_FILE_PATH":"/data/taiko-geth/geth/jwtsecret",
         "SIMULATE_NOT_SUBMITTING_AT_THE_END_OF_EPOCH": simulate_not_submitting_at_the_end_of_epoch,
-        "WEB3SIGNER_URL" : "http://192.168.1.25:9000",
-        "PRECONF_ADDRESS" : ADDRESS_OPERATOR
+        "FORCED_INCLUSION_STORE_ADDRESS": contracts_addresses.forced_inclusion_store,
+        # "WEB3SIGNER_L1_URL" : "http://192.168.1.25:9000",
+        # "WEB3SIGNER_L2_URL" : "http://192.168.1.25:9001",
+        # "PRECONFER_ADDRESS" : ADDRESS_OPERATOR
     }
 
     # For each service, we'll create env_vars by combining base_env_vars with service-specific vars
@@ -102,7 +102,10 @@ def launch(
             },
             image = image,
             private_ip_address_placeholder = "avs_ip_placeholder",
-            env_vars=create_service_env_vars({}),
+            # env_vars=create_service_env_vars({}),
+            env_vars=create_service_env_vars({
+                "CATALYST_NODE_ECDSA_PRIVATE_KEY": PRIVATE_KEY_OPERATOR,
+            }),
             ports = {
                 "metrics-port": PortSpec(
                     number=9898, transport_protocol="TCP", wait=None

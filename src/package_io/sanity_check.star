@@ -217,6 +217,7 @@ SUBCATEGORY_PARAMS = {
         "preconf_registry",
         "preconf_task_manager",
         "bridge",
+        "forced_inclusion_store",
     ],
     "xatu_sentry_params": [
         "xatu_sentry_image",
@@ -255,8 +256,8 @@ ADDITIONAL_SERVICES_PARAMS = [
     "forky",
     "apache",
     "tracoor",
-    "taiko_stack",
-    "preconf_avs",
+    # "taiko_stack",
+    # "preconf_avs",
 ]
 
 ADDITIONAL_CATEGORY_PARAMS = {

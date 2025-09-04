@@ -63,9 +63,9 @@ get_prefunded_accounts = import_module(
 
 # Preconf AVS
 contract_deployer = import_module("./src/contracts/contract_deployer.star")
-l2_taiko = import_module("./src/l2_taiko/taiko_launcher.star")
-taiko_blockscout = import_module("./src/l2_taiko/blockscout_launcher.star")
-preconf_avs = import_module("./src/preconf_avs/avs_launcher.star")
+# l2_taiko = import_module("./src/l2_taiko/taiko_launcher.star")
+# taiko_blockscout = import_module("./src/l2_taiko/blockscout_launcher.star")
+# preconf_avs = import_module("./src/preconf_avs/avs_launcher.star")
 
 GRAFANA_USER = "admin"
 GRAFANA_PASSWORD = "admin"
@@ -752,92 +752,92 @@ print(int(a+b), end="")
                 args_with_right_defaults.custom_flood_params,
                 global_node_selectors,
             )
-        elif additional_service == "taiko_stack":
-            plan.print("Launching taiko")
+        # elif additional_service == "taiko_stack":
+        #     plan.print("Launching taiko")
 
-            plan.upload_files(
-                src="./taiko-geth",
-                name="taiko_genesis",
-            )
+        #     plan.upload_files(
+        #         src="./taiko-geth",
+        #         name="taiko_genesis",
+        #     )
 
-            #Launch boot-node
-            p2p_bootnode_test = plan.add_service(
-                name = "taiko-bootnode-test",
-                config = ServiceConfig(
-                    image = args_with_right_defaults.taiko_params.taiko_bootnode_image,
-                    ports = {
-                        "p2p": PortSpec(
-                            number=9001, transport_protocol="TCP", wait=None
-                        ),
-                        "udp": PortSpec(
-                            number=9000, transport_protocol="TCP", wait=None
-                        ),
-                    },
-                    cmd = [
-                        "p2p-boot-node",
-                        "p2pbootnode_ip_placeholder",
-                        "9000",
-                    ],
-                    private_ip_address_placeholder = "p2pbootnode_ip_placeholder",
-                ),
-            )
+        #     #Launch boot-node
+        #     p2p_bootnode_test = plan.add_service(
+        #         name = "taiko-bootnode-test",
+        #         config = ServiceConfig(
+        #             image = args_with_right_defaults.taiko_params.taiko_bootnode_image,
+        #             ports = {
+        #                 "p2p": PortSpec(
+        #                     number=9001, transport_protocol="TCP", wait=None
+        #                 ),
+        #                 "udp": PortSpec(
+        #                     number=9000, transport_protocol="TCP", wait=None
+        #                 ),
+        #             },
+        #             cmd = [
+        #                 "p2p-boot-node",
+        #                 "p2pbootnode_ip_placeholder",
+        #                 "9000",
+        #             ],
+        #             private_ip_address_placeholder = "p2pbootnode_ip_placeholder",
+        #         ),
+        #     )
 
-            plan.print("Bootnode IP: {0}".format(p2p_bootnode_test.ip_address))
+        #     plan.print("Bootnode IP: {0}".format(p2p_bootnode_test.ip_address))
 
-            bootnode_enr_recipe = PostHttpRequestRecipe(
-                endpoint="",
-                body='{"method":"p2p_getENR","params":[],"id":1,"jsonrpc":"2.0"}',
-                content_type="application/json",
-                port_id="p2p",
-                extract={
-                    "enr": ".result",
-                },
-            )
+        #     bootnode_enr_recipe = PostHttpRequestRecipe(
+        #         endpoint="",
+        #         body='{"method":"p2p_getENR","params":[],"id":1,"jsonrpc":"2.0"}',
+        #         content_type="application/json",
+        #         port_id="p2p",
+        #         extract={
+        #             "enr": ".result",
+        #         },
+        #     )
 
-            response = plan.wait(
-                recipe=bootnode_enr_recipe,
-                field="extract.enr",
-                assertion="!=",
-                target_value="",
-                timeout="15m",
-                service_name="taiko-bootnode-test",
-            )
+        #     response = plan.wait(
+        #         recipe=bootnode_enr_recipe,
+        #         field="extract.enr",
+        #         assertion="!=",
+        #         target_value="",
+        #         timeout="15m",
+        #         service_name="taiko-bootnode-test",
+        #     )
 
-            bootnode_enr = response["extract.enr"]
+        #     bootnode_enr = response["extract.enr"]
 
-            plan.print("Bootnode ENR: {0}".format(bootnode_enr))
+        #     plan.print("Bootnode ENR: {0}".format(bootnode_enr))
 
             # Launch taiko stack 1
-            taiko_stack_1 = l2_taiko.launch(
-                plan,
-                all_el_contexts[0],
-                all_cl_contexts[0],
-                prefunded_accounts,
-                "",
-                0,
-                1, # key index same as for avs node
-                args_with_right_defaults.taiko_params.taiko_geth_image,
-                args_with_right_defaults.taiko_params.taiko_client_image,
-                contracts_addresses,
-                bootnode_enr,
-            )
+            # taiko_stack_1 = l2_taiko.launch(
+            #     plan,
+            #     all_el_contexts[0],
+            #     all_cl_contexts[0],
+            #     prefunded_accounts,
+            #     "",
+            #     0,
+            #     1, # key index same as for avs node
+            #     args_with_right_defaults.taiko_params.taiko_geth_image,
+            #     args_with_right_defaults.taiko_params.taiko_client_image,
+            #     contracts_addresses,
+            #     bootnode_enr,
+            # )
 
             # Launch taiko stack 2
-            taiko_stack_2 = l2_taiko.launch(
-                plan,
-                all_el_contexts[0],
-                all_cl_contexts[0],
-                prefunded_accounts,
-                taiko_stack_1.enode,
-                1,
-                2, # key index same as for avs node
-                args_with_right_defaults.taiko_params.taiko_geth_image,
-                args_with_right_defaults.taiko_params.taiko_client_image,
-                contracts_addresses,
-                bootnode_enr,
-            )
+            # taiko_stack_2 = l2_taiko.launch(
+            #     plan,
+            #     all_el_contexts[0],
+            #     all_cl_contexts[0],
+            #     prefunded_accounts,
+            #     taiko_stack_1.enode,
+            #     1,
+            #     2, # key index same as for avs node
+            #     args_with_right_defaults.taiko_params.taiko_geth_image,
+            #     args_with_right_defaults.taiko_params.taiko_client_image,
+            #     contracts_addresses,
+            #     bootnode_enr,
+            # )
 
-            plan.print("Successfully launched 2 taiko stacks")
+            # plan.print("Successfully launched 2 taiko stacks")
 
             # Launch blockscout for taiko L2
             # taiko_blockscout.launch_blockscout(
@@ -897,95 +897,95 @@ print(int(a+b), end="")
             """
 
             # plan.print(spammer_result)
-        elif additional_service == "preconf_avs":
-            plan.print("Launching preconfirmation AVS")
+        # elif additional_service == "preconf_avs":
+            # plan.print("Launching preconfirmation AVS")
 
-            # Launch Preconf AVS 1
-            preconf_avs_job_0 = preconf_avs.launch(
-                plan,
-                preconf_params.preconf_avs_image,
-                network_id,
-                all_el_contexts[0],
-                all_cl_contexts[0],
-                taiko_stack_1,
-                taiko_params.taiko_deploy_image,
-                all_mevboost_contexts[0],
-                prefunded_accounts,
-                "3219c83a76e82682c3e706902ca85777e703a06c9f0a82a5dfa6164f527c1ea6",
-                1,
-                1,
-                0,
-                contracts_addresses,
-                "false",
-            )
+            # # Launch Preconf AVS 1
+            # preconf_avs_job_0 = preconf_avs.launch(
+            #     plan,
+            #     preconf_params.preconf_avs_image,
+            #     network_id,
+            #     all_el_contexts[0],
+            #     all_cl_contexts[0],
+            #     taiko_stack_1,
+            #     taiko_params.taiko_deploy_image,
+            #     all_mevboost_contexts[0],
+            #     prefunded_accounts,
+            #     "3219c83a76e82682c3e706902ca85777e703a06c9f0a82a5dfa6164f527c1ea6",
+            #     1,
+            #     1,
+            #     0,
+            #     contracts_addresses,
+            #     "false",
+            # )
 
-            launch_prometheus_grafana = False
-            prometheus_additional_metrics_jobs.append(
-                preconf_avs_job_0
-            )
-            # Launch Preconf AVS 2
-            preconf_avs_job_1 = preconf_avs.launch(
-                plan,
-                preconf_params.preconf_avs_image,
-                network_id,
-                all_el_contexts[0],
-                all_cl_contexts[0],
-                taiko_stack_2,
-                taiko_params.taiko_deploy_image,
-                all_mevboost_contexts[0],
-                prefunded_accounts,
-                "0dce41fa73ae9f6bdfd51df4d422d75eee174553dba5fd450c4437e4ed3fc903",
-                1,
-                2,
-                1,
-                contracts_addresses,
-                "false",
-            )
+            # launch_prometheus_grafana = False
+            # prometheus_additional_metrics_jobs.append(
+            #     preconf_avs_job_0
+            # )
+            # # Launch Preconf AVS 2
+            # preconf_avs_job_1 = preconf_avs.launch(
+            #     plan,
+            #     preconf_params.preconf_avs_image,
+            #     network_id,
+            #     all_el_contexts[0],
+            #     all_cl_contexts[0],
+            #     taiko_stack_2,
+            #     taiko_params.taiko_deploy_image,
+            #     all_mevboost_contexts[0],
+            #     prefunded_accounts,
+            #     "0dce41fa73ae9f6bdfd51df4d422d75eee174553dba5fd450c4437e4ed3fc903",
+            #     1,
+            #     2,
+            #     1,
+            #     contracts_addresses,
+            #     "false",
+            # )
 
-            launch_prometheus_grafana = False
-            plan.print(preconf_avs_job_1)
-            prometheus_additional_metrics_jobs.append(
-                preconf_avs_job_1
-            )
+            # launch_prometheus_grafana = False
+            # plan.print(preconf_avs_job_1)
+            # prometheus_additional_metrics_jobs.append(
+            #     preconf_avs_job_1
+            # )
 
-            plan.print("Successfully launched 2 preconf avs")
+            # plan.print("Successfully launched 2 preconf avs")
 
-            plan.add_service(
-                name = "cast-call-image",
-                description = "Starting cast call",
-                config = ServiceConfig(
-                    image = taiko_params.taiko_deploy_image,
-                    cmd = [
-                        "sleep",
-                        "infinity",
-                    ],
-                ),
-            )
+            # plan.add_service(
+            #     name = "cast-call-image",
+            #     description = "Starting cast call",
+            #     config = ServiceConfig(
+            #         image = taiko_params.taiko_deploy_image,
+            #         cmd = [
+            #             "sleep",
+            #             "infinity",
+            #         ],
+            #     ),
+            # )
 
-            recipe_result = plan.wait(
-                service_name = "cast-call-image",
-                recipe = ExecRecipe(
-                    command = [
-                        "cast",
-                        "call",
-                        "0xD9BFe39BA99503baA8cBA3DF08e3C9421889Fd44",
-                        "getOperatorForCurrentEpoch()(address)",
-                        "--rpc-url",
-                        all_el_contexts[0].rpc_http_url,
-                    ],
-                    extract = {
-                        "epoch" : ".",
-                    },
-                ),
-                field = "extract.epoch",
-                assertion = "!=",
-                target_value = "0x0000000000000000000000000000000000000000\n",
-                interval = "30s",
-                timeout = "15m",
-                description = "Waiting for current epoch to become non-zero",
-            )
+            # recipe_result = plan.wait(
+            #     service_name = "cast-call-image",
+            #     recipe = ExecRecipe(
+            #         command = [
+            #             "cast",
+            #             "call",
+            #             "0xD9BFe39BA99503baA8cBA3DF08e3C9421889Fd44",
+            #             "getOperatorForCurrentEpoch()(address)",
+            #             "--rpc-url",
+            #             all_el_contexts[0].rpc_http_url,
+            #         ],
+            #         extract = {
+            #             "epoch" : ".",
+            #         },
+            #     ),
+            #     field = "extract.epoch",
+            #     assertion = "!=",
+            #     target_value = "0x0000000000000000000000000000000000000000\n",
+            #     interval = "30s",
+            #     timeout = "15m",
+            #     description = "Waiting for current epoch to become non-zero",
+            # )
 
-            plan.print("Current epoch: {0}".format(recipe_result["extract.epoch"]))
+            # plan.print("Current epoch: {0}".format(recipe_result["extract.epoch"]))
             """
             plan.run_sh(
                 run = "sleep 120",
