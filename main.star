@@ -586,16 +586,16 @@ print(int(a+b), end="")
             )
             plan.print("Successfully launched beacon metrics gazer")
         elif additional_service == "blockscout":
-            # plan.print("Launching blockscout")
-            # blockscout_sc_verif_url = blockscout.launch_blockscout(
-            #     plan,
-            #     all_el_contexts,
-            #     persistent,
-            #     global_node_selectors,
-            #     args_with_right_defaults.port_publisher,
-            #     index,
-            #     args_with_right_defaults.blockscout_params.public_api_host,
-            # )
+            plan.print("Launching blockscout")
+            blockscout_sc_verif_url = blockscout.launch_blockscout(
+                plan,
+                all_el_contexts,
+                persistent,
+                global_node_selectors,
+                args_with_right_defaults.port_publisher,
+                index,
+                args_with_right_defaults.blockscout_params.public_api_host,
+            )
             plan.print("Successfully launched blockscout")
         elif additional_service == "dora":
             plan.print("Launching dora")
