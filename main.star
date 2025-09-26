@@ -235,6 +235,7 @@ print(int(a+b), end="")
         taiko_params.taiko_deploy_image,
         preconf_params.avs_deploy_image,
         contracts_addresses,
+        "{0}".format(network_params.seconds_per_slot)
     )
 
     # Broadcaster forwards requests, sent to it, to all nodes in parallel

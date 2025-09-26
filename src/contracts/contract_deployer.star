@@ -11,6 +11,7 @@ def deploy(
     taiko_protocol_image,
     avs_protocol_image,
     contracts_addresses,
+    seconds_per_slot,
 ):
     # Get el rpc url
     el_rpc_url = el_context.rpc_http_url
@@ -26,4 +27,6 @@ def deploy(
         first_prefunded_account,
         taiko_protocol_image,
         contracts_addresses,
+        network_id,
+        seconds_per_slot,
     )

@@ -7,7 +7,9 @@ def deploy(
     el_rpc_url,
     contract_owner,
     taiko_protocol_image,
-    contracts_addresses
+    contracts_addresses,
+    network_id,
+    seconds_per_slot,
 ):
     FORK_URL_COMMAND = "--fork-url {0}".format(el_rpc_url)
 
@@ -17,9 +19,12 @@ def deploy(
 
     plan.run_sh(
         name="deploy-taiko-contract",
-        run="forge script {0} {1} {2} $FORGE_FLAGS".format(TAIKO_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
+        run="./setup.sh && forge script {0} {1} {2} $FORGE_FLAGS".format(TAIKO_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
         image=taiko_protocol_image,
         env_vars={
+            "DEVNET_CHAIN_ID": network_id,
+            "DEVNET_BEACON_GENESIS": genesis_timestamp,
+            "DEVNET_SECONDS_IN_SLOT": seconds_per_slot,
             "FOUNDRY_PROFILE": "layer1",
             "PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
             "OLD_FORK_TAIKO_INBOX": "0x0000000000000000000000000000000000000000",
@@ -40,7 +45,6 @@ def deploy(
             "INCLUSION_FEE_IN_GWEI": "100",
             "DUMMY_VERIFIERS": "true",
             "FORK_URL": el_rpc_url,
-            "GENESIS_TIMESTAMP": genesis_timestamp,
             "FORGE_FLAGS": "--broadcast --ffi -vvv --block-gas-limit 200000000",
         },
         wait=None,
