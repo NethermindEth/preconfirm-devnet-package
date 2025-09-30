@@ -25,6 +25,8 @@ def deploy(
             "DEVNET_CHAIN_ID": network_id,
             "DEVNET_BEACON_GENESIS": genesis_timestamp,
             "DEVNET_SECONDS_IN_SLOT": seconds_per_slot,
+            "DEVNET_OP_CHANGE_DELAY": "0",
+            "DEVNET_RANDOMNESS_DELAY": "0",
             "FOUNDRY_PROFILE": "layer1",
             "PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
             "OLD_FORK_TAIKO_INBOX": "0x0000000000000000000000000000000000000000",
