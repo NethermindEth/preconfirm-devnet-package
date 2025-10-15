@@ -1,6 +1,5 @@
 taiko_contract_deployer = import_module("./taiko.star")
-eigenlayer_contract_deployer = import_module("./eigenlayer_mvp.star")
-avs_contract_deployer = import_module("./preconf_avs.star")
+# eigenlayer_contract_deployer = import_module("./eigenlayer_mvp.star")
 
 def deploy(
     plan,
@@ -9,7 +8,7 @@ def deploy(
     prefunded_accounts,
     network_id,
     taiko_protocol_image,
-    avs_protocol_image,
+    taiko_deploy_alethia_image,
     contracts_addresses,
     seconds_per_slot,
 ):
@@ -26,6 +25,7 @@ def deploy(
         el_rpc_url,
         first_prefunded_account,
         taiko_protocol_image,
+        taiko_deploy_alethia_image,
         contracts_addresses,
         network_id,
         seconds_per_slot,

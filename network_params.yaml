@@ -142,12 +142,12 @@ blockscout_params:
   public_api_host: "178.79.141.170"
 taiko_params:
   #taiko_deploy_image: nethswitchboard/preconf-taiko-protocol:alethia-v2.3.1
+  taiko_deploy_alethia_image: nethswitchboard/preconf-taiko-protocol:alethia-v2.3.1
   taiko_deploy_image: nethswitchboard/preconf-taiko-protocol:shasta
   taiko_geth_image: nethswitchboard/preconf-taiko-geth:whitelist
   taiko_client_image: nethswitchboard/preconf-taiko-client:whitelist
   taiko_bootnode_image: nethswitchboard/bootnode-p2p:whitelist
 preconf_params:
-  avs_deploy_image: nethswitchboard/preconf-avs-protocol:latest
   preconf_avs_image: nethswitchboard/preconf-avs-node:whitelist
 contracts_addresses:
   taiko_l1: 0x7E2E7DD2Aead92e2e6d05707F21D4C36004f8A2B

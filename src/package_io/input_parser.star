@@ -343,13 +343,13 @@ def input_parser(plan, input_args):
             public_api_host=result["blockscout_params"]["public_api_host"],
         ),
         taiko_params=struct(
+            taiko_deploy_alethia_image=result["taiko_params"]["taiko_deploy_alethia_image"],
             taiko_deploy_image=result["taiko_params"]["taiko_deploy_image"],
             taiko_geth_image=result["taiko_params"]["taiko_geth_image"],
             taiko_client_image=result["taiko_params"]["taiko_client_image"],
             taiko_bootnode_image=result["taiko_params"]["taiko_bootnode_image"],
         ),
         preconf_params=struct(
-            avs_deploy_image=result["preconf_params"]["avs_deploy_image"],
             preconf_avs_image=result["preconf_params"]["preconf_avs_image"],
         ),
         contracts_addresses=struct(

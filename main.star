@@ -233,7 +233,7 @@ print(int(a+b), end="")
         prefunded_accounts,
         network_id,
         taiko_params.taiko_deploy_image,
-        preconf_params.avs_deploy_image,
+        taiko_params.taiko_deploy_alethia_image,
         contracts_addresses,
         "{0}".format(network_params.seconds_per_slot)
     )

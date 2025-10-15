@@ -7,6 +7,7 @@ def deploy(
     el_rpc_url,
     contract_owner,
     taiko_protocol_image,
+    taiko_deploy_alethia_image,
     contracts_addresses,
     network_id,
     seconds_per_slot,
@@ -17,17 +18,14 @@ def deploy(
 
     plan.print("Contract genesis_timestamp {0}".format(genesis_timestamp))
 
-    plan.run_sh(
-        name="deploy-taiko-contract",
-        run="./setup.sh && forge script {0} {1} {2} $FORGE_FLAGS".format(TAIKO_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
-        image=taiko_protocol_image,
-        env_vars={
+    env_vars = {
             "DEVNET_CHAIN_ID": network_id,
             "DEVNET_BEACON_GENESIS": genesis_timestamp,
             "DEVNET_SECONDS_IN_SLOT": seconds_per_slot,
             "DEVNET_OP_CHANGE_DELAY": "0",
             "DEVNET_RANDOMNESS_DELAY": "0",
             "FOUNDRY_PROFILE": "layer1",
+            "L2_CHAIN_ID":"167001",
             "PRIVATE_KEY": "0x{0}".format(contract_owner.private_key),
             "OLD_FORK_TAIKO_INBOX": "0x0000000000000000000000000000000000000000",
             "TAIKO_TOKEN": "0x0000000000000000000000000000000000000000",
@@ -39,9 +37,9 @@ def deploy(
             "TAIKO_TOKEN_NAME": "Taiko Token",
             "TAIKO_TOKEN_SYMBOL": "TAIKO",
             "SHARED_RESOLVER": "0x0000000000000000000000000000000000000000",
-            "L2_GENESIS_HASH": "0xde852e92c3fda801714d9c321d66818bf02eec1d1737d2d495ad4973e74b29c2",
+            "L2_GENESIS_HASH": "0x6dfba9eb683bd39f0663f91252560d9086847bfc881584fcf89407f6d1f2bf81",
             "PAUSE_BRIDGE": "true",
-            "DEPLOY_PRECONF_CONTRACTS": "false",
+            "DEPLOY_PRECONF_CONTRACTS": "true",
             "PRECONF_INBOX": "false",
             "PRECONF_ROUTER": "false",
             "INCLUSION_WINDOW": "24",
@@ -51,11 +49,28 @@ def deploy(
             "SECURITY_COUNCIL": contract_owner.address,
             "FORK_URL": el_rpc_url,
             "FORGE_FLAGS": "--broadcast --ffi -vvv --block-gas-limit 200000000",
-        },
+        }
+
+    alethia_deployment = plan.run_sh(
+        name="deploy-taiko-contract-alethia",
+        run="./setup.sh && forge script {0} {1} {2} $FORGE_FLAGS".format(TAIKO_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
+        image=taiko_deploy_alethia_image,
+        env_vars=env_vars,
         wait=None,
-        description="Deploying taiko smart contracts",
-        store = [StoreSpec(src = "app/deployments/deploy_l1.json", name = "taiko_on_l1_deployment")],
+        description="Deploying taiko alethia smart contracts",
+        store = [StoreSpec(src = "app/deployments/deploy_l1.json", name = "taiko_alethia_on_l1_deployment")],
     )
+
+    plan.run_sh(
+        name="deploy-taiko-contract",
+        run="./setup.sh && forge script {0} {1} {2} $FORGE_FLAGS".format(TAIKO_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
+        image=taiko_protocol_image,
+        env_vars=env_vars,
+        wait=None,
+        description="Deploying taiko shasta smart contracts",
+        store = [StoreSpec(src = "app/deployments/deploy_l1.json", name = "taiko_on_l1_deployment")]
+    )
+
 
     # """
     # plan.run_sh(
