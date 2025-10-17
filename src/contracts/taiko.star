@@ -1,6 +1,9 @@
 TAIKO_SCRIPT_PATH = "./script/layer1/based/DeployProtocolOnL1.s.sol:DeployProtocolOnL1"
 TOKEN_SCRIPT_PATH = "./script/layer1/based/DeployTaikoToken.s.sol:DeployTaikoToken"
 
+SHASTA_TAIKO_SCRIPT_PATH = "./script/layer1/core/DeployProtocolOnL1.s.sol:DeployProtocolOnL1"
+SHASTA_TOKEN_SCRIPT_PATH = "./script/layer1/core/DeployTaikoToken.s.sol:DeployTaikoToken"
+
 def deploy(
     plan,
     genesis_timestamp,
@@ -49,6 +52,7 @@ def deploy(
             "SECURITY_COUNCIL": contract_owner.address,
             "FORK_URL": el_rpc_url,
             "FORGE_FLAGS": "--broadcast --ffi -vvv --block-gas-limit 200000000",
+            "ACTIVATE_INBOX": "false",
         }
 
     alethia_deployment = plan.run_sh(
@@ -63,7 +67,7 @@ def deploy(
 
     plan.run_sh(
         name="deploy-taiko-contract",
-        run="./setup.sh && forge script {0} {1} {2} $FORGE_FLAGS".format(TAIKO_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
+        run="./setup.sh && forge script {0} {1} {2} $FORGE_FLAGS".format(SHASTA_TAIKO_SCRIPT_PATH, PRIVATE_KEY_COMMAND, FORK_URL_COMMAND),
         image=taiko_protocol_image,
         env_vars=env_vars,
         wait=None,
