@@ -194,9 +194,6 @@ SUBCATEGORY_PARAMS = {
     "taiko_params": [
         "taiko_deploy_image",
         "taiko_deploy_alethia_image",
-        "taiko_geth_image",
-        "taiko_client_image",
-        "taiko_bootnode_image",
     ],
     "preconf_params": [
         "preconf_avs_image",

@@ -345,9 +345,6 @@ def input_parser(plan, input_args):
         taiko_params=struct(
             taiko_deploy_alethia_image=result["taiko_params"]["taiko_deploy_alethia_image"],
             taiko_deploy_image=result["taiko_params"]["taiko_deploy_image"],
-            taiko_geth_image=result["taiko_params"]["taiko_geth_image"],
-            taiko_client_image=result["taiko_params"]["taiko_client_image"],
-            taiko_bootnode_image=result["taiko_params"]["taiko_bootnode_image"],
         ),
         preconf_params=struct(
             preconf_avs_image=result["preconf_params"]["preconf_avs_image"],
