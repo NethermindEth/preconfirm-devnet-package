@@ -53,6 +53,7 @@ def deploy(
             "FORK_URL": el_rpc_url,
             "FORGE_FLAGS": "--broadcast --ffi -vvv --block-gas-limit 200000000",
             "ACTIVATE_INBOX": "false",
+            "PRECONF_WHITELIST": "0xD9BFe39BA99503baA8cBA3DF08e3C9421889Fd44",  # alethia whitelist address, needed for shasta whitelist upgrade https://github.com/taikoxyz/taiko-mono/commit/4e842086939a869f7287cc149c6b27b08803b032#diff-4b11afbfbcaf07e2ba9db4d9d5e4f343908f2639efb7eb0b48e171f029a335d0R179
         }
 
     alethia_deployment = plan.run_sh(
