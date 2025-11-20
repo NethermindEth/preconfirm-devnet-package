@@ -1,7 +1,9 @@
 participants:
 # EL
   - el_type: nethermind
-    el_image: nethermindeth/nethermind:surge-nethermind
+    el_image: nethermind/nethermind:latest
+  # - el_type: geth
+  #   el_image: ethereum/client-go:latest
     el_log_level: "debug"
     el_extra_env_vars: {}
     el_extra_labels: {}
@@ -115,7 +117,8 @@ parallel_keystore_generation: false
 disable_peer_scoring: false
 grafana_additional_dashboards: []
 persistent: false
-mev_type: commit-boost
+mev_type: null
+# mev_type: commit-boost
 mev_params:
   mev_relay_image: ghcr.io/chainbound/bolt-relay:v0.2.1-alpha
   mev_builder_image: ghcr.io/chainbound/bolt-builder:v0.3.0-alpha.rc3

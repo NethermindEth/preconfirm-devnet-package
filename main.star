@@ -209,7 +209,7 @@ def run(plan, args={}):
     )
 
     plan.run_sh(
-        run = "sleep 60",
+        run = "sleep 30",
         description = "Waiting for L1 to sync",
     )
 
