@@ -40,7 +40,7 @@ def deploy(
             "TAIKO_TOKEN_NAME": "Taiko Token",
             "TAIKO_TOKEN_SYMBOL": "TAIKO",
             "SHARED_RESOLVER": "0x0000000000000000000000000000000000000000",
-            "L2_GENESIS_HASH": "0x3c1ce741168e687e8a5f422188082885439d9cdd7f6d3cba8302b1bce34ce2b4",
+            "L2_GENESIS_HASH": "0xb07704ddb2c2f13c6791df325238679f1283b73aeb3d58934945fe0d04542a8e",
             "PAUSE_BRIDGE": "true",
             "DEPLOY_PRECONF_CONTRACTS": "true",
             "PRECONF_INBOX": "false",
